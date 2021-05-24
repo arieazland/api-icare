@@ -6,9 +6,10 @@ const authController = require("../controllers/auth");
 Router.post('/login', authController.login);
 Router.get('/userlist', authController.userList)
 Router.post('/registeradmin', authController.registerAdmin);
-// Router.post('/registerpeserta', authController.registerPeserta);
-// Router.post('/registerkonsultan', authController.registerKonsultan);
-// Router.post('/registerpsikolog', authController.registerPsikolog);
+Router.post('/registerpesertaevent', authController.registerPesertaevent);
+Router.post('/registerpesertareguler', authController.registerPesertareguler);
+Router.post('/registerkonsultan', authController.registerKonsultan);
+Router.post('/registerpsikolog', authController.registerPsikolog);
 Router.put('/edit', authController.edit);
 Router.delete('/deleteuser', authController.deleteUser);
 

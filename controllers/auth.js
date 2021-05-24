@@ -94,7 +94,183 @@ exports.registerAdmin = (req, res) => {
                     } else {
                         /** Registrasi berhasil dilanjutkan ke login */
                         res.status(201).json({
-                            message: "user berhasil di daftarkan",
+                            message: "admin berhasil di daftarkan",
+                        });
+                    }
+                })
+            }
+        })
+    } else {
+        /** Field tidak boleh kosong */
+        res.status(500).json({
+            message: "field tidak boleh kosong",
+        });
+    }
+};
+
+/** Peserta Event Register Process */
+exports.registerPesertaevent = (req, res) => {
+    const { email, nama, password, password2 } = req.body;
+    
+    if(email && nama && password && password2){
+        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+            if(error) { 
+                throw error;
+            } else if(results.length > 0){
+                /** username sudah dipakai */
+                res.status(500).json({
+                    message: "email sudah terdaftar, silahkan login",
+                });
+                
+            } else if( password !== password2) {
+                /** password dan password konfirmasi tidak sama */
+                res.status(500).json({
+                    message: "password dan konfirmasi password tidak sama",
+                });
+
+            } else if (results.length == 0){
+                /** Username tersedia */
+                let hashedPassword = await Bcrypt.hash(password, 8);
+
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "peserta_event"}, (error, results) => {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        /** Registrasi berhasil dilanjutkan ke login */
+                        res.status(201).json({
+                            message: "user event berhasil di daftarkan",
+                        });
+                    }
+                })
+            }
+        })
+    } else {
+        /** Field tidak boleh kosong */
+        res.status(500).json({
+            message: "field tidak boleh kosong",
+        });
+    }
+};
+
+/** Peserta Reguler Register Process */
+exports.registerPesertareguler = (req, res) => {
+    const { email, nama, password, password2 } = req.body;
+    
+    if(email && nama && password && password2){
+        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+            if(error) { 
+                throw error;
+            } else if(results.length > 0){
+                /** username sudah dipakai */
+                res.status(500).json({
+                    message: "email sudah terdaftar, silahkan login",
+                });
+                
+            } else if( password !== password2) {
+                /** password dan password konfirmasi tidak sama */
+                res.status(500).json({
+                    message: "password dan konfirmasi password tidak sama",
+                });
+
+            } else if (results.length == 0){
+                /** Username tersedia */
+                let hashedPassword = await Bcrypt.hash(password, 8);
+
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "peserta_reguler"}, (error, results) => {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        /** Registrasi berhasil dilanjutkan ke login */
+                        res.status(201).json({
+                            message: "user reguler berhasil di daftarkan",
+                        });
+                    }
+                })
+            }
+        })
+    } else {
+        /** Field tidak boleh kosong */
+        res.status(500).json({
+            message: "field tidak boleh kosong",
+        });
+    }
+};
+
+/** Konsultan Register Process */
+exports.registerKonsultan = (req, res) => {
+    const { email, nama, password, password2 } = req.body;
+    
+    if(email && nama && password && password2){
+        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+            if(error) { 
+                throw error;
+            } else if(results.length > 0){
+                /** username sudah dipakai */
+                res.status(500).json({
+                    message: "email sudah terdaftar, silahkan login",
+                });
+                
+            } else if( password !== password2) {
+                /** password dan password konfirmasi tidak sama */
+                res.status(500).json({
+                    message: "password dan konfirmasi password tidak sama",
+                });
+
+            } else if (results.length == 0){
+                /** Username tersedia */
+                let hashedPassword = await Bcrypt.hash(password, 8);
+
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "konsultan"}, (error, results) => {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        /** Registrasi berhasil dilanjutkan ke login */
+                        res.status(201).json({
+                            message: "user konsultan berhasil di daftarkan",
+                        });
+                    }
+                })
+            }
+        })
+    } else {
+        /** Field tidak boleh kosong */
+        res.status(500).json({
+            message: "field tidak boleh kosong",
+        });
+    }
+};
+
+/** Psikolog Register Process */
+exports.registerPsikolog = (req, res) => {
+    const { email, nama, password, password2 } = req.body;
+    
+    if(email && nama && password && password2){
+        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+            if(error) { 
+                throw error;
+            } else if(results.length > 0){
+                /** username sudah dipakai */
+                res.status(500).json({
+                    message: "email sudah terdaftar, silahkan login",
+                });
+                
+            } else if( password !== password2) {
+                /** password dan password konfirmasi tidak sama */
+                res.status(500).json({
+                    message: "password dan konfirmasi password tidak sama",
+                });
+
+            } else if (results.length == 0){
+                /** Username tersedia */
+                let hashedPassword = await Bcrypt.hash(password, 8);
+
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "psikologis"}, (error, results) => {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        /** Registrasi berhasil dilanjutkan ke login */
+                        res.status(201).json({
+                            message: "user psikolog berhasil di daftarkan",
                         });
                     }
                 })
