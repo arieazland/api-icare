@@ -18,8 +18,8 @@ app.use(session({
     saveUninitialized: true
 }));
 
-Dotenv.config({ path: './.env' });
-const Connection = require ("./DBConnection");
+// Dotenv.config({ path: './.env' });
+// const Connection = require ("./DBConnection");
 
 // Parse URL-encoded bodies (as sent by HTML Forms)
 app.use(Express.urlencoded({ extended: false }));
@@ -29,14 +29,9 @@ app.use(Express.json());
 /** define router */
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
-// app.use('/kelolaacara', require('./routes/kelolaacara'));
-// app.use('/kelolatamu', require('./routes/kelolatamu'));
-// app.use('/post', require('./routes/post'));
-
-/** router for index */
-// app.get('/', (req, res) => {
-//     res.render('index');
-// });
+// app.use('/acara', require('./routes/acara'));
+// app.use('/assesment', require('./routes/assesment'));
+// app.use('/kesimpulan', require('./routes/kesimpulan'));
 
 let port = process.env.DB_PORT || 8080;
 app.listen(port, () => {
