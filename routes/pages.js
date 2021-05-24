@@ -11,17 +11,7 @@ const Connection = require ("../DBconnection");
 
 /** Route for Register */
 Router.get('/', (req, res) => {
-    res.send("Hello");
+    res.send("Hello, welcome to API-ICare Page");
 });
-
-Router.post('/registeradmin', (req, res) => {
-    const { email, nama, password, password2 } = req.body;
-    res.status(201).json({
-        message: "berhasil",
-        email: email,
-        nama: nama,
-        password: password
-    })
-})
 
 module.exports = Router;
