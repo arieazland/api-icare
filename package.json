@@ -1,0 +1,33 @@
+{
+  "name": "api-icare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arieazland/api-icare.git"
+  },
+  "author": "arieazland",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arieazland/api-icare/issues"
+  },
+  "homepage": "https://github.com/arieazland/api-icare#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
