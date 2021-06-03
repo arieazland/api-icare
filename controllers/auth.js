@@ -15,24 +15,25 @@ exports.login = async (req, res) => {
             Connection.query('SELECT * FROM icare_account WHERE email = ?', [email], async (error, results) =>{
                 if( results.length == 0 ){
                     /** email salah */
-                    res.status(500).json({
+                    res.status(401).json({
                         message: 'Email atau password salah'
                     });
                 } else if( results.length > 0 && !(await Bcrypt.compare(password, results[0].password)) ){
                     /** password salah */
-                    res.status(500).json({
+                    res.status(401).json({
                         message: 'Email atau password salah'
                     });
                 } else if( results.length > 0 && await Bcrypt.compare(password, results[0].password) ) {
                     /** login sukses */
-                    res.status(201).json({
-                        message: 'Login Berhasil'
+                    res.status(200).json({
+                        message: 'Login Berhasil',
+                        data: results
                     });
                 }
             });
         } else {
             /** username dan password kosong */
-            res.status(500).json({
+            res.status(401).json({
                 message: 'Field tidak boleh kosong'
             });
         }
