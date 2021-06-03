@@ -43,27 +43,27 @@ exports.login = async (req, res) => {
 };
 
 /** Get User List */
-exports.userList = async (req, res) => {
-    try{
-        Connection.query('SELECT * FROM icare_account', async (error, results) =>{
-            if(error){
-                throw error;
-            } else if(results.length > 0){
-                /** Kirim data user */
-                res.status(201).json({
-                    data: results
-                });
-            } else if(results.length = 0){
-                /** Data user kosong */
-                res.status(500).json({
-                    message: 'Data user kosong'
-                })
-            }
-        })
-    } catch (error) {
-        console.log(error);
-    } 
-}
+// exports.userList = async (req, res) => {
+//     try{
+//         Connection.query('SELECT * FROM icare_account', async (error, results) =>{
+//             if(error){
+//                 throw error;
+//             } else if(results.length > 0){
+//                 /** Kirim data user */
+//                 res.status(201).json({
+//                     data: results
+//                 });
+//             } else if(results.length = 0){
+//                 /** Data user kosong */
+//                 res.status(500).json({
+//                     message: 'Data user kosong'
+//                 })
+//             }
+//         })
+//     } catch (error) {
+//         console.log(error);
+//     } 
+// }
 
 /** Admin Register Process */
 exports.registerAdmin = (req, res) => {
@@ -265,13 +265,20 @@ exports.registerPsikolog = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "psikologis"}, (error, results) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "psikologis"}, (error) => {
                     if(error){
                         console.log(error)
                     } else {
-                        /** Registrasi berhasil dilanjutkan ke login */
-                        res.status(201).json({
-                            message: "user psikolog berhasil di daftarkan",
+                        /** Registrasi berhasil  */
+                        Connection.query("SELECT * FROM icare_account", async (error, results) =>{
+                            if(error){ 
+                                throw error; 
+                            } else if(results.length >= 0){
+                                /** Kirim data user */
+                                res.status(201).json({
+                                    data: results
+                                });
+                            }
                         });
                     }
                 })
