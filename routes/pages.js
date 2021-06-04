@@ -15,19 +15,14 @@ Router.get('/', (req, res) => {
 });
 
 Router.get('/userlist', (req, res) =>{
-    Connection.query("SELECT * FROM icare_account", async (error, results) =>{
+    Connection.query("SELECT * FROM icare_account WHERE NOT account_type = 'nonaktif'  ORDER BY nama ASC", async (error, results) =>{
         if(error){ 
             throw error; 
-        } else if(results.length > 0){
+        } else if(results.length >= 0){
             /** Kirim data user */
             res.status(201).json({
                 data: results
             });
-        } else if(results.length = 0){
-            /** Data user kosong */
-            res.status(500).json({
-                message: 'Data user kosong'
-            })
         }
     });
 })

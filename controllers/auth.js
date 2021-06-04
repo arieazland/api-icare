@@ -23,11 +23,20 @@ exports.login = async (req, res) => {
                     res.status(401).json({
                         message: 'Email atau password salah'
                     });
-                } else if( results.length > 0 && await Bcrypt.compare(password, results[0].password) ) {
+                } else if ( results.length > 0 && results[0].account_type == 'nonaktif' ){
+                    /** user nonaktif */
+                    res.status(401).json({
+                        message: 'User anda sudah di nonaktifkan'
+                    });
+                } else if( results.length > 0 && await Bcrypt.compare(password, results[0].password) && results[0].account_type != 'nonaktif' ) {
                     /** login sukses */
                     res.status(200).json({
                         message: 'Login Berhasil',
                         data: results
+                    });
+                } else {
+                    res.status(401).json({
+                        message: 'Error please contact developer!'
                     });
                 }
             });
@@ -41,29 +50,6 @@ exports.login = async (req, res) => {
         console.log(error);
     }        
 };
-
-/** Get User List */
-// exports.userList = async (req, res) => {
-//     try{
-//         Connection.query('SELECT * FROM icare_account', async (error, results) =>{
-//             if(error){
-//                 throw error;
-//             } else if(results.length > 0){
-//                 /** Kirim data user */
-//                 res.status(201).json({
-//                     data: results
-//                 });
-//             } else if(results.length = 0){
-//                 /** Data user kosong */
-//                 res.status(500).json({
-//                     message: 'Data user kosong'
-//                 })
-//             }
-//         })
-//     } catch (error) {
-//         console.log(error);
-//     } 
-// }
 
 /** Admin Register Process */
 exports.registerAdmin = (req, res) => {
