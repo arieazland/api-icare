@@ -10,7 +10,7 @@ Router.post('/registerpesertaevent', authController.registerPesertaevent);
 Router.post('/registerpesertareguler', authController.registerPesertareguler);
 Router.post('/registerkonsultan', authController.registerKonsultan);
 Router.post('/registerpsikolog', authController.registerPsikolog);
-Router.put('/edit', authController.edit);
-Router.delete('/deleteuser', authController.deleteUser);
+Router.put('/edituser', authController.edit);
+Router.put('/deleteuser', authController.delete);
 
 module.exports = Router;
