@@ -17,7 +17,9 @@ Router.get('/', (req, res) => {
 Router.get('/userlist', (req, res) =>{
     Connection.query("SELECT * FROM icare_account WHERE NOT account_type = 'nonaktif'  ORDER BY nama ASC", async (error, results) =>{
         if(error){ 
-            throw error; 
+            res.status(500).json({
+                message: 'Get data users error'
+            });
         } else if(results.length >= 0){
             /** Kirim data user */
             res.status(201).json({
@@ -25,6 +27,21 @@ Router.get('/userlist', (req, res) =>{
             });
         }
     });
+})
+
+Router.get('/konsullist', (req, res) => {
+    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, results) => {
+        if(error){
+            res.status(500).json({
+                message: 'Get data konsul error'
+            });
+        } else if(results.length >= 0){
+            /** Kirim data event */
+            res.status(201).json({
+                data: results
+            });
+        }
+    })
 })
 
 module.exports = Router;
