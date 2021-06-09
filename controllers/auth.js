@@ -6,10 +6,16 @@ const Bcrypt = require('bcrypt');
 Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
 
+const Moment = require("moment");
+require("moment/locale/id");  // without this line it didn't work
+Moment.locale('id');
+
 /** Login Process */
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        var tanggal = Moment().format("YYYY-MM-DD");
+        var waktu = Moment().format("HH:mm:ss");
 
         if(email && password){
             Connection.query('SELECT * FROM icare_account WHERE email = ?', [email], async (error, results) =>{
@@ -35,30 +41,37 @@ exports.login = async (req, res) => {
                         data: results
                     });
                 } else {
-                    res.status(401).json({
+                    res.status(500).json({
                         message: 'Error please contact developer!'
                     });
                 }
             });
         } else {
             /** username dan password kosong */
-            res.status(401).json({
+            res.status(500).json({
                 message: 'Field tidak boleh kosong'
             });
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            message: error
+        });
     }        
 };
 
 /** Admin Register Process */
 exports.registerAdmin = (req, res) => {
     const { email, nama, password, password2 } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
         Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -75,7 +88,9 @@ exports.registerAdmin = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "admin"}, (error, results) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                    password: hashedPassword, account_type: "admin", date_created: tanggal, time_created: waktu}, 
+                    (error, results) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -98,11 +113,16 @@ exports.registerAdmin = (req, res) => {
 /** Peserta Event Register Process */
 exports.registerPesertaevent = (req, res) => {
     const { email, nama, password, password2 } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
         Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -119,7 +139,9 @@ exports.registerPesertaevent = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "peserta_event"}, (error, results) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                    password: hashedPassword, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
+                    (error, results) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -142,11 +164,16 @@ exports.registerPesertaevent = (req, res) => {
 /** Peserta Reguler Register Process */
 exports.registerPesertareguler = (req, res) => {
     const { email, nama, password, password2 } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
         Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -163,7 +190,9 @@ exports.registerPesertareguler = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "peserta_reguler"}, (error, results) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                    password: hashedPassword, account_type: "peserta_reguler", date_created: tanggal, time_created: waktu}, 
+                    (error, results) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -186,11 +215,16 @@ exports.registerPesertareguler = (req, res) => {
 /** Konsultan Register Process */
 exports.registerKonsultan = (req, res) => {
     const { email, nama, password, password2 } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
         Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -207,7 +241,9 @@ exports.registerKonsultan = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "konsultan"}, (error, results) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                    password: hashedPassword, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
+                    (error, results) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -230,11 +266,16 @@ exports.registerKonsultan = (req, res) => {
 /** Psikolog Register Process */
 exports.registerPsikolog = (req, res) => {
     const { email, nama, password, password2 } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
         Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -251,7 +292,9 @@ exports.registerPsikolog = (req, res) => {
                 /** Username tersedia */
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, password: hashedPassword, account_type: "psikologis"}, (error) => {
+                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                    password: hashedPassword, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
+                    (error) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -281,11 +324,16 @@ exports.registerPsikolog = (req, res) => {
 /** Edit Account Process */
 exports.edit = (req, res) => {
     const { id, email, nama, } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(id && email && nama){
         Connection.query('SELECT email FROM icare_account WHERE email = ? AND id <> ?', [email, id], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else if(results.length > 0){
                 /** username sudah dipakai */
                 res.status(500).json({
@@ -295,7 +343,8 @@ exports.edit = (req, res) => {
             } else if (results.length == 0){
                 /** Username tersedia */
 
-                Connection.query('UPDATE icare_account SET ? WHERE id = ?', [{email: email, nama: nama}, id], (error, results) => {
+                Connection.query('UPDATE icare_account SET ? WHERE id = ?', [{email: email, nama: nama, 
+                    date_updated: tanggal, time_updated: waktu}, id], (error, results) => {
                     if(error){
                         console.log(error)
                     } else {
@@ -318,11 +367,17 @@ exports.edit = (req, res) => {
 /** Delete Account Process */
 exports.delete = (req, res) => {
     const { id } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
     
     if(id){
-        Connection.query('UPDATE icare_account SET ? WHERE id = ? ', [{account_type: 'nonaktif'}, id], async (error, results) => {
+        Connection.query('UPDATE icare_account SET ? WHERE id = ? ', [{account_type: 'nonaktif', date_updated: tanggal, 
+        time_updated: waktu}, id], async (error, results) => {
             if(error) { 
-                throw error;
+                // throw error;
+                res.status(500).json({
+                    message: error
+                });
             } else {
                 /** username dinonaktifkan */
                 res.status(201).json({
