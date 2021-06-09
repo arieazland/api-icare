@@ -1,10 +1,10 @@
 const Express = require("express");
 const Router = Express.Router();
-const authController = require("../controllers/konsul");
+const konsulController = require("../controllers/konsul");
 
 /** Router */
-Router.post('/registerkonsul', authController.registerKonsul);
-Router.put('/editkonsul', authController.editKonsul);
-Router.put('/deletekonsul', authController.deleteKonsul);
+Router.post('/registerkonsul', konsulController.registerKonsul);
+Router.put('/editkonsul', konsulController.editKonsul);
+Router.put('/deletekonsul', konsulController.deleteKonsul);
 
 module.exports = Router;

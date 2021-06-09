@@ -29,7 +29,7 @@ app.use(Express.json());
 /** define router */
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
-// app.use('/acara', require('./routes/acara'));
+app.use('/konsul', require('./routes/konsul'));
 // app.use('/assesment', require('./routes/assesment'));
 // app.use('/kesimpulan', require('./routes/kesimpulan'));
 
