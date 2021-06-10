@@ -36,12 +36,96 @@ Router.get('/konsullist', (req, res) => {
                 message: 'Get data konsul error'
             })
         } else if(results.length >= 0){
-            /** Kirim data event */
-            res.status(201).json({
+            /** Kirim data konsul */
+            res.status(200).json({
                 data: results
             })
         }
     })
+})
+
+Router.post('/konsulid', (req, res) => {
+    try{
+        // var id = req.params.id;
+        const { id } = req.body;
+        if(id){
+            Connection.query('SELECT * FROM icare_consult_type WHERE id = ?', [id], async (error, results) => {
+                if(error){
+                    res.status(500).json({
+                        message: 'Get data konsul error'
+                    })
+                } else if(results.length >= 0 ){
+                    /** Kirim data konsul */
+                    res.status(200).json({
+                        data: results
+                    })
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+Router.post('/partisipant', (req, res) => {
+    try{
+        // var id = req.params.id;
+        const { selectkonsul } = req.body;
+        if(selectkonsul){
+            Connection.query('SELECT u.id AS iduser, u.nama AS namauser FROM icare_consult_acc a INNER JOIN icare_consult_type t ON a.id_tipe_konsultasi = t.id INNER JOIN icare_account u ON a.id_account = u.id WHERE t.id = ?', [selectkonsul], async (error, results) => {
+                if(error){
+                    res.status(500).json({
+                        message: 'Get data partisipant error'
+                    })
+                } else if(results.length >= 0 ){
+                    Connection.query('SELECT id, nama FROM icare_consult_type', async (error, konsul) => {
+                        if(error){
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else {
+                            Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
+                                if(error){
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else {
+                                    Connection.query('SELECT u.id, u.nama FROM icare_account u WHERE account_type = ? AND u.id NOT IN (SELECT a.id_account FROM icare_consult_acc a WHERE a.id_tipe_konsultasi = ?)', ['psikologis', selectkonsul], async (error, psikolog) => {
+                                        if(error){
+                                            res.status(500).json({
+                                                message: error
+                                            })
+                                        } else {
+                                            /** Kirim data konsul */
+                                            res.status(200).json({
+                                                results: results,
+                                                konsul : konsul,
+                                                pilihkonsul: pilihkonsul,
+                                                psikolog : psikolog,
+                                                selectkonsul
+                                            })
+                                        }
+                                    } )
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 module.exports = Router;
