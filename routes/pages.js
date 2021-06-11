@@ -83,7 +83,7 @@ Router.post('/partisipant', (req, res) => {
                         message: 'Get data partisipant error'
                     })
                 } else if(results.length >= 0 ){
-                    Connection.query('SELECT id, nama FROM icare_consult_type', async (error, konsul) => {
+                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
                         if(error){
                             res.status(500).json({
                                 message: error

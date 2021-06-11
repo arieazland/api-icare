@@ -30,6 +30,7 @@ app.use(Express.json());
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/konsul', require('./routes/konsul'));
+app.use('/partisipant', require('./routes/partisipant'));
 // app.use('/assesment', require('./routes/assesment'));
 // app.use('/kesimpulan', require('./routes/kesimpulan'));
 

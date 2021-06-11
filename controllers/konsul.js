@@ -35,7 +35,7 @@ exports.registerKonsul = (req, res) => {
                 message: "Field tidak boleh kosong"
             });
         }
-    } catch (err){
+    } catch (error){
         console.log(error)
     }
 }
@@ -64,7 +64,7 @@ exports.editKonsul = (req, res) => {
                 message: "Field tidak boleh kosong"
             });
         }
-    } catch (err){
+    } catch (error){
         console.log(error)
     }
 }
@@ -93,7 +93,7 @@ exports.deleteKonsul = (req, res) => {
                 message: "Field tidak boleh kosong"
             });
         }
-    } catch (err){
+    } catch (error){
         console.log(error)
     }
 }
