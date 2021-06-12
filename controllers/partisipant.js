@@ -20,7 +20,7 @@ exports.registerPartisipant = (req, res) => {
             Connection.query('INSERT INTO icare_consult_acc SET ?', {id: null, id_account: iduser, id_tipe_konsultasi: idkonsul, date_created: tanggal, time_created: waktu}, async (error, results) => {
                 if(error){
                     console.log(error)
-                } else{
+                } else {
                     res.status(201).json({
                         message: "User berhasil di daftarkan",
                         idkonsul
@@ -39,5 +39,15 @@ exports.registerPartisipant = (req, res) => {
 }
 
 exports.deletePartisipant = (req, res) => {
-
+    try{
+        Connection.query('DELETE FROM icare_consult_acc WHERE id = ?', [id], async (error, results) => {
+            if(error){
+                console.log(error)
+            } else {
+                
+            }
+        })
+    } catch (error){
+        console.log(error)
+    }
 }

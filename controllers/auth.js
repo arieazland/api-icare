@@ -191,7 +191,7 @@ exports.registerPesertareguler = (req, res) => {
                 let hashedPassword = await Bcrypt.hash(password, 8);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "peserta_reguler", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
