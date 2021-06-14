@@ -4,6 +4,6 @@ const partisipantController = require("../controllers/partisipant");
 
 /** Router */
 Router.post('/registerpartisipant', partisipantController.registerPartisipant);
-Router.delete('/deletepartisipant', partisipantController.deletePartisipant);
+Router.put('/deletepartisipant', partisipantController.deletePartisipant);
 
 module.exports = Router;

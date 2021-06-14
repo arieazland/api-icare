@@ -40,13 +40,26 @@ exports.registerPartisipant = (req, res) => {
 
 exports.deletePartisipant = (req, res) => {
     try{
-        Connection.query('DELETE FROM icare_consult_acc WHERE id = ?', [id], async (error, results) => {
-            if(error){
-                console.log(error)
-            } else {
-                
-            }
-        })
+        const { idconsultacc, idkonsul } = req.body;
+        if(idconsultacc && idkonsul){
+            Connection.query('DELETE FROM icare_consult_acc WHERE id = ?', [idconsultacc], async (error, results) => {
+                if(error){
+                    console.log(error)
+                } else {
+                    /** query berhasil */
+                    res.status(200).json({
+                        message: "User berhasil di hapus dari partisipant",
+                        idkonsul
+                    });
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
+        
     } catch (error){
         console.log(error)
     }

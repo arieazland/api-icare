@@ -77,7 +77,7 @@ Router.post('/partisipant', (req, res) => {
         // var id = req.params.id;
         const { selectkonsul } = req.body;
         if(selectkonsul){
-            Connection.query('SELECT u.id AS iduser, u.nama AS namauser FROM icare_consult_acc a INNER JOIN icare_consult_type t ON a.id_tipe_konsultasi = t.id INNER JOIN icare_account u ON a.id_account = u.id WHERE t.id = ?', [selectkonsul], async (error, results) => {
+            Connection.query('SELECT a.id AS idca, u.id AS iduser, u.nama AS namauser FROM icare_consult_acc a INNER JOIN icare_consult_type t ON a.id_tipe_konsultasi = t.id INNER JOIN icare_account u ON a.id_account = u.id WHERE t.id = ?', [selectkonsul], async (error, results) => {
                 if(error){
                     res.status(500).json({
                         message: 'Get data partisipant error'
