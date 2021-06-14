@@ -128,4 +128,51 @@ Router.post('/partisipant', (req, res) => {
     }
 })
 
+Router.post('/listsoal', (req, res) => {
+    try{
+        // var id = req.params.id;
+        const { selectkonsul } = req.body;
+        if(selectkonsul){
+            Connection.query('SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q INNER JOIN icare_consult_type t ON t.id = q.id_consult_type WHERE t.id = ? AND NOT q.status = "hapus" ', [selectkonsul], async (error, results) => {
+                if(error){
+                    res.status(500).json({
+                        message: 'Get data partisipant error'
+                    })
+                } else if(results.length >= 0 ){
+                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                        if(error){
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else {
+                            Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
+                                if(error){
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else {
+                                    /** Kirim data konsul */
+                                    res.status(200).json({
+                                        results: results,
+                                        konsul : konsul,
+                                        pilihkonsul: pilihkonsul,
+                                        selectkonsul
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 module.exports = Router;
