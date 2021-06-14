@@ -62,17 +62,6 @@ exports.registerSoalmultiple = (req, res) => {
                     });
                 }
             })
-            // Connection.query('INSERT INTO icare_qassessment SET ?', {id: null, id_consult_type: idkonsul, pertanyaan: pertanyaan, date_created: tanggal, time_created: waktu }, async (error, results) =>{
-            //     if(error){
-            //         console.log(error)
-            //     } else {
-            //         /** Input Tipe Konsul berhasil */
-            //         res.status(201).json({
-            //             message: "Pertanyaan berhasil di buat",
-            //             idkonsul
-            //         });
-            //     }
-            // })
         } else {
             /** Field kosong */
             res.status(500).json({
