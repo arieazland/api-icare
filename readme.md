@@ -7,6 +7,8 @@
 
 > $ npm install
 
+> $ npm init
+
 > $ npm i bcrypt
 
 > $ npm i body-parser
