@@ -19,22 +19,22 @@ exports.login = async (req, res) => {
 
         if(email && password){
             Connection.query('SELECT * FROM icare_account WHERE email = ?', [email], async (error, results) =>{
-                if( results.length == 0 ){
+                if(results.length == 0){
                     /** email salah */
                     res.status(401).json({
                         message: 'Email atau password salah'
                     });
-                } else if( results.length > 0 && !(await Bcrypt.compare(password, results[0].password)) ){
+                } else if(results.length > 0 && !(await Bcrypt.compare(password, results[0].password))){
                     /** password salah */
                     res.status(401).json({
                         message: 'Email atau password salah'
                     });
-                } else if ( results.length > 0 && results[0].account_type == 'nonaktif' ){
+                } else if (results.length > 0 && results[0].account_type == 'nonaktif'){
                     /** user nonaktif */
                     res.status(401).json({
                         message: 'User anda sudah di nonaktifkan'
                     });
-                } else if( results.length > 0 && await Bcrypt.compare(password, results[0].password) && results[0].account_type != 'nonaktif' ) {
+                } else if(results.length > 0 && await Bcrypt.compare(password, results[0].password) && results[0].account_type != 'nonaktif') {
                     /** login sukses */
                     res.status(200).json({
                         message: 'Login Berhasil',

@@ -175,6 +175,14 @@ Router.post('/listsoal', (req, res) => {
     }
 })
 
+Router.post('/jawaban', (req, res) => {
+    try{
+        /** get data pertanyaan */
+    } catch(error){
+        console.log(error);
+    }
+});
+
 Router.post('/listjawaban', (req, res) => {
     try{
         const { selectkonsul } = req.body;
