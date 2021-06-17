@@ -177,7 +177,53 @@ Router.post('/listsoal', (req, res) => {
 
 Router.post('/jawaban', (req, res) => {
     try{
-        /** get data pertanyaan */
+        const { selectkonsul, selectuser } = req.body;
+
+        if(selectkonsul, selectuser){
+            Connection.query("SELECT t.id AS idtipe, q.pertanyaan AS pertanyaan, a.jawaban AS jawaban, ac.nama AS namauser FROM icare_aassessment a INNER JOIN icare_qassessment q ON q.id = a.id_pertanyaan INNER JOIN icare_consult_type t ON q.id_consult_type = t.id INNER JOIN icare_account ac ON ac.id = a.id_account WHERE t.id = ? AND ac.id = ?", [selectkonsul, selectuser], async (error, results) => {
+                if(error){
+                    res.status(500).json({
+                        message: 'Get data jawaban error'
+                    })
+                } else if(results.length >= 0 ){
+                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                        if(error){
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else {
+                            Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
+                                if(error){
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else {
+                                    Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
+                                        if(error){
+                                            throw error;
+                                        } else {
+                                            /** Kirim data konsul */
+                                            res.status(200).json({
+                                                results: results,
+                                                konsul : konsul,
+                                                pilihkonsul: pilihkonsul,
+                                                pertanyaan: pertanyaan,
+                                                selectkonsul
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
     } catch(error){
         console.log(error);
     }
@@ -200,18 +246,25 @@ Router.post('/listjawaban', (req, res) => {
                                 message: error
                             })
                         } else {
-                            Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
+                            Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
                                 if(error){
                                     res.status(500).json({
                                         message: error
                                     })
                                 } else {
-                                    /** Kirim data konsul */
-                                    res.status(200).json({
-                                        results: results,
-                                        konsul : konsul,
-                                        pilihkonsul: pilihkonsul,
-                                        selectkonsul
+                                    Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
+                                        if(error){
+                                            throw error;
+                                        } else {
+                                            /** Kirim data konsul */
+                                            res.status(200).json({
+                                                results: results,
+                                                konsul : konsul,
+                                                pilihkonsul: pilihkonsul,
+                                                pertanyaan: pertanyaan,
+                                                selectkonsul
+                                            })
+                                        }
                                     })
                                 }
                             })
