@@ -44,10 +44,6 @@ exports.registerJawab = (req, res) => {
     }
 };
 
-exports.registerJawabmultiple = (req, res) => {
-    
-};
-
 exports.editJawab = (req, res) => {
     
 };
