@@ -1,6 +1,6 @@
 const Express = require("express");
 const Mysql = require("mysql");
-const Bcrypt = require("bcrypt");
+const Bcrypt = require("bcryptjs");
 const Path = require("path");
 const Dotenv = require("dotenv");
 

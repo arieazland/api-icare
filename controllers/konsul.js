@@ -1,7 +1,7 @@
 const Mysql = require("mysql");
 const Path = require("path");
 const Dotenv = require("dotenv");
-const Bcrypt = require('bcrypt');
+const Bcrypt = require('bcryptjs');
 
 Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
