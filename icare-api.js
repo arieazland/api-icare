@@ -35,7 +35,7 @@ app.use('/soal', require('./routes/soal'));
 app.use('/jawab', require('./routes/jawab'));
 app.use('/kesimpulan', require('./routes/kesimpulan'));
 
-let port = process.env.DB_PORT || 8080;
+let port = 8080;
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
