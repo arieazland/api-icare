@@ -11,5 +11,6 @@ Router.post('/registerkonsultan', authController.registerKonsultan);
 Router.post('/registerpsikolog', authController.registerPsikolog);
 Router.put('/edituser', authController.edit);
 Router.put('/deleteuser', authController.delete);
+Router.put('/gantipassword', authController.gantiPassword);
 
 module.exports = Router;

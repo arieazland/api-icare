@@ -392,3 +392,81 @@ exports.delete = (req, res) => {
         });
     }
 };
+
+/** Admin Register Process */
+exports.gantiPassword = (req, res) => {
+    try{
+        const { id, passwordlama, password, password2 } = req.body
+
+        if(id && passwordlama && password && password2){
+            if(password == password2){
+                Connection.query("SELECT * FROM icare_account WHERE id = ?", [id], async (error, cekid) => {
+                    if(error){
+                        /** error */
+                        res.status(500).json({
+                            message: error,
+                        });
+                    } else if(cekid.length == 0) {
+                        /** idaccount tidak ada */
+                        res.status(403).json({
+                            message: "User tidak terdaftar",
+                        });
+                    } else if(cekid.length > 0 && !(await Bcrypt.compare(passwordlama, cekid[0].password))) {
+                        /** password lama tidak sesuai */
+                        res.status(403).json({
+                            message: "Password lama tidak sesuai",
+                        });
+                    } else if(cekid.length > 0 && cekid[0].account_type == 'nonaktif') {
+                        /** user nonaktif */
+                        res.status(403).json({
+                            message: "User nonaktif",
+                        });
+                    } else if(cekid.length > 0 && await Bcrypt.compare(passwordlama, cekid[0].password) && cekid[0].account_type != 'nonaktif'){
+                        /** hash password */
+                        let hashedPassword = await Bcrypt.hash(password, 8);
+
+                        /** user aktif dan password lama sesuai, lakukan update password */
+                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword}, id], async (error, results) => {
+                            if(error){
+                                /** error */
+                                res.status(500).json({
+                                    message: error,
+                                });
+                            } else {
+                                /** update password berhasil */
+                                res.status(200).json({
+                                    message: "Password berhasil diubah",
+                                });
+                            }
+                        })
+                    } else {
+                        /** error */
+                        res.status(500).json({
+                            message: "Error, please contact developer",
+                        });
+                    }
+                })
+            } else if(password != password2) {
+                /** password baru dan konfirmasi password tidak sama */
+                res.status(500).json({
+                    message: "Password baru dan konfirmasi password baru tidak sama",
+                });
+            } else {
+                /** error */
+                res.status(500).json({
+                    message: "Error, please contact developer",
+                });
+            }
+        } else {
+            /** Field tidak boleh kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong",
+            });
+        }
+    } catch(error) {
+        /** Error */
+        res.status(500).json({
+            message: error,
+        });
+    }
+}
