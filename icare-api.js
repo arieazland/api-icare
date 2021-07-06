@@ -3,6 +3,7 @@ const Mysql = require("mysql");
 const Bcrypt = require("bcryptjs");
 const Path = require("path");
 const Dotenv = require("dotenv");
+Dotenv.config({ path: './.env' });
 
 // Set Moment Format engine
 const Moment = require("moment");
@@ -18,9 +19,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// Dotenv.config({ path: './.env' });
-// const Connection = require ("./DBConnection");
-
 // Parse URL-encoded bodies (as sent by HTML Forms)
 app.use(Express.urlencoded({ extended: false }));
 // Parse JSON bodies (as sent by API Clients)
@@ -35,7 +33,7 @@ app.use('/soal', require('./routes/soal'));
 app.use('/jawab', require('./routes/jawab'));
 app.use('/kesimpulan', require('./routes/kesimpulan'));
 
-let port = process.env.DB_PORT || 8080;
+let port = process.env.PORT || 8092;
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
