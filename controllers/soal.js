@@ -51,17 +51,18 @@ exports.registerSoalmultiple = (req, res) => {
             for( var i = 0; i < pertanyaan.length; i++){
                 value.push([null, idkonsul, pertanyaan[i], tanggal, waktu]);
             }
-            Connection.query(sql, [value], async (error, results) => {
-                if(error){
-                    console.log(error) 
-                } else {
-                    /** Input pertanyaan berhasil */
-                    res.status(201).json({
-                        message: "Pertanyaan berhasil di buat",
-                        idkonsul
-                    });
-                }
-            })
+            console.log(pertanyaan.length)
+            // Connection.query(sql, [value], async (error, results) => {
+            //     if(error){
+            //         console.log(error) 
+            //     } else {
+            //         /** Input pertanyaan berhasil */
+            //         res.status(201).json({
+            //             message: "Pertanyaan berhasil di buat",
+            //             idkonsul
+            //         });
+            //     }
+            // })
         } else {
             /** Field kosong */
             res.status(500).json({

@@ -59,7 +59,7 @@ exports.registerKesimpulan = (req, res) => {
                                     }); 
                                 } else if(cekpsikolog.length > 0){
                                     /** cek kesimpualn sudah ada atau belum */
-                                    Connection.query("SELECT * FROM icare_conc WHERE id_consult_type = ? AND id_account = ?", [selectkonsul, selectpeserta], async (error, cekkesimpulan) => {
+                                    Connection.query("SELECT * FROM icare_conc WHERE id_consult_type = ? AND id_account = ? AND NOT status = 'hapus' ", [selectkonsul, selectpeserta], async (error, cekkesimpulan) => {
                                         if(error){
                                             /** get cek kesimpulan error */
                                             res.status(500).json({

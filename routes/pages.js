@@ -544,7 +544,7 @@ Router.post('/listkesimpulanpeserta', (req, res) => {
                                                 });
                                             }else if(peserta.length > 0){
                                                 /** get data kesimpulan peserta */
-                                                Connection.query("SELECT k.id AS idkesimpulan, k.id_consult_type AS idkonsul, a.nama AS tipekonsul, k.verified_by AS idpsikolog, p.nama AS namapsikolog, k.id_account AS idpeserta, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account p ON p.id = k.verified_by WHERE k.id_consult_type = ? AND k.id_account = ?", [selectkonsul, selectpeserta], async (error, datakesimpulan) => {
+                                                Connection.query("SELECT k.id AS idkesimpulan, k.id_consult_type AS idkonsul, a.nama AS tipekonsul, k.verified_by AS idpsikolog, p.nama AS namapsikolog, k.id_account AS idpeserta, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account p ON p.id = k.verified_by WHERE k.id_consult_type = ? AND k.id_account = ? AND NOT k.status = 'hapus'", [selectkonsul, selectpeserta], async (error, datakesimpulan) => {
                                                     if(error){
                                                         res.status(500).json({
                                                             message: "Get data konsul error"
