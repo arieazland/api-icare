@@ -528,7 +528,7 @@ Router.post('/listkesimpulanpeserta', (req, res) => {
                             });
                         } else if(cekpeserta.length > 0) {
                             /** get data jawaban peserta berdasarkan acara terpilih */
-                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban FROM icare_account U INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
+                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
                                 /** get data acara */
                                 Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
                                     if(error){
