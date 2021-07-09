@@ -8,6 +8,7 @@ Moment.locale('id');
 
 Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
+const { Cookie } = require("express-session");
 
 /** Route for Register */
 Router.get('/', (req, res) => {
@@ -27,6 +28,49 @@ Router.get('/userlist', (req, res) =>{
             })
         }
     })
+})
+
+Router.post("/getpeserta", (req, res) => {
+    try{
+
+        const { idpeserta } = req.body
+
+        if(idpeserta){
+            Connection.query("SELECT id, email, nama, phone FROM icare_account WHERE id = ? AND account_type IN ('peserta','peserta_event')", [idpeserta], async (error, cekpeserta) => {
+                if(error) {
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(cekpeserta.length == 0) {
+                    /** data peserta tidak ada */
+                    res.status(403).json({
+                        message: "Peserta tidak terdaftar"
+                    })
+                } else if(cekpeserta.length > 0) {
+                    /** get data peserta */
+                    res.status(200).json({
+                        data: cekpeserta
+                    })
+                } else {
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: "Error, please contact developer"
+                    })
+                }
+            })
+        } else {
+            /** field kosong */
+            res.status(403).json({
+                message: "Field tidak boleh kosong"
+            })
+        }
+    } catch (error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
+        })
+    }
 })
 
 Router.get('/konsullist', (req, res) => {
