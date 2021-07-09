@@ -33,7 +33,7 @@ app.use('/soal', require('./routes/soal'));
 app.use('/jawab', require('./routes/jawab'));
 app.use('/kesimpulan', require('./routes/kesimpulan'));
 
-let port = process.env.PORT || 8092;
+let port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
