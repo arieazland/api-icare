@@ -219,6 +219,183 @@ Router.post('/listsoal', (req, res) => {
     }
 })
 
+Router.post('/listpart', (req, res) => {
+    try {
+        const { selectkonsul, selectuser } = req.body;
+
+        if(selectkonsul, selectuser){
+            /** cek tipe konsultasi */
+            Connection.query("SELECT * FROM icare_consult_type WHERE id = ? AND NOT status_consult = 'hapus'", [selectkonsul], async (error, pilihkonsul) =>{ 
+                if(error){
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(pilihkonsul.length == 0) {
+                    res.status(403).json({
+                        message: 'Tipe konsul tidak terdaftar'
+                    })
+                } else if(pilihkonsul.length > 0){
+                    /** cek data peserta */
+                    Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], async (error, cekuser) => {
+                        if(error){
+                            res.status(500).json({
+                                message: error
+                            }) 
+                        } else if(cekuser.length == 0) {
+                            res.status(403).json({
+                                message: 'Peserta tidak terdaftar'
+                            })
+                        } else if(cekuser.length > 0) {
+                            /** get data part */
+                            Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+                                if(error){
+                                    res.status(500).json({
+                                        message: error
+                                    }) 
+                                } else if(datapart.length >= 0){
+                                    /** get data konsul */
+                                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                                        if(error){
+                                            res.status(500).json({
+                                                message: error
+                                            }) 
+                                        } else if(konsul.length >= 0){
+                                            /** Kirim data part */
+                                            res.status(200).json({
+                                                datapart: datapart,
+                                                konsul : konsul,
+                                                pilihkonsul: pilihkonsul,
+                                                selectkonsul
+                                            })
+                                        } else {
+                                            res.status(500).json({
+                                                message: 'Get data konsul error'
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    res.status(500).json({
+                                        message: 'Get data part error'
+                                    })
+                                }
+                            })
+                        } else {
+                            res.status(500).json({
+                                message: 'Get data peserta error'
+                            })
+                        }
+                    })
+                } else {
+                    res.status(500).json({
+                        message: 'Get data konsul error'
+                    })
+                }
+            })
+        }
+    }catch (error) {
+        console.log(error);
+    }
+})
+
+Router.post('/listsoal2', (req, res) => {
+    try{
+        const { selectkonsul, selectpart } = req.body;
+
+        if(selectkonsul, selectpart){
+            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND id = ?", selectkonsul, async(error, pilihkonsul) => {
+                if(error){
+                    res.status(500).json({
+                        message: 'Get data jawaban error'
+                    })
+                } else if(pilihkonsul.length == 0){
+                    res.status(403).json({
+                        message: 'Konsul tidak terdaftar'
+                    })
+                } else if(pilihkonsul.length > 0){
+                    Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id = ?", selectpart, async(error, cekpart) => {
+                        if(error){
+                            res.status(500).json({
+                                message: 'Get data kualifikasi konsultasi error'
+                            })
+                        } else if(cekpart.length == 0){
+                            res.status(403).json({
+                                message: 'Kualifikasi konsultasi tidak terdaftar'
+                            })
+                        } else if(cekpart.length > 0){
+                            Connection.query("SELECT * FROM icare_q3assessment WHERE status = 'aktif' AND idpart = ?", selectpart, async(error, soal) => {
+                                if(error){
+                                    res.status(500).json({
+                                        message: 'Get data soal error'
+                                    })
+                                } else if(soal.length > 0){
+                                    /** get all data part */
+                                    Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+                                        if(error){
+                                            res.status(500).json({
+                                                message: error
+                                            }) 
+                                        } else if(datapart.length >= 0){
+                                            /** get data konsul */
+                                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' ORDER BY nama ASC", async (error, konsul) => {
+                                                if(error){
+                                                    res.status(500).json({
+                                                        message: error
+                                                    }) 
+                                                } else if(konsul.length >= 0){
+                                                    /** Kirim data soal */
+                                                    res.status(200).json({
+                                                        datapart: datapart,
+                                                        konsul : konsul,
+                                                        pilihkonsul: pilihkonsul,
+                                                        soal: soal,
+                                                        selectkonsul,
+                                                        selectpart
+                                                    })
+                                                } else {
+                                                    res.status(500).json({
+                                                        message: 'Get data konsul error'
+                                                    })
+                                                }
+                                            })
+                                        } else {
+                                            res.status(500).json({
+                                                message: 'Get data part error'
+                                            })
+                                        }
+                                    })
+                                } else if(soal.length == 0){
+                                    res.status(403).json({
+                                        message: 'Belum ada soal terdaftar'
+                                    })
+                                } else {
+                                    res.status(500).json({
+                                        message: 'Get data soal error'
+                                    })
+                                }
+                            })
+                        } else {
+                            res.status(500).json({
+                                message: 'Get data kualifikasi konsultasi error'
+                            })
+                        }
+                    })
+                } else {
+                    res.status(500).json({
+                        message: 'Get data konsul error'
+                    })
+                }
+            })
+        } else {
+            /** Field kosong */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            });
+        }
+    } catch(error) {
+        console.log(error);
+    }
+})
+
 Router.post('/jawaban', (req, res) => {
     try{
         const { selectkonsul, selectuser } = req.body;
