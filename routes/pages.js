@@ -246,36 +246,98 @@ Router.post('/listpart', (req, res) => {
                                 message: 'Peserta tidak terdaftar'
                             })
                         } else if(cekuser.length > 0) {
-                            /** get data part */
-                            Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+                            /** cek apakah tipe konsultasi adalah konsultasi berlanjut atau tidak */
+                            Connection.query("SELECT repeat_consult FROM icare_consult_type WHERE id = ? AND repeat_consult = 'y'", [selectkonsul], async(error, cekrepeat) => {
                                 if(error){
                                     res.status(500).json({
                                         message: error
                                     }) 
-                                } else if(datapart.length >= 0){
-                                    /** get data konsul */
-                                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                                }
+                                else if(cekrepeat.length == 0){
+                                    /** tipe konsultasi 1x konsul */
+                                    Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = ?", [selectuser, selectkonsul], async (error, cekjawaban) => {
                                         if(error){
                                             res.status(500).json({
                                                 message: error
                                             }) 
-                                        } else if(konsul.length >= 0){
-                                            /** Kirim data part */
-                                            res.status(200).json({
-                                                datapart: datapart,
-                                                konsul : konsul,
-                                                pilihkonsul: pilihkonsul,
-                                                selectkonsul
+                                        }
+                                        else if(cekjawaban.length == 0) {
+                                            /** peserta blm memberikan jawaban */
+                                            /** get data part */
+                                            Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+                                                if(error){
+                                                    res.status(500).json({
+                                                        message: error
+                                                    }) 
+                                                } else if(datapart.length >= 0){
+                                                    /** get data konsul */
+                                                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                                                        if(error){
+                                                            res.status(500).json({
+                                                                message: error
+                                                            }) 
+                                                        } else if(konsul.length >= 0){
+                                                            /** Kirim data part */
+                                                            res.status(200).json({
+                                                                datapart: datapart,
+                                                                konsul : konsul,
+                                                                pilihkonsul: pilihkonsul,
+                                                                selectkonsul
+                                                            })
+                                                        } else {
+                                                            res.status(500).json({
+                                                                message: 'Get data konsul error'
+                                                            })
+                                                        }
+                                                    })
+                                                } else {
+                                                    res.status(500).json({
+                                                        message: 'Get data part error'
+                                                    })
+                                                }
                                             })
-                                        } else {
+                                        }
+                                        else if(cekjawaban.length > 0) {
+                                            /** peserta sudah memberikan jawaban */
                                             res.status(500).json({
-                                                message: 'Get data konsul error'
+                                                message: 'Anda Sudah Menyelesaikan Assessment Ini, terima kasih atas partisipasinya'
                                             })
                                         }
                                     })
-                                } else {
-                                    res.status(500).json({
-                                        message: 'Get data part error'
+                                } else if(cekrepeat.length > 0){
+                                    /** tipe konsultasi berulang */
+                                    /** get data part */
+                                    Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+                                        if(error){
+                                            res.status(500).json({
+                                                message: error
+                                            }) 
+                                        } else if(datapart.length >= 0){
+                                            /** get data konsul */
+                                            Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+                                                if(error){
+                                                    res.status(500).json({
+                                                        message: error
+                                                    }) 
+                                                } else if(konsul.length >= 0){
+                                                    /** Kirim data part */
+                                                    res.status(200).json({
+                                                        datapart: datapart,
+                                                        konsul : konsul,
+                                                        pilihkonsul: pilihkonsul,
+                                                        selectkonsul
+                                                    })
+                                                } else {
+                                                    res.status(500).json({
+                                                        message: 'Get data konsul error'
+                                                    })
+                                                }
+                                            })
+                                        } else {
+                                            res.status(500).json({
+                                                message: 'Get data part error'
+                                            })
+                                        }
                                     })
                                 }
                             })
