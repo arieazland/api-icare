@@ -581,7 +581,7 @@ Router.post('/listhasil', (req, res) => {
                         message: 'Konsul tidak terdaftar'
                     })
                 } else if(cekkonsul.length > 0) {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
                         if(error){
                             res.status(500).json({
                                 message: 'Get data hasil error'
@@ -660,7 +660,7 @@ Router.post('/listhasilpeserta', (req, res) => {
                             });
                         } else if(cekpeserta.length > 0) {
                             /** get data jawaban peserta berdasarkan acara terpilih */
-                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
+                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
                                 /** get data acara */
                                 Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
                                     if(error){
@@ -669,15 +669,25 @@ Router.post('/listhasilpeserta', (req, res) => {
                                         });
                                     } else if(konsul.length >= 0){
                                         /** get data peserta yg sudah menjawab dan blm ada kesimpulan */
-                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
+                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
                                             if(error){
                                                 res.status(500).json({
                                                     message: "Get data peserta error"
                                                 });
                                             }else if(peserta.length > 0){
-                                                res.status(200).json({
-                                                    results, konsul, peserta, selectkonsul, selectpeserta
-                                                });
+                                                /** get biodata peserta */
+                                                Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ? GROUP BY u.id", [selectkonsul, selectpeserta], async (error, biodata) => {
+                                                    if(error){
+                                                        res.status(500).json({
+                                                            message: "Get biodata peserta error"
+                                                        });
+                                                    } else if(biodata.length > 0) {
+                                                        /** biodata tersedia */
+                                                        res.status(200).json({
+                                                            results, konsul, peserta, selectkonsul, selectpeserta, biodata
+                                                        });
+                                                    }
+                                                })
                                             }else if(peserta.length == 0){
                                                 res.status(403).json({
                                                     message: "Belum ada peserta yang memberikan jawaban"
@@ -732,7 +742,7 @@ Router.post('/listkesimpulan', (req, res) => {
                         message: 'Konsul tidak terdaftar'
                     })
                 } else if(cekkonsul.length > 0) {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
                         if(error){
                             res.status(500).json({
                                 message: 'Get data hasil error'
@@ -811,7 +821,7 @@ Router.post('/listkesimpulanpeserta', (req, res) => {
                             });
                         } else if(cekpeserta.length > 0) {
                             /** get data jawaban peserta berdasarkan acara terpilih */
-                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
+                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
                                 /** get data acara */
                                 Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
                                     if(error){
@@ -820,7 +830,7 @@ Router.post('/listkesimpulanpeserta', (req, res) => {
                                         });
                                     } else if(konsul.length >= 0){
                                         /** get data peserta yg sudah menjawab dan ada kesimpulan */
-                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_aassessment j ON j.id_account = u.id INNER JOIN icare_qassessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
+                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
                                             if(error){
                                                 res.status(500).json({
                                                     message: "Get data peserta error"
@@ -833,9 +843,19 @@ Router.post('/listkesimpulanpeserta', (req, res) => {
                                                             message: "Get data konsul error"
                                                         });
                                                     } else {
-                                                        res.status(200).json({
-                                                            results, konsul, peserta, selectkonsul, selectpeserta, datakesimpulan
-                                                        });
+                                                        /** get biodata peserta */
+                                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ? GROUP BY u.id", [selectkonsul, selectpeserta], async (error, biodata) => {
+                                                            if(error){
+                                                                res.status(500).json({
+                                                                    message: "Get biodata peserta error"
+                                                                });
+                                                            } else if(biodata.length > 0) {
+                                                                /** biodata tersedia */
+                                                                res.status(200).json({
+                                                                    results, konsul, peserta, selectkonsul, selectpeserta, datakesimpulan, biodata
+                                                                });
+                                                            }
+                                                        })
                                                     }
                                                 })
                                             }else if(peserta.length == 0){
