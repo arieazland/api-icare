@@ -737,7 +737,7 @@ Router.post('/skorassessment2', async (req, res) =>{
                 if(partnumber == '1'){
                     /** get skoring part 1 */
                     const part = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT nama, sum(IF(idsoal = '1', jawab, 0)) AS '1', sum(IF(idsoal = '2', jawab, 0)) AS '2', sum(IF(idsoal = '3', jawab, 0)) AS '3', sum(IF(idsoal = '4', jawab, 0)) AS '4', sum(IF(idsoal = '5', jawab, 0)) AS '5', sum(IF(idsoal = '6', jawab, 0)) AS '6', sum(IF(idsoal = '7', jawab, 0)) AS '7', sum(IF(idsoal = '8', jawab, 0)) AS '8', sum(IF(idsoal = '9', jawab, 0)) AS '9', sum(IF(idsoal = '10', jawab, 0)) AS '10', sum(IF(idsoal = '11', jawab, 0)) AS '11', sum(IF(idsoal = '12', jawab, 0)) AS '12', sum(IF(idsoal = '13', jawab, 0)) AS '13', sum(IF(idsoal = '14', jawab, 0)) AS '14', sum(IF(idsoal = '15', jawab, 0)) AS '15', sum(IF(idsoal < 16, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                        Connection.query("SELECT nama, tanggal_lahir, sum(IF(idsoal = '1', jawab, 0)) AS '1', sum(IF(idsoal = '2', jawab, 0)) AS '2', sum(IF(idsoal = '3', jawab, 0)) AS '3', sum(IF(idsoal = '4', jawab, 0)) AS '4', sum(IF(idsoal = '5', jawab, 0)) AS '5', sum(IF(idsoal = '6', jawab, 0)) AS '6', sum(IF(idsoal = '7', jawab, 0)) AS '7', sum(IF(idsoal = '8', jawab, 0)) AS '8', sum(IF(idsoal = '9', jawab, 0)) AS '9', sum(IF(idsoal = '10', jawab, 0)) AS '10', sum(IF(idsoal = '11', jawab, 0)) AS '11', sum(IF(idsoal = '12', jawab, 0)) AS '12', sum(IF(idsoal = '13', jawab, 0)) AS '13', sum(IF(idsoal = '14', jawab, 0)) AS '14', sum(IF(idsoal = '15', jawab, 0)) AS '15', sum(IF(idsoal < 16, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -758,7 +758,7 @@ Router.post('/skorassessment2', async (req, res) =>{
                 } else if(partnumber == '2'){
                     /** get skoring part 2 */
                     const part = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT nama, sum(IF(idsoal = '16', jawab, 0)) AS '1', sum(IF(idsoal = '17', jawab, 0)) AS '2', sum(IF(idsoal = '18', jawab, 0)) AS '3', sum(IF(idsoal = '19', jawab, 0)) AS '4', sum(IF(idsoal = '20', jawab, 0)) AS '5', sum(IF(idsoal = '21', jawab, 0)) AS '6', sum(IF(idsoal = '22', jawab, 0)) AS '7', sum(IF(idsoal = '23', jawab, 0)) AS '8', sum(IF(idsoal = '24', jawab, 0)) AS '9', sum(IF(idsoal = '25', jawab, 0)) AS '10', sum(IF(idsoal = '26', jawab, 0)) AS '11', sum(IF(idsoal = '27', jawab, 0)) AS '12', sum(IF(idsoal = '28', jawab, 0)) AS '13', sum(IF(idsoal = '29', jawab, 0)) AS '14', sum(IF(idsoal = '30', jawab, 0)) AS '15', sum(IF(idsoal = '31', jawab, 0)) AS '16', sum(IF(idsoal = '32', jawab, 0)) AS '17', sum(IF(idsoal = '33', jawab, 0)) AS '18', sum(IF(idsoal = '34', jawab, 0)) AS '19', sum(IF(idsoal = '35', jawab, 0)) AS '20', sum(IF(idsoal < 36 AND idsoal > 15, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                        Connection.query("SELECT nama, tanggal_lahir, sum(IF(idsoal = '16', jawab, 0)) AS '1', sum(IF(idsoal = '17', jawab, 0)) AS '2', sum(IF(idsoal = '18', jawab, 0)) AS '3', sum(IF(idsoal = '19', jawab, 0)) AS '4', sum(IF(idsoal = '20', jawab, 0)) AS '5', sum(IF(idsoal = '21', jawab, 0)) AS '6', sum(IF(idsoal = '22', jawab, 0)) AS '7', sum(IF(idsoal = '23', jawab, 0)) AS '8', sum(IF(idsoal = '24', jawab, 0)) AS '9', sum(IF(idsoal = '25', jawab, 0)) AS '10', sum(IF(idsoal = '26', jawab, 0)) AS '11', sum(IF(idsoal = '27', jawab, 0)) AS '12', sum(IF(idsoal = '28', jawab, 0)) AS '13', sum(IF(idsoal = '29', jawab, 0)) AS '14', sum(IF(idsoal = '30', jawab, 0)) AS '15', sum(IF(idsoal = '31', jawab, 0)) AS '16', sum(IF(idsoal = '32', jawab, 0)) AS '17', sum(IF(idsoal = '33', jawab, 0)) AS '18', sum(IF(idsoal = '34', jawab, 0)) AS '19', sum(IF(idsoal = '35', jawab, 0)) AS '20', sum(IF(idsoal < 36 AND idsoal > 15, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -779,7 +779,7 @@ Router.post('/skorassessment2', async (req, res) =>{
                 } else if(partnumber == '3'){
                     /** get skoring part 3 */
                     const part = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT nama, sum(IF(idsoal = '36', jawab, 0)) AS '1', sum(IF(idsoal = '37', jawab, 0)) AS '2', sum(IF(idsoal = '38', jawab, 0)) AS '3', sum(IF(idsoal = '39', jawab, 0)) AS '4', sum(IF(idsoal = '40', jawab, 0)) AS '5', sum(IF(idsoal = '41', jawab, 0)) AS '6', sum(IF(idsoal = '42', jawab, 0)) AS '7', sum(IF(idsoal = '43', jawab, 0)) AS '8', sum(IF(idsoal = '44', jawab, 0)) AS '9', sum(IF(idsoal = '45', jawab, 0)) AS '10', sum(IF(idsoal = '46', jawab, 0)) AS '11', sum(IF(idsoal = '47', jawab, 0)) AS '12', sum(IF(idsoal = '48', jawab, 0)) AS '13', sum(IF(idsoal = '49', jawab, 0)) AS '14', sum(IF(idsoal > 35 AND idsoal < 50, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                        Connection.query("SELECT nama, tanggal_lahir, sum(IF(idsoal = '36', jawab, 0)) AS '1', sum(IF(idsoal = '37', jawab, 0)) AS '2', sum(IF(idsoal = '38', jawab, 0)) AS '3', sum(IF(idsoal = '39', jawab, 0)) AS '4', sum(IF(idsoal = '40', jawab, 0)) AS '5', sum(IF(idsoal = '41', jawab, 0)) AS '6', sum(IF(idsoal = '42', jawab, 0)) AS '7', sum(IF(idsoal = '43', jawab, 0)) AS '8', sum(IF(idsoal = '44', jawab, 0)) AS '9', sum(IF(idsoal = '45', jawab, 0)) AS '10', sum(IF(idsoal = '46', jawab, 0)) AS '11', sum(IF(idsoal = '47', jawab, 0)) AS '12', sum(IF(idsoal = '48', jawab, 0)) AS '13', sum(IF(idsoal = '49', jawab, 0)) AS '14', sum(IF(idsoal > 35 AND idsoal < 50, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -800,7 +800,7 @@ Router.post('/skorassessment2', async (req, res) =>{
                 } else if(partnumber == '4'){
                     /** get skoring part 4 */
                     const part = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT nama, sum(IF(idsoal = '50', jawab, 0)) AS '1', sum(IF(idsoal = '51', jawab, 0)) AS '2', sum(IF(idsoal = '52', jawab, 0)) AS '3', sum(IF(idsoal = '53', jawab, 0)) AS '4', sum(IF(idsoal = '54', jawab, 0)) AS '5', sum(IF(idsoal = '55', jawab, 0)) AS '6', sum(IF(idsoal = '56', jawab, 0)) AS '7', sum(IF(idsoal = '57', jawab, 0)) AS '8', sum(IF(idsoal = '58', jawab, 0)) AS '9', sum(IF(idsoal = '59', jawab, 0)) AS '10', sum(IF(idsoal = '60', jawab, 0)) AS '11', sum(IF(idsoal = '61', jawab, 0)) AS '12', sum(IF(idsoal = '62', jawab, 0)) AS '13', sum(IF(idsoal = '63', jawab, 0)) AS '14', sum(IF(idsoal = '64', jawab, 0)) AS '15', sum(IF(idsoal = '65', jawab, 0)) AS '16', sum(IF(idsoal = '66', jawab, 0)) AS '17', sum(IF(idsoal = '67', jawab, 0)) AS '18', sum(IF(idsoal = '68', jawab, 0)) AS '19', sum(IF(idsoal = '69', jawab, 0)) AS '20', sum(IF(idsoal < 70 AND idsoal > 49, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                        Connection.query("SELECT nama, tanggal_lahir, sum(IF(idsoal = '50', jawab, 0)) AS '1', sum(IF(idsoal = '51', jawab, 0)) AS '2', sum(IF(idsoal = '52', jawab, 0)) AS '3', sum(IF(idsoal = '53', jawab, 0)) AS '4', sum(IF(idsoal = '54', jawab, 0)) AS '5', sum(IF(idsoal = '55', jawab, 0)) AS '6', sum(IF(idsoal = '56', jawab, 0)) AS '7', sum(IF(idsoal = '57', jawab, 0)) AS '8', sum(IF(idsoal = '58', jawab, 0)) AS '9', sum(IF(idsoal = '59', jawab, 0)) AS '10', sum(IF(idsoal = '60', jawab, 0)) AS '11', sum(IF(idsoal = '61', jawab, 0)) AS '12', sum(IF(idsoal = '62', jawab, 0)) AS '13', sum(IF(idsoal = '63', jawab, 0)) AS '14', sum(IF(idsoal = '64', jawab, 0)) AS '15', sum(IF(idsoal = '65', jawab, 0)) AS '16', sum(IF(idsoal = '66', jawab, 0)) AS '17', sum(IF(idsoal = '67', jawab, 0)) AS '18', sum(IF(idsoal = '68', jawab, 0)) AS '19', sum(IF(idsoal = '69', jawab, 0)) AS '20', sum(IF(idsoal < 70 AND idsoal > 49, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -821,7 +821,7 @@ Router.post('/skorassessment2', async (req, res) =>{
                 } else if(partnumber == '5'){
                     /** get skoring part 5 */
                     const part = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT nama, sum(IF(idsoal = '70', jawab, 0)) AS '1', sum(IF(idsoal = '71', jawab, 0)) AS '2', sum(IF(idsoal = '72', jawab, 0)) AS '3', sum(IF(idsoal = '73', jawab, 0)) AS '4', sum(IF(idsoal = '74', jawab, 0)) AS '5', sum(IF(idsoal = '75', jawab, 0)) AS '6', sum(IF(idsoal = '76', jawab, 0)) AS '7', sum(IF(idsoal = '77', jawab, 0)) AS '8', sum(IF(idsoal = '78', jawab, 0)) AS '9', sum(IF(idsoal = '79', jawab, 0)) AS '10', sum(IF(idsoal = '80', jawab, 0)) AS '11', sum(IF(idsoal = '81', jawab, 0)) AS '12', sum(IF(idsoal = '82', jawab, 0)) AS '13', sum(IF(idsoal = '83', jawab, 0)) AS '14', sum(IF(idsoal = '84', jawab, 0)) AS '15', sum(IF(idsoal = '85', jawab, 0)) AS '16', sum(IF(idsoal = '86', jawab, 0)) AS '17', sum(IF(idsoal = '87', jawab, 0)) AS '18', sum(IF(idsoal = '88', jawab, 0)) AS '19', sum(IF(idsoal = '89', jawab, 0)) AS '20', sum(IF(idsoal = '90', jawab, 0)) AS '21', sum(IF(idsoal = '91', jawab, 0)) AS '22', sum(IF(idsoal = '92', jawab, 0)) AS '23', sum(IF(idsoal = '93', jawab, 0)) AS '24', sum(IF(idsoal = '94', jawab, 0)) AS '25', sum(IF(idsoal = '95', jawab, 0)) AS '26', sum(IF(idsoal = '96', jawab, 0)) AS '27', sum(IF(idsoal = '97', jawab, 0)) AS '28', sum(IF(idsoal = '98', jawab, 0)) AS '29', sum(IF(idsoal = '99', jawab, 0)) AS '30', sum(IF(idsoal = '100', jawab, 0)) AS '31', sum(IF(idsoal = '101', jawab, 0)) AS '32', sum(IF(idsoal = '102', jawab, 0)) AS '33', sum(IF(idsoal = '103', jawab, 0)) AS '34', sum(IF(idsoal = '104', jawab, 0)) AS '35', sum(IF(idsoal = '105', jawab, 0)) AS '36', sum(IF(idsoal > 69, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                        Connection.query("SELECT nama, tanggal_lahir, sum(IF(idsoal = '70', jawab, 0)) AS '1', sum(IF(idsoal = '71', jawab, 0)) AS '2', sum(IF(idsoal = '72', jawab, 0)) AS '3', sum(IF(idsoal = '73', jawab, 0)) AS '4', sum(IF(idsoal = '74', jawab, 0)) AS '5', sum(IF(idsoal = '75', jawab, 0)) AS '6', sum(IF(idsoal = '76', jawab, 0)) AS '7', sum(IF(idsoal = '77', jawab, 0)) AS '8', sum(IF(idsoal = '78', jawab, 0)) AS '9', sum(IF(idsoal = '79', jawab, 0)) AS '10', sum(IF(idsoal = '80', jawab, 0)) AS '11', sum(IF(idsoal = '81', jawab, 0)) AS '12', sum(IF(idsoal = '82', jawab, 0)) AS '13', sum(IF(idsoal = '83', jawab, 0)) AS '14', sum(IF(idsoal = '84', jawab, 0)) AS '15', sum(IF(idsoal = '85', jawab, 0)) AS '16', sum(IF(idsoal = '86', jawab, 0)) AS '17', sum(IF(idsoal = '87', jawab, 0)) AS '18', sum(IF(idsoal = '88', jawab, 0)) AS '19', sum(IF(idsoal = '89', jawab, 0)) AS '20', sum(IF(idsoal = '90', jawab, 0)) AS '21', sum(IF(idsoal = '91', jawab, 0)) AS '22', sum(IF(idsoal = '92', jawab, 0)) AS '23', sum(IF(idsoal = '93', jawab, 0)) AS '24', sum(IF(idsoal = '94', jawab, 0)) AS '25', sum(IF(idsoal = '95', jawab, 0)) AS '26', sum(IF(idsoal = '96', jawab, 0)) AS '27', sum(IF(idsoal = '97', jawab, 0)) AS '28', sum(IF(idsoal = '98', jawab, 0)) AS '29', sum(IF(idsoal = '99', jawab, 0)) AS '30', sum(IF(idsoal = '100', jawab, 0)) AS '31', sum(IF(idsoal = '101', jawab, 0)) AS '32', sum(IF(idsoal = '102', jawab, 0)) AS '33', sum(IF(idsoal = '103', jawab, 0)) AS '34', sum(IF(idsoal = '104', jawab, 0)) AS '35', sum(IF(idsoal = '105', jawab, 0)) AS '36', sum(IF(idsoal > 69, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -858,6 +858,543 @@ Router.post('/skorassessment2', async (req, res) =>{
         /** Kirim error */
         res.status(400).json({
             message: "Field tidak boleh kosong"
+        })
+    }
+})
+
+/** Route for hasil assessment kepribadian */
+Router.post('/hasilassessmentkepribadian', (req, res) =>{
+    try{
+        const {selectkonsul} = req.body;
+
+        if(selectkonsul){
+            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND id = ?", [selectkonsul], async (error, acaraterpilih) => {
+                if(error){
+                    /** send error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(acaraterpilih.length > 0) {
+                    /** get data mahasiswa */
+                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif') AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                        if(error) {
+                            /** send error */
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else if(resultcekpeserta.length > 0){
+                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) =>{
+                                if(error) {
+                                    /** send error */
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else if(datakonsul.length >= 0) {
+                                    /** send data */
+                                    res.status(200).json({
+                                        resultcekpeserta,
+                                        datakonsul,
+                                        selectkonsul
+                                    })
+                                } else {
+                                    /** send error */
+                                    res.status(403).json({
+                                        message: 'Error, please contact developer'
+                                    })
+                                }
+                            })
+                        } else if(resultcekpeserta.length == 0) {
+                            /** send error */
+                            res.status(403).json({
+                                message: 'Belum ada peserta yang memberikan jawaban'
+                            })
+                        } else {
+                            /** send error */
+                            res.status(403).json({
+                                message: 'Error, please contact developer'
+                            })
+                        }
+                    })
+                } else if(acaraterpilih.length == 0) {
+                    /** send error */
+                    res.status(403).json({
+                        message: 'Acara tidak terdaftar'
+                    })
+                } else {
+                    /** send error */
+                    res.status(403).json({
+                        message: 'Error, please contact developer'
+                    })
+                }
+            })
+        } else {
+            /** Kirim error */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            })
+        }
+    } catch(error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
+        })
+    }
+})
+
+/** Route for hasil assessment */
+Router.post('/hasilassessmentkepribadianpeserta', (req, res) =>{
+    try{
+        const {selectkonsul, selectpeserta} = req.body;
+
+        if(selectkonsul && selectpeserta) {
+            /** cek acara -> cek mahasiswa -> get result hasil assessment mahasiswa per part  */
+            Connection.query('SELECT id FROM icare_consult_type WHERE id = ?',[selectkonsul], async (error, cekkonsul) => {
+                if(error) {
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(cekkonsul.length == 0) {
+                    /** Acara tidak terdaftar */
+                    res.status(403).json({
+                        message: "Acara tidak terdaftar"
+                    })
+                } else if(cekkonsul.length > 0) {
+                    /** cek mahasiswa */
+                    Connection.query('SELECT id FROM icare_account WHERE id = ?', [selectpeserta], async (error, cekpeserta) => {
+                        if(error) {
+                            /** Kirim error */
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else if(cekpeserta.length == 0) {
+                            /** Acara tidak terdaftar */
+                            res.status(403).json({
+                                message: "Mahasiswa tidak terdaftar"
+                            })
+                        } else if(cekpeserta.length > 0) {
+                            /** get data hasil assessment mahasiswa part1 */
+                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part1) => {
+                                if(error) {
+                                    /** Kirim error */
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else if(part1.length >= 0) {
+                                    /** get data hasil assessment mahasiswa part2 */
+                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part2) => {
+                                        if(error) {
+                                            /** Kirim error */
+                                            res.status(500).json({
+                                                message: error
+                                            })
+                                        } else if(part2.length >= 0) {
+                                            /** get data hasil assessment mahasiswa part3 */
+                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part3) => {
+                                                if(error) {
+                                                    /** Kirim error */
+                                                    res.status(500).json({
+                                                        message: error
+                                                    })
+                                                } else if(part3.length >= 0) {
+                                                    /** get data hasil assessment mahasiswa part4 */
+                                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part4) => {
+                                                        if(error){
+                                                            /** Kirim error */
+                                                            res.status(500).json({
+                                                                message: error
+                                                            })
+                                                        } else if(part4.length >= 0) {
+                                                            /** get data hasil assessment mahasiswa part5 */
+                                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part5) => {
+                                                                if(error){
+                                                                    /** Kirim error */
+                                                                    res.status(500).json({
+                                                                        message: error
+                                                                    })
+                                                                } else if(part5.length >= 0){
+                                                                    /** get data acara */
+                                                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) => {
+                                                                        if(error) {
+                                                                            /** Kirim error */
+                                                                            res.status(500).json({
+                                                                                message: error
+                                                                            })
+                                                                        } else if(datakonsul.length >= 0) {
+                                                                            /** get data mahasiswa yang sudah menjawab */
+                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif') AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                                                                                if(error) {
+                                                                                    /** Kirim error */
+                                                                                    res.status(500).json({
+                                                                                        message: error
+                                                                                    })
+                                                                                } else if(resultcekpeserta.length >= 0) {
+                                                                                    Connection.query("SELECT m.id AS idpeserta, m.nama AS nama, m.jenis_kelamin AS jenis_kelamin ,m.phone AS nomor_kontak, m.tanggal_lahir AS tanggal_lahir, m.tempat_lahir AS tempat_lahir, m.pendidikan AS pendidikan, m.universitas AS universitas, m.jurusan AS jurusan FROM icare_account m WHERE m.id = ? AND m.account_type = 'peserta_event' ORDER BY m.nama ASC", [selectpeserta], async (error, biodatapeserta) => {
+                                                                                        if(error) {
+                                                                                            /** Kirim error */
+                                                                                            res.status(500).json({
+                                                                                                message: error
+                                                                                            })
+                                                                                        } else if(biodatapeserta.length >= 0) {
+                                                                                            /** kirim data */
+                                                                                            res.status(200).json({
+                                                                                                part1, part2, part3, part4, part5,
+                                                                                                selectkonsul, selectpeserta, datakonsul, resultcekpeserta, biodatapeserta,
+                                                                                            })
+                                                                                        } else {
+                                                                                            /** Kirim error */
+                                                                                            res.status(403).json({
+                                                                                                message: "Error, please contact developer"
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                                } else {
+                                                                                    /** Kirim error */
+                                                                                    res.status(403).json({
+                                                                                        message: "Error, please contact developer"
+                                                                                    })
+                                                                                }
+                                                                            })
+                                                                        } else {
+                                                                            /** Kirim error */
+                                                                            res.status(403).json({
+                                                                                message: "Error, please contact developer"
+                                                                            })   
+                                                                        }
+                                                                    })
+                                                                } else {
+                                                                    /** Kirim error */
+                                                                    res.status(403).json({
+                                                                        message: "Error, please contact developer"
+                                                                    })
+                                                                }
+                                                            })
+                                                        } else {
+                                                            /** Kirim error */
+                                                            res.status(403).json({
+                                                                message: "Error, please contact developer"
+                                                            })
+                                                        }
+                                                    })
+                                                } else {
+                                                    /** Kirim error */
+                                                    res.status(403).json({
+                                                        message: "Error, please contact developer"
+                                                    })
+                                                }
+                                            })
+                                        } else {
+                                            /** Kirim error */
+                                            res.status(403).json({
+                                                message: "Error, please contact developer"
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    /** Kirim error */
+                                    res.status(403).json({
+                                        message: "Error, please contact developer"
+                                    })
+                                }
+                            })
+                        } else {
+                            /** Kirim error */
+                            res.status(403).json({
+                                message: "Error, please contact developer"
+                            })
+                        }
+                    })
+                } else {
+                    /** Kirim error */
+                    res.status(403).json({
+                        message: "Error, please contact developer"
+                    })
+                }
+            })
+        } else {
+            /** Kirim error */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            })
+        }
+    } catch(error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
+        })
+    }
+})
+
+/** Route for kesimpulan assessment kepribadian */
+Router.post('/kesimpulanassessmentkepribadian', (req, res) =>{
+    try{
+        const {selectkonsul} = req.body;
+
+        if(selectkonsul){
+            Connection.query("SELECT id FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, konsulterpilih) => {
+                if(error){
+                    /** send error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(konsulterpilih.length > 0) {
+                    /** get data peserta */
+                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus') AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                        if(error) {
+                            /** send error */
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else if(resultcekpeserta.length > 0){
+                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) =>{
+                                if(error) {
+                                    /** send error */
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else if(datakonsul.length >= 0) {
+                                    /** send data */
+                                    res.status(200).json({
+                                        resultcekpeserta,
+                                        datakonsul,
+                                        selectkonsul
+                                    })
+                                } else {
+                                    /** send error */
+                                    res.status(403).json({
+                                        message: 'Error, please contact developer'
+                                    })
+                                }
+                            })
+                        } else if(resultcekpeserta.length == 0) {
+                            /** send error */
+                            res.status(403).json({
+                                message: 'Belum ada peserta yang diberikan kesimpulan'
+                            })
+                        } else {
+                            /** send error */
+                            res.status(403).json({
+                                message: 'Error, please contact developer'
+                            })
+                        }
+                    })
+                } else if(konsulterpilih.length == 0) {
+                    /** send error */
+                    res.status(403).json({
+                        message: 'Tipe konsultasi tidak terdaftar'
+                    })
+                } else {
+                    /** send error */
+                    res.status(403).json({
+                        message: 'Error, please contact developer'
+                    })
+                }
+            })
+        } else {
+            /** Kirim error */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            })
+        }
+    } catch(error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
+        })
+    }
+})
+
+/** Route for kesimpulan assessment kepribadian peserta */
+Router.post('/kesimpulanassessmentkepribadianpeserta', (req, res) =>{
+    try{
+        const {selectkonsul, selectpeserta} = req.body;
+
+        if(selectkonsul && selectpeserta) {
+            /** cek acara */
+            Connection.query('SELECT id FROM icare_consult_type WHERE id = ?',[selectkonsul], async (error, cekkonsul) => {
+                if(error) {
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(cekkonsul.length == 0) {
+                    /** Acara tidak terdaftar */
+                    res.status(403).json({
+                        message: "Acara tidak terdaftar"
+                    })
+                } else if(cekkonsul.length > 0) {
+                    /** cek mahasiswa */
+                    Connection.query('SELECT id FROM icare_account WHERE id = ?', [selectpeserta], async (error, cekpeserta) => {
+                        if(error) {
+                            /** Kirim error */
+                            res.status(500).json({
+                                message: error
+                            })
+                        } else if(cekpeserta.length == 0) {
+                            /** Acara tidak terdaftar */
+                            res.status(403).json({
+                                message: "Peserta tidak terdaftar"
+                            })
+                        } else if(cekpeserta.length > 0) {
+                            /** get data hasil assessment mahasiswa part1 */
+                            /** SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek */
+                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part1) => {
+                                if(error) {
+                                    /** Kirim error */
+                                    res.status(500).json({
+                                        message: error
+                                    })
+                                } else if(part1.length >= 0) {
+                                    /** get data hasil assessment mahasiswa part2 */
+                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part2) => {
+                                        if(error) {
+                                            /** Kirim error */
+                                            res.status(500).json({
+                                                message: error
+                                            })
+                                        } else if(part2.length >= 0) {
+                                            /** get data hasil assessment mahasiswa part3 */
+                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part3) => {
+                                                if(error) {
+                                                    /** Kirim error */
+                                                    res.status(500).json({
+                                                        message: error
+                                                    })
+                                                } else if(part3.length >= 0) {
+                                                    /** get data hasil assessment mahasiswa part4 */
+                                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part4) => {
+                                                        if(error){
+                                                            /** Kirim error */
+                                                            res.status(500).json({
+                                                                message: error
+                                                            })
+                                                        } else if(part4.length >= 0) {
+                                                            /** get data hasil assessment mahasiswa part5 */
+                                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part5) => {
+                                                                if(error){
+                                                                    /** Kirim error */
+                                                                    res.status(500).json({
+                                                                        message: error
+                                                                    })
+                                                                } else if(part5.length >= 0){
+                                                                    /** get data acara */
+                                                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) => {
+                                                                        if(error) {
+                                                                            /** Kirim error */
+                                                                            res.status(500).json({
+                                                                                message: error
+                                                                            })
+                                                                        } else if(datakonsul.length >= 0) {
+                                                                            /** get data mahasiswa yang sudah menjawab */
+                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus') AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                                                                                if(error) {
+                                                                                    /** Kirim error */
+                                                                                    res.status(500).json({
+                                                                                        message: error
+                                                                                    })
+                                                                                } else if(resultcekpeserta.length >= 0) {
+                                                                                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u WHERE u.id = ? AND u.account_type = 'peserta_event' ORDER BY u.nama ASC", [selectpeserta], async (error, datapeserta) => {
+                                                                                        if(error) {
+                                                                                            /** Kirim error */
+                                                                                            res.status(500).json({
+                                                                                                message: error
+                                                                                            })
+                                                                                        } else if(datapeserta.length >= 0) {
+                                                                                            /** Ambil data kesimpulan */
+                                                                                            Connection.query("SELECT u.id AS idpsikolog, u.nama AS namapsikolog, k.id AS idkesimpulan, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account u ON u.id = k.verified_by WHERE k.id_consult_type = ? AND k.id_account = ? AND NOT k.status = 'hapus'", [selectkonsul, selectpeserta], async (error, datakesimpulan) => {
+                                                                                                if(error) {
+                                                                                                    /** Kirim error */
+                                                                                                    res.status(500).json({
+                                                                                                        message: error
+                                                                                                    })
+                                                                                                } else {
+                                                                                                    /** kirim data */
+                                                                                                    res.status(200).json({
+                                                                                                        part1, part2, part3, part4, part5,
+                                                                                                        selectkonsul, selectpeserta, datakonsul, resultcekpeserta, datapeserta, datakesimpulan
+                                                                                                    })
+                                                                                                }
+                                                                                            })
+                                                                                        } else {
+                                                                                            /** Kirim error */
+                                                                                            res.status(403).json({
+                                                                                                message: "Error, please contact developer"
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                                } else {
+                                                                                    /** Kirim error */
+                                                                                    res.status(403).json({
+                                                                                        message: "Error, please contact developer"
+                                                                                    })
+                                                                                }
+                                                                            })
+                                                                        } else {
+                                                                            /** Kirim error */
+                                                                            res.status(403).json({
+                                                                                message: "Error, please contact developer"
+                                                                            })   
+                                                                        }
+                                                                    })
+                                                                } else {
+                                                                    /** Kirim error */
+                                                                    res.status(403).json({
+                                                                        message: "Error, please contact developer"
+                                                                    })
+                                                                }
+                                                            })
+                                                        } else {
+                                                            /** Kirim error */
+                                                            res.status(403).json({
+                                                                message: "Error, please contact developer"
+                                                            })
+                                                        }
+                                                    })
+                                                } else {
+                                                    /** Kirim error */
+                                                    res.status(403).json({
+                                                        message: "Error, please contact developer"
+                                                    })
+                                                }
+                                            })
+                                        } else {
+                                            /** Kirim error */
+                                            res.status(403).json({
+                                                message: "Error, please contact developer"
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    /** Kirim error */
+                                    res.status(403).json({
+                                        message: "Error, please contact developer"
+                                    })
+                                }
+                            })
+                        } else {
+                            /** Kirim error */
+                            res.status(403).json({
+                                message: "Error, please contact developer"
+                            })
+                        }
+                    })
+                } else {
+                    /** Kirim error */
+                    res.status(403).json({
+                        message: "Error, please contact developer"
+                    })
+                }
+            })
+        } else {
+            /** Kirim error */
+            res.status(500).json({
+                message: "Field tidak boleh kosong"
+            })
+        }
+    } catch(error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
         })
     }
 })
