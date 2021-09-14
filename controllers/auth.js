@@ -112,11 +112,11 @@ exports.registerAdmin = (req, res) => {
 
 /** Register Peserta Process */
 exports.registerPeserta = async (req, res) => {
-    const { nama, email, password, password2, jenis_kelamin, nomor_kontak, tempat_lahir, tanggal_lahir, pendidikan, universitas, jurusan } = req.body;
+    const { username, nama, email, password, password2, jenis_kelamin, nomor_kontak, tempat_lahir, tanggal_lahir, pendidikan, universitas, jurusan } = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
 
-    if(nama && email && password && password2 && jenis_kelamin && nomor_kontak && tempat_lahir && tanggal_lahir && pendidikan && universitas && jurusan){
+    if(username && nama && email && password && password2 && jenis_kelamin && nomor_kontak && tempat_lahir && tanggal_lahir && pendidikan && universitas && jurusan){
         try{
             /** cek email */
             const cek_email = await new Promise((resolve, reject) => {
@@ -139,8 +139,7 @@ exports.registerPeserta = async (req, res) => {
 
                     /** insert data ke database */
                     const insert_data_peserta = await new Promise((resolve, reject) => {
-                        Connection.query("INSERT INTO icare_account SET ?", {id: null, email: email, nama: nama, 
-                            password: hashedPassword, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
+                        Connection.query("INSERT INTO icare_account SET ?", {id: null, email: email, nama: nama, username: username,password: hashedPassword, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
                             if(error){
                                 reject(error)
                             } else {

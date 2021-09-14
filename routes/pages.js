@@ -359,6 +359,510 @@ Router.post('/listpart', (req, res) => {
     }
 })
 
+/** start of sapa konsep */
+/** list pertanyaan SAPA */
+Router.post('/listpertanyaan2', async (req, res) =>{
+    const { selectkonsul, idu } = req.body;
+    if(selectkonsul, idu){
+        try{
+            /** cek apakah user sudah ada jawaban di part 1 */
+            const cek_part1 = await new Promise((resolve, reject) => {
+                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 1 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban1) => {
+                    if(error) { 
+                        /** jika error */
+                        reject(error);
+                    } else {
+                        /** jika results */
+                        resolve(cek_jawaban1);
+                    }
+                });
+            });
+
+            if(cek_part1.length === 0){
+                /** jika tidak ada jawaban di part 1, tampil pertanyaan part 1 */
+                const pertanyaan_part1 = await new Promise((resolve, reject) => {
+                    Connection.query('SELECT t_soal.id AS idsoal, t_soal.soal AS soal, t_soal.tipe AS tipe, t_soal.skormax AS skormax FROM t_soal INNER JOIN t_part ON t_soal.idpart = t_part.id INNER JOIN t_aspek ON t_soal.idaspek = t_aspek.id WHERE t_part.id = 1 ORDER BY t_soal.id ASC', async (error, resultspart1) => {
+                        if(error) { 
+                            /** jika error */
+                            reject(error);
+                        } else {
+                            /** jika results */
+                            resolve(resultspart1);
+                        }
+                    })
+                })
+
+                if(pertanyaan_part1.length >= 0){
+                    /** jika tidak error, get data acara */
+                    const datakonsul = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(results);
+                            }
+                        })
+                    })
+                    if(datakonsul.length >= 0){
+                        /** kirim data */
+                        res.status(201).json({ pertanyaan_part1, selectkonsul, datakonsul, partpertanyaan : "1" });
+                    } else {
+                        /** jika error lainnya */
+                        throw new Error('Error, please contact developer');
+                    }
+                } else {
+                    /** jika error lainnya */
+                    throw new Error('Error, please contact developer');
+                }
+            } else if(cek_part1.length > 0){
+                /** jika user sudah menjawab part 1 pada acara terpilih, cek jawaban di part 2 */
+                const cek_part2 = await new Promise((resolve, reject) => {
+                    Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 2 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id', [idu, selectkonsul] , (error, cek_jawaban2) => {
+                        if(error) { 
+                            /** jika error */
+                            reject(error);
+                        } else {
+                            /** jika results */
+                            resolve(cek_jawaban2);
+                        }
+                    });
+                });
+                
+                if(cek_part2.length === 0){
+                    /** jika tidak ada jawaban di part 2, tampil pertanyaan part 2 */
+                    const pertanyaan_part2 = await new Promise((resolve, reject) => {
+                        Connection.query('SELECT t_soal.id AS idsoal, t_soal.soal AS soal, t_soal.tipe AS tipe, t_soal.skormax AS skormax FROM t_soal INNER JOIN t_part ON t_soal.idpart = t_part.id INNER JOIN t_aspek ON t_soal.idaspek = t_aspek.id WHERE t_part.id = 2 ORDER BY t_soal.id ASC', async (error, resultspart2) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(resultspart2);
+                            }
+                        })
+                    })
+    
+                    if(pertanyaan_part2.length >= 0){
+                        /** jika tidak error, get data acara */
+                        const datakonsul = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                                if(error) { 
+                                    /** jika error */
+                                    reject(error);
+                                } else {
+                                    /** jika results */
+                                    resolve(results);
+                                }
+                            })
+                        })
+                        if(datakonsul.length >= 0){
+                            /** kirim data */
+                            res.status(201).json({ pertanyaan_part2, selectkonsul, datakonsul, partpertanyaan : "2" });
+                        } else {
+                            /** jika error lainnya */
+                            throw new Error('Error, please contact developer');
+                        }
+                    } else {
+                        /** jika error lainnya */
+                        throw new Error('Error, please contact developer');
+                    }
+                } else if(cek_part2.length > 0){
+                    /** jika user sudah menjawab part 2 pada acara terpilih, cek jawaban di part 3 */
+                    const cek_part3 = await new Promise((resolve, reject) => {
+                        Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 3 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban3) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(cek_jawaban3);
+                            }
+                        });
+                    });
+                    
+                    if(cek_part3.length === 0){
+                        /** jika tidak ada jawaban di part 3, tampil pertanyaan part 3 */
+                        const pertanyaan_part3 = await new Promise((resolve, reject) => {
+                            Connection.query('SELECT t_soal.id AS idsoal, t_soal.soal AS soal, t_soal.tipe AS tipe, t_soal.skormax AS skormax FROM t_soal INNER JOIN t_part ON t_soal.idpart = t_part.id INNER JOIN t_aspek ON t_soal.idaspek = t_aspek.id WHERE t_part.id = 3 ORDER BY t_soal.id ASC', async (error, resultspart3) => {
+                                if(error) { 
+                                    /** jika error */
+                                    reject(error);
+                                } else {
+                                    /** jika results */
+                                    resolve(resultspart3);
+                                }
+                            })
+                        })
+        
+                        if(pertanyaan_part3.length >= 0){
+                            /** jika tidak error, get data acara */
+                            const datakonsul = await new Promise((resolve, reject) => {
+                                Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                                    if(error) { 
+                                        /** jika error */
+                                        reject(error);
+                                    } else {
+                                        /** jika results */
+                                        resolve(results);
+                                    }
+                                })
+                            })
+                            if(datakonsul.length >= 0){
+                                /** kirim data */
+                                res.status(201).json({ pertanyaan_part3, selectkonsul, datakonsul, partpertanyaan : "3" });
+                            } else {
+                                /** jika error lainnya */
+                                throw new Error('Error, please contact developer');
+                            }
+                        } else {
+                            /** jika error lainnya */
+                            throw new Error('Error, please contact developer');
+                        }
+                    } else if(cek_part3.length > 0){
+                        /** jika user sudah menjawab part 3 pada acara terpilih, cek jawaban di part 4 */
+                        const cek_part4 = await new Promise((resolve, reject) => {
+                            Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 4 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban4) => {
+                                if(error) { 
+                                    /** jika error */
+                                    reject(error);
+                                } else {
+                                    /** jika results */
+                                    resolve(cek_jawaban4);
+                                }
+                            });
+                        });
+
+                        if(cek_part4.length === 0) {
+                            /** jika tidak ada jawaban di part 4, tampil pertanyaan part 4 */
+                            const pertanyaan_part4 = await new Promise((resolve, reject) => {
+                                Connection.query('SELECT t_soal.id AS idsoal, t_soal.soal AS soal, t_soal.tipe AS tipe, t_soal.skormax AS skormax FROM t_soal INNER JOIN t_part ON t_soal.idpart = t_part.id INNER JOIN t_aspek ON t_soal.idaspek = t_aspek.id WHERE t_part.id = 4 ORDER BY t_soal.id ASC', async (error, resultspart4) => {
+                                    if(error) { 
+                                        /** jika error */
+                                        reject(error);
+                                    } else {
+                                        /** jika results */
+                                        resolve(resultspart4);
+                                    }
+                                })
+                            })
+            
+                            if(pertanyaan_part4.length >= 0){
+                                /** jika tidak error, get data acara */
+                                const datakonsul = await new Promise((resolve, reject) => {
+                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                                        if(error) { 
+                                            /** jika error */
+                                            reject(error);
+                                        } else {
+                                            /** jika results */
+                                            resolve(results);
+                                        }
+                                    })
+                                })
+                                if(datakonsul.length >= 0){
+                                    /** kirim data */
+                                    res.status(201).json({ pertanyaan_part4, selectkonsul, datakonsul, partpertanyaan : "4" });
+                                } else {
+                                    /** jika error lainnya */
+                                    throw new Error('Error, please contact developer');
+                                }
+                            } else {
+                                /** jika error lainnya */
+                                throw new Error('Error, please contact developer');
+                            }
+                        } else if(cek_part4.length > 0) {
+                            /** jika user sudah menjawab part 4 pada acara terpilih, cek jawaban di part 5 */
+                            const cek_part5 = await new Promise((resolve, reject) => {
+                                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 5 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban5) => {
+                                    if(error) { 
+                                        /** jika error */
+                                        reject(error);
+                                    } else {
+                                        /** jika results */
+                                        resolve(cek_jawaban5);
+                                    }
+                                });
+                            });
+
+                            if(cek_part5.length === 0) {
+                                /** jika tidak ada jawaban di part 5, tampil pertanyaan part 5 */
+                                const pertanyaan_part5 = await new Promise((resolve, reject) => {
+                                    Connection.query('SELECT t_soal.id AS idsoal, t_soal.soal AS soal, t_soal.tipe AS tipe, t_soal.skormax AS skormax FROM t_soal INNER JOIN t_part ON t_soal.idpart = t_part.id INNER JOIN t_aspek ON t_soal.idaspek = t_aspek.id WHERE t_part.id = 5 ORDER BY t_soal.id ASC', async (error, resultspart5) => {
+                                        if(error) { 
+                                            /** jika error */
+                                            reject(error);
+                                        } else {
+                                            /** jika results */
+                                            resolve(resultspart5);
+                                        }
+                                    })
+                                })
+                
+                                if(pertanyaan_part5.length >= 0){
+                                    /** jika tidak error, get data acara */
+                                    const datakonsul = await new Promise((resolve, reject) => {
+                                        Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                                            if(error) { 
+                                                /** jika error */
+                                                reject(error);
+                                            } else {
+                                                /** jika results */
+                                                resolve(results);
+                                            }
+                                        })
+                                    })
+                                    if(datakonsul.length >= 0){
+                                        /** kirim data */
+                                        res.status(201).json({ pertanyaan_part5, selectkonsul, datakonsul, partpertanyaan : "5" });
+                                    } else {
+                                        /** jika error lainnya */
+                                        throw new Error('Error, please contact developer');
+                                    }
+                                } else {
+                                    /** jika error lainnya */
+                                    throw new Error('Error, please contact developer');
+                                }
+                            } else if(cek_part5.length > 0) {
+                                /** jika user sudah menjawab part 5 pada acara terpilih, kirim notif test selesai */
+                                const datakonsul = await new Promise((resolve, reject) => {
+                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
+                                        if(error) { 
+                                            /** jika error */
+                                            reject(error);
+                                        } else {
+                                            /** jika results */
+                                            resolve(results);
+                                        }
+                                    })
+                                })
+                                if(datakonsul.length >= 0){
+                                    /** kirim data */
+                                    res.status(201).json({ message: 'Assessment selesai, silahkan logout. Terima kasih', selectkonsul, datakonsul });
+                                } else {
+                                    /** jika error lainnya */
+                                    throw new Error('Error, please contact developer');
+                                }
+                            } else {
+                                /** jika error lainnya */
+                                throw new Error('Error, please contact developer');
+                            }
+
+                        } else {
+                            /** jika error lainnya */
+                            throw new Error('Error, please contact developer');
+                        }
+                    } else {
+                        /** jika error lainnya */
+                        throw new Error('Error, please contact developer');
+                    }
+                } else {
+                    /** jika error lainnya */
+                    throw new Error('Error, please contact developer');
+                }
+
+            } else {
+                /** jika error lainnya */
+                throw new Error('Error, please contact developer');
+            }
+
+        } catch(e) {
+            res.status(400).json({ message: e.message });    
+        }
+    } else {
+        res.status(400).json({ message: 'Field tidak boleh kosong' });
+    }
+})
+
+/** list part SAPA */
+Router.get('/skoringpart', async (req, res) => {
+    try{
+        /** get data part */
+        const getpart = await new Promise((resolve, reject) => {
+            Connection.query("SELECT id, nama FROM t_part WHERE status = 'aktif' ", (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+
+        if(getpart.length >= 0){
+            /** send data */
+            res.status(201).json({
+                getpart
+            });
+        } else {
+            throw new Error('Error get data part');
+        }
+    }catch (e) {
+        /** kirim error */
+        res.status(400).json({ message: e.message });
+    }
+})
+
+/** skoring assessment */
+Router.post('/skorassessment2', async (req, res) =>{
+    const {selectpart} = req.body;
+
+    if(selectpart) {
+        try{
+            /** cek part */
+            const cek_part = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM t_part WHERE id = ?", [selectpart], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+
+            const getpart = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id, nama FROM t_part WHERE status = 'aktif' ", (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+
+            if(cek_part.length > 0 && getpart.length >= 0){
+                var partnumber = cek_part[0].id;
+                /** part terdaftar */
+                /** get data skoring */
+                if(partnumber == '1'){
+                    /** get skoring part 1 */
+                    const part = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT nama, sum(IF(idsoal = '1', jawab, 0)) AS '1', sum(IF(idsoal = '2', jawab, 0)) AS '2', sum(IF(idsoal = '3', jawab, 0)) AS '3', sum(IF(idsoal = '4', jawab, 0)) AS '4', sum(IF(idsoal = '5', jawab, 0)) AS '5', sum(IF(idsoal = '6', jawab, 0)) AS '6', sum(IF(idsoal = '7', jawab, 0)) AS '7', sum(IF(idsoal = '8', jawab, 0)) AS '8', sum(IF(idsoal = '9', jawab, 0)) AS '9', sum(IF(idsoal = '10', jawab, 0)) AS '10', sum(IF(idsoal = '11', jawab, 0)) AS '11', sum(IF(idsoal = '12', jawab, 0)) AS '12', sum(IF(idsoal = '13', jawab, 0)) AS '13', sum(IF(idsoal = '14', jawab, 0)) AS '14', sum(IF(idsoal = '15', jawab, 0)) AS '15', sum(IF(idsoal < 16, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+
+                    if(part.length >= 0) {
+                        /** send data */
+                        res.status(200).json({
+                            part, selectpart, getpart
+                        })
+                    } else {
+                        /** send error */
+                        throw new Error("Gagal get skor")
+                    }
+                } else if(partnumber == '2'){
+                    /** get skoring part 2 */
+                    const part = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT nama, sum(IF(idsoal = '16', jawab, 0)) AS '1', sum(IF(idsoal = '17', jawab, 0)) AS '2', sum(IF(idsoal = '18', jawab, 0)) AS '3', sum(IF(idsoal = '19', jawab, 0)) AS '4', sum(IF(idsoal = '20', jawab, 0)) AS '5', sum(IF(idsoal = '21', jawab, 0)) AS '6', sum(IF(idsoal = '22', jawab, 0)) AS '7', sum(IF(idsoal = '23', jawab, 0)) AS '8', sum(IF(idsoal = '24', jawab, 0)) AS '9', sum(IF(idsoal = '25', jawab, 0)) AS '10', sum(IF(idsoal = '26', jawab, 0)) AS '11', sum(IF(idsoal = '27', jawab, 0)) AS '12', sum(IF(idsoal = '28', jawab, 0)) AS '13', sum(IF(idsoal = '29', jawab, 0)) AS '14', sum(IF(idsoal = '30', jawab, 0)) AS '15', sum(IF(idsoal = '31', jawab, 0)) AS '16', sum(IF(idsoal = '32', jawab, 0)) AS '17', sum(IF(idsoal = '33', jawab, 0)) AS '18', sum(IF(idsoal = '34', jawab, 0)) AS '19', sum(IF(idsoal = '35', jawab, 0)) AS '20', sum(IF(idsoal < 36 AND idsoal > 15, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+
+                    if(part.length >= 0) {
+                        /** send data */
+                        res.status(200).json({
+                            part, selectpart, getpart 
+                        })
+                    } else {
+                        /** send error */
+                        throw new Error("Gagal get skor")
+                    }
+                } else if(partnumber == '3'){
+                    /** get skoring part 3 */
+                    const part = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT nama, sum(IF(idsoal = '36', jawab, 0)) AS '1', sum(IF(idsoal = '37', jawab, 0)) AS '2', sum(IF(idsoal = '38', jawab, 0)) AS '3', sum(IF(idsoal = '39', jawab, 0)) AS '4', sum(IF(idsoal = '40', jawab, 0)) AS '5', sum(IF(idsoal = '41', jawab, 0)) AS '6', sum(IF(idsoal = '42', jawab, 0)) AS '7', sum(IF(idsoal = '43', jawab, 0)) AS '8', sum(IF(idsoal = '44', jawab, 0)) AS '9', sum(IF(idsoal = '45', jawab, 0)) AS '10', sum(IF(idsoal = '46', jawab, 0)) AS '11', sum(IF(idsoal = '47', jawab, 0)) AS '12', sum(IF(idsoal = '48', jawab, 0)) AS '13', sum(IF(idsoal = '49', jawab, 0)) AS '14', sum(IF(idsoal > 35 AND idsoal < 50, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+
+                    if(part.length >= 0) {
+                        /** send data */
+                        res.status(200).json({
+                            part, selectpart, getpart 
+                        })
+                    } else {
+                        /** send error */
+                        throw new Error("Gagal get skor")
+                    }
+                } else if(partnumber == '4'){
+                    /** get skoring part 4 */
+                    const part = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT nama, sum(IF(idsoal = '50', jawab, 0)) AS '1', sum(IF(idsoal = '51', jawab, 0)) AS '2', sum(IF(idsoal = '52', jawab, 0)) AS '3', sum(IF(idsoal = '53', jawab, 0)) AS '4', sum(IF(idsoal = '54', jawab, 0)) AS '5', sum(IF(idsoal = '55', jawab, 0)) AS '6', sum(IF(idsoal = '56', jawab, 0)) AS '7', sum(IF(idsoal = '57', jawab, 0)) AS '8', sum(IF(idsoal = '58', jawab, 0)) AS '9', sum(IF(idsoal = '59', jawab, 0)) AS '10', sum(IF(idsoal = '60', jawab, 0)) AS '11', sum(IF(idsoal = '61', jawab, 0)) AS '12', sum(IF(idsoal = '62', jawab, 0)) AS '13', sum(IF(idsoal = '63', jawab, 0)) AS '14', sum(IF(idsoal = '64', jawab, 0)) AS '15', sum(IF(idsoal = '65', jawab, 0)) AS '16', sum(IF(idsoal = '66', jawab, 0)) AS '17', sum(IF(idsoal = '67', jawab, 0)) AS '18', sum(IF(idsoal = '68', jawab, 0)) AS '19', sum(IF(idsoal = '69', jawab, 0)) AS '20', sum(IF(idsoal < 70 AND idsoal > 49, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+
+                    if(part.length >= 0) {
+                        /** send data */
+                        res.status(200).json({
+                            part, selectpart, getpart 
+                        })
+                    } else {
+                        /** send error */
+                        throw new Error("Gagal get skor")
+                    }
+                } else if(partnumber == '5'){
+                    /** get skoring part 5 */
+                    const part = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT nama, sum(IF(idsoal = '70', jawab, 0)) AS '1', sum(IF(idsoal = '71', jawab, 0)) AS '2', sum(IF(idsoal = '72', jawab, 0)) AS '3', sum(IF(idsoal = '73', jawab, 0)) AS '4', sum(IF(idsoal = '74', jawab, 0)) AS '5', sum(IF(idsoal = '75', jawab, 0)) AS '6', sum(IF(idsoal = '76', jawab, 0)) AS '7', sum(IF(idsoal = '77', jawab, 0)) AS '8', sum(IF(idsoal = '78', jawab, 0)) AS '9', sum(IF(idsoal = '79', jawab, 0)) AS '10', sum(IF(idsoal = '80', jawab, 0)) AS '11', sum(IF(idsoal = '81', jawab, 0)) AS '12', sum(IF(idsoal = '82', jawab, 0)) AS '13', sum(IF(idsoal = '83', jawab, 0)) AS '14', sum(IF(idsoal = '84', jawab, 0)) AS '15', sum(IF(idsoal = '85', jawab, 0)) AS '16', sum(IF(idsoal = '86', jawab, 0)) AS '17', sum(IF(idsoal = '87', jawab, 0)) AS '18', sum(IF(idsoal = '88', jawab, 0)) AS '19', sum(IF(idsoal = '89', jawab, 0)) AS '20', sum(IF(idsoal = '90', jawab, 0)) AS '21', sum(IF(idsoal = '91', jawab, 0)) AS '22', sum(IF(idsoal = '92', jawab, 0)) AS '23', sum(IF(idsoal = '93', jawab, 0)) AS '24', sum(IF(idsoal = '94', jawab, 0)) AS '25', sum(IF(idsoal = '95', jawab, 0)) AS '26', sum(IF(idsoal = '96', jawab, 0)) AS '27', sum(IF(idsoal = '97', jawab, 0)) AS '28', sum(IF(idsoal = '98', jawab, 0)) AS '29', sum(IF(idsoal = '99', jawab, 0)) AS '30', sum(IF(idsoal = '100', jawab, 0)) AS '31', sum(IF(idsoal = '101', jawab, 0)) AS '32', sum(IF(idsoal = '102', jawab, 0)) AS '33', sum(IF(idsoal = '103', jawab, 0)) AS '34', sum(IF(idsoal = '104', jawab, 0)) AS '35', sum(IF(idsoal = '105', jawab, 0)) AS '36', sum(IF(idsoal > 69, jawab, 0)) AS Jumlah FROM t_answer JOIN icare_account ON t_answer.iduser = icare_account.id WHERE t_answer.idacara = 3 GROUP BY icare_account.id", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+
+                    if(part.length >= 0) {
+                        /** send data */
+                        res.status(200).json({
+                            part, selectpart, getpart 
+                        })
+                    } else {
+                        /** send error */
+                        throw new Error("Gagal get skor")
+                    }
+                } else {
+                    /** data part tidak terdaftar */
+                    throw new Error("Part atau acara tidak terdaftar")
+                }
+            } else if(cek_part.length === 0) {
+                /** data part tidak terdaftar */
+                throw new Error("Part tidak terdaftar")
+            } else {
+                /** error lainnya */
+                throw new Error("Gagal cek data part")
+            }
+        } catch(e) {
+            /** kirim error */
+            res.status(400).json({ message: e.message });
+        }
+    } else {
+        /** Kirim error */
+        res.status(400).json({
+            message: "Field tidak boleh kosong"
+        })
+    }
+})
+/** end of sapa konsep */
+
 Router.post('/listsoal2', (req, res) => {
     try{
         const { selectkonsul, selectpart } = req.body;
