@@ -874,7 +874,6 @@ Router.post('/hasilassessmentkepribadian', (req, res) =>{
                     res.status(500).json({
                         message: error
                     })
-                    console.log("error 1");
                 } else if(acaraterpilih.length > 0) {
                     /** get data mahasiswa */
                     Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
@@ -883,7 +882,6 @@ Router.post('/hasilassessmentkepribadian', (req, res) =>{
                             res.status(500).json({
                                 message: error
                             })
-                            console.log("error 2");
                         } else if(resultcekpeserta.length > 0){
                             Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) =>{
                                 if(error) {
@@ -891,7 +889,6 @@ Router.post('/hasilassessmentkepribadian', (req, res) =>{
                                     res.status(500).json({
                                         message: error
                                     })
-                                    console.log("error 3");
                                 } else if(datakonsul.length >= 0) {
                                     /** send data */
                                     res.status(200).json({
@@ -941,7 +938,6 @@ Router.post('/hasilassessmentkepribadian', (req, res) =>{
         res.status(500).json({
             message: error
         })
-        console.log("error 4");
     }
 })
 
@@ -1026,7 +1022,7 @@ Router.post('/hasilassessmentkepribadianpeserta', (req, res) =>{
                                                                             })
                                                                         } else if(datakonsul.length >= 0) {
                                                                             /** get data mahasiswa yang sudah menjawab */
-                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = ?) AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
                                                                                 if(error) {
                                                                                     /** Kirim error */
                                                                                     res.status(500).json({
