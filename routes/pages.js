@@ -876,7 +876,7 @@ Router.post('/hasilassessmentkepribadian', (req, res) =>{
                     })
                 } else if(acaraterpilih.length > 0) {
                     /** get data mahasiswa */
-                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif') AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = ?) AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
                         if(error) {
                             /** send error */
                             res.status(500).json({
@@ -1022,7 +1022,7 @@ Router.post('/hasilassessmentkepribadianpeserta', (req, res) =>{
                                                                             })
                                                                         } else if(datakonsul.length >= 0) {
                                                                             /** get data mahasiswa yang sudah menjawab */
-                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif') AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type =?) AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
                                                                                 if(error) {
                                                                                     /** Kirim error */
                                                                                     res.status(500).json({
@@ -1139,7 +1139,7 @@ Router.post('/kesimpulanassessmentkepribadian', (req, res) =>{
                     })
                 } else if(konsulterpilih.length > 0) {
                     /** get data peserta */
-                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus') AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
+                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus' AND id_consult_type = ?) AND u.account_type = 'peserta_event' AND a.idacara = ? GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
                         if(error) {
                             /** send error */
                             res.status(500).json({
