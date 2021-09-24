@@ -73,301 +73,707 @@ Router.post("/getpeserta", (req, res) => {
     }
 })
 
-Router.get('/konsullist', (req, res) => {
-    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, results) => {
-        if(error){
-            res.status(500).json({
-                message: 'Get data konsul error'
-            })
-        } else if(results.length >= 0){
-            /** Kirim data konsul */
-            res.status(200).json({
-                data: results
-            })
-        }
-    })
-})
+// Router.get('/konsullist', (req, res) => {
+//     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, results) => {
+//         if(error){
+//             res.status(500).json({
+//                 message: 'Get data konsul error'
+//             })
+//         } else if(results.length >= 0){
+//             /** Kirim data konsul */
+//             res.status(200).json({
+//                 data: results
+//             })
+//         }
+//     })
+// })
 
-Router.post('/konsulid', (req, res) => {
-    try{
-        // var id = req.params.id;
-        const { id } = req.body;
-        if(id){
-            Connection.query('SELECT * FROM icare_consult_type WHERE id = ?', [id], async (error, results) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data konsul error'
-                    })
-                } else if(results.length >= 0 ){
-                    /** Kirim data konsul */
-                    res.status(200).json({
-                        data: results
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
+// Router.post('/konsulid', (req, res) => {
+//     try{
+//         // var id = req.params.id;
+//         const { id } = req.body;
+//         if(id){
+//             Connection.query('SELECT * FROM icare_consult_type WHERE id = ?', [id], async (error, results) => {
+//                 if(error){
+//                     res.status(500).json({
+//                         message: 'Get data konsul error'
+//                     })
+//                 } else if(results.length >= 0 ){
+//                     /** Kirim data konsul */
+//                     res.status(200).json({
+//                         data: results
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** Field kosong */
+//             res.status(500).json({
+//                 message: "Field tidak boleh kosong"
+//             });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+// Router.post('/partisipant', (req, res) => {
+//     try{
+//         // var id = req.params.id;
+//         const { selectkonsul } = req.body;
+//         if(selectkonsul){
+//             Connection.query('SELECT a.id AS idca, u.id AS iduser, u.nama AS namauser FROM icare_consult_acc a INNER JOIN icare_consult_type t ON a.id_tipe_konsultasi = t.id INNER JOIN icare_account u ON a.id_account = u.id WHERE t.id = ?', [selectkonsul], async (error, results) => {
+//                 if(error){
+//                     res.status(500).json({
+//                         message: 'Get data partisipant error'
+//                     })
+//                 } else if(results.length >= 0 ){
+//                     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                         if(error){
+//                             res.status(500).json({
+//                                 message: error
+//                             })
+//                         } else {
+//                             Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
+//                                 if(error){
+//                                     res.status(500).json({
+//                                         message: error
+//                                     })
+//                                 } else {
+//                                     Connection.query('SELECT u.id, u.nama FROM icare_account u WHERE account_type = ? AND u.id NOT IN (SELECT a.id_account FROM icare_consult_acc a WHERE a.id_tipe_konsultasi = ?)', ['psikologis', selectkonsul], async (error, psikolog) => {
+//                                         if(error){
+//                                             res.status(500).json({
+//                                                 message: error
+//                                             })
+//                                         } else {
+//                                             /** Kirim data konsul */
+//                                             res.status(200).json({
+//                                                 results: results,
+//                                                 konsul : konsul,
+//                                                 pilihkonsul: pilihkonsul,
+//                                                 psikolog : psikolog,
+//                                                 selectkonsul
+//                                             })
+//                                         }
+//                                     } )
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** Field kosong */
+//             res.status(500).json({
+//                 message: "Field tidak boleh kosong"
+//             });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+// Router.post('/listsoal', (req, res) => {
+//     try{
+//         // var id = req.params.id;
+//         const { selectkonsul } = req.body;
+//         if(selectkonsul){
+//             Connection.query('SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q INNER JOIN icare_consult_type t ON t.id = q.id_consult_type WHERE t.id = ? AND NOT q.status = "hapus" ', [selectkonsul], async (error, results) => {
+//                 if(error){
+//                     res.status(500).json({
+//                         message: 'Get data partisipant error'
+//                     })
+//                 } else if(results.length >= 0 ){
+//                     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                         if(error){
+//                             res.status(500).json({
+//                                 message: error
+//                             })
+//                         } else {
+//                             Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
+//                                 if(error){
+//                                     res.status(500).json({
+//                                         message: error
+//                                     })
+//                                 } else {
+//                                     /** Kirim data konsul */
+//                                     res.status(200).json({
+//                                         results: results,
+//                                         konsul : konsul,
+//                                         pilihkonsul: pilihkonsul,
+//                                         selectkonsul
+//                                     })
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** Field kosong */
+//             res.status(500).json({
+//                 message: "Field tidak boleh kosong"
+//             });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+Router.post('/listpartkarir', async (req, res) => {
+    const { selectuser } = req.body;
+    if(selectuser){
+        try{
+            /** cekpeserta */
+            const cekpeserta = await new Promise((resolve, reject) => {
+                Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], (error, results) => {
+                    if(error) { 
+                        /** jika error */
+                        reject(error);
+                    } else {
+                        /** jika results */
+                        resolve(results);
+                    }
+                });
             });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})
-
-Router.post('/partisipant', (req, res) => {
-    try{
-        // var id = req.params.id;
-        const { selectkonsul } = req.body;
-        if(selectkonsul){
-            Connection.query('SELECT a.id AS idca, u.id AS iduser, u.nama AS namauser FROM icare_consult_acc a INNER JOIN icare_consult_type t ON a.id_tipe_konsultasi = t.id INNER JOIN icare_account u ON a.id_account = u.id WHERE t.id = ?', [selectkonsul], async (error, results) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data partisipant error'
-                    })
-                } else if(results.length >= 0 ){
-                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                        if(error){
-                            res.status(500).json({
-                                message: error
-                            })
+            if(cekpeserta.length > 0){
+                /** cek apakah user sudah ada jawaban atau tidak */
+                const cekjawaban = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = 1", [selectuser], (error, results) => {
+                        if(error) { 
+                            /** jika error */
+                            reject(error);
                         } else {
-                            Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else {
-                                    Connection.query('SELECT u.id, u.nama FROM icare_account u WHERE account_type = ? AND u.id NOT IN (SELECT a.id_account FROM icare_consult_acc a WHERE a.id_tipe_konsultasi = ?)', ['psikologis', selectkonsul], async (error, psikolog) => {
-                                        if(error){
-                                            res.status(500).json({
-                                                message: error
-                                            })
-                                        } else {
-                                            /** Kirim data konsul */
-                                            res.status(200).json({
-                                                results: results,
-                                                konsul : konsul,
-                                                pilihkonsul: pilihkonsul,
-                                                psikolog : psikolog,
-                                                selectkonsul
-                                            })
-                                        }
-                                    } )
-                                }
-                            })
+                            /** jika results */
+                            resolve(results);
                         }
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})
-
-Router.post('/listsoal', (req, res) => {
-    try{
-        // var id = req.params.id;
-        const { selectkonsul } = req.body;
-        if(selectkonsul){
-            Connection.query('SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q INNER JOIN icare_consult_type t ON t.id = q.id_consult_type WHERE t.id = ? AND NOT q.status = "hapus" ', [selectkonsul], async (error, results) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data partisipant error'
-                    })
-                } else if(results.length >= 0 ){
-                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                        if(error){
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else {
-                            Connection.query('SELECT id, nama FROM icare_consult_type WHERE id = ?', [selectkonsul], async (error, pilihkonsul) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else {
-                                    /** Kirim data konsul */
-                                    res.status(200).json({
-                                        results: results,
-                                        konsul : konsul,
-                                        pilihkonsul: pilihkonsul,
-                                        selectkonsul
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})
-
-Router.post('/listpart', (req, res) => {
-    try {
-        const { selectkonsul, selectuser } = req.body;
-
-        if(selectkonsul, selectuser){
-            /** cek tipe konsultasi */
-            Connection.query("SELECT * FROM icare_consult_type WHERE id = ? AND NOT status_consult = 'hapus'", [selectkonsul], async (error, pilihkonsul) =>{ 
-                if(error){
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(pilihkonsul.length == 0) {
-                    res.status(403).json({
-                        message: 'Tipe konsul tidak terdaftar'
-                    })
-                } else if(pilihkonsul.length > 0){
-                    /** cek data peserta */
-                    Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], async (error, cekuser) => {
-                        if(error){
-                            res.status(500).json({
-                                message: error
-                            }) 
-                        } else if(cekuser.length == 0) {
-                            res.status(403).json({
-                                message: 'Peserta tidak terdaftar'
-                            })
-                        } else if(cekuser.length > 0) {
-                            /** cek apakah tipe konsultasi adalah konsultasi berlanjut atau tidak */
-                            Connection.query("SELECT repeat_consult FROM icare_consult_type WHERE id = ? AND repeat_consult = 'y'", [selectkonsul], async(error, cekrepeat) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: error
-                                    }) 
-                                }
-                                else if(cekrepeat.length == 0){
-                                    /** tipe konsultasi 1x konsul */
-                                    Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = ?", [selectuser, selectkonsul], async (error, cekjawaban) => {
-                                        if(error){
-                                            res.status(500).json({
-                                                message: error
-                                            }) 
-                                        }
-                                        else if(cekjawaban.length == 0) {
-                                            /** peserta blm memberikan jawaban */
-                                            /** get data part */
-                                            Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
-                                                if(error){
-                                                    res.status(500).json({
-                                                        message: error
-                                                    }) 
-                                                } else if(datapart.length >= 0){
-                                                    /** get data konsul */
-                                                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                                                        if(error){
-                                                            res.status(500).json({
-                                                                message: error
-                                                            }) 
-                                                        } else if(konsul.length >= 0){
-                                                            /** Kirim data part */
-                                                            res.status(200).json({
-                                                                datapart: datapart,
-                                                                konsul : konsul,
-                                                                pilihkonsul: pilihkonsul,
-                                                                selectkonsul
-                                                            })
-                                                        } else {
-                                                            res.status(500).json({
-                                                                message: 'Get data konsul error'
-                                                            })
-                                                        }
-                                                    })
-                                                } else {
-                                                    res.status(500).json({
-                                                        message: 'Get data part error'
-                                                    })
-                                                }
-                                            })
-                                        }
-                                        else if(cekjawaban.length > 0) {
-                                            /** peserta sudah memberikan jawaban */
-                                            res.status(500).json({
-                                                message: 'Anda Sudah Menyelesaikan Assessment Ini, terima kasih atas partisipasinya'
-                                            })
-                                        }
-                                    })
-                                } else if(cekrepeat.length > 0){
-                                    /** tipe konsultasi berulang */
-                                    /** get data part */
-                                    Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
-                                        if(error){
-                                            res.status(500).json({
-                                                message: error
-                                            }) 
-                                        } else if(datapart.length >= 0){
-                                            /** get data konsul */
-                                            Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                                                if(error){
-                                                    res.status(500).json({
-                                                        message: error
-                                                    }) 
-                                                } else if(konsul.length >= 0){
-                                                    /** Kirim data part */
-                                                    res.status(200).json({
-                                                        datapart: datapart,
-                                                        konsul : konsul,
-                                                        pilihkonsul: pilihkonsul,
-                                                        selectkonsul
-                                                    })
-                                                } else {
-                                                    res.status(500).json({
-                                                        message: 'Get data konsul error'
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            res.status(500).json({
-                                                message: 'Get data part error'
-                                            })
-                                        }
-                                    })
-                                }
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: 'Get data peserta error'
-                            })
-                        }
-                    })
+                    });
+                });
+                if(cekjawaban.length === 0){
+                    /** peserta blm memberikan jawaban */
+                    /** get data part */
+                    const datapart = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = 1",(error, results) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(results);
+                            }
+                        });
+                    });
+                    if(datapart.length > 0){
+                        /** Kirim data part */
+                        res.status(200).json({
+                            datapart: datapart
+                        })
+                    } else if(datapart.length === 0){
+                        /** send error */
+                        throw new Error('Data Part/Kualifikasi Kosong');
+                    } else {
+                        /** send error */
+                        throw new Error('Get Data Part/Kualifikasi Error');
+                    }
+                } else if(cekjawaban.length > 0){
+                    /** peserta sudah memberikan jawaban */
+                    /** send error */
+                    // throw new Error('Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya');
+                    res.status(201).json({ message: 'Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya'});
                 } else {
-                    res.status(500).json({
-                        message: 'Get data konsul error'
-                    })
+                    /** send error */
+                    throw new Error('Cek Jawaban Error');
                 }
-            })
+            } else if(cekpeserta.length === 0){
+                /** send error */
+                throw new Error('Peserta Tidak Terdaftar');
+            } else {
+                /** send error */
+                throw new Error('Cek Peserta Error');
+            }
+        } catch(e){
+            res.status(400).json({ message: e.message });   
         }
-    }catch (error) {
-        console.log(error);
+    } else {
+        res.status(500).json({
+            message: 'Field Tidak Boleh Kosong'
+        })
     }
 })
+
+// Router.post('/listpart', (req, res) => {
+//     try {
+//         const { selectkonsul, selectuser } = req.body;
+
+//         if(selectkonsul, selectuser){
+//             /** cek tipe konsultasi */
+//             Connection.query("SELECT * FROM icare_consult_type WHERE id = ? AND NOT status_consult = 'hapus'", [selectkonsul], async (error, pilihkonsul) =>{ 
+//                 if(error){
+//                     res.status(500).json({
+//                         message: error
+//                     })
+//                 } else if(pilihkonsul.length == 0) {
+//                     res.status(403).json({
+//                         message: 'Tipe konsul tidak terdaftar'
+//                     })
+//                 } else if(pilihkonsul.length > 0){
+//                     /** cek data peserta */
+//                     Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], async (error, cekuser) => {
+//                         if(error){
+//                             res.status(500).json({
+//                                 message: error
+//                             }) 
+//                         } else if(cekuser.length == 0) {
+//                             res.status(403).json({
+//                                 message: 'Peserta tidak terdaftar'
+//                             })
+//                         } else if(cekuser.length > 0) {
+//                             /** cek apakah tipe konsultasi adalah konsultasi berlanjut atau tidak */
+//                             Connection.query("SELECT repeat_consult FROM icare_consult_type WHERE id = ? AND repeat_consult = 'y'", [selectkonsul], async(error, cekrepeat) => {
+//                                 if(error){
+//                                     res.status(500).json({
+//                                         message: error
+//                                     }) 
+//                                 }
+//                                 else if(cekrepeat.length == 0){
+//                                     /** tipe konsultasi 1x konsul */
+//                                     Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = ?", [selectuser, selectkonsul], async (error, cekjawaban) => {
+//                                         if(error){
+//                                             res.status(500).json({
+//                                                 message: error
+//                                             }) 
+//                                         }
+//                                         else if(cekjawaban.length == 0) {
+//                                             /** peserta blm memberikan jawaban */
+//                                             /** get data part */
+//                                             Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+//                                                 if(error){
+//                                                     res.status(500).json({
+//                                                         message: error
+//                                                     }) 
+//                                                 } else if(datapart.length >= 0){
+//                                                     /** get data konsul */
+//                                                     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                                                         if(error){
+//                                                             res.status(500).json({
+//                                                                 message: error
+//                                                             }) 
+//                                                         } else if(konsul.length >= 0){
+//                                                             /** Kirim data part */
+//                                                             res.status(200).json({
+//                                                                 datapart: datapart,
+//                                                                 konsul : konsul,
+//                                                                 pilihkonsul: pilihkonsul,
+//                                                                 selectkonsul
+//                                                             })
+//                                                         } else {
+//                                                             res.status(500).json({
+//                                                                 message: 'Get data konsul error'
+//                                                             })
+//                                                         }
+//                                                     })
+//                                                 } else {
+//                                                     res.status(500).json({
+//                                                         message: 'Get data part error'
+//                                                     })
+//                                                 }
+//                                             })
+//                                         }
+//                                         else if(cekjawaban.length > 0) {
+//                                             /** peserta sudah memberikan jawaban */
+//                                             res.status(500).json({
+//                                                 message: 'Anda Sudah Menyelesaikan Assessment Ini, terima kasih atas partisipasinya'
+//                                             })
+//                                         }
+//                                     })
+//                                 } else if(cekrepeat.length > 0){
+//                                     /** tipe konsultasi berulang */
+//                                     /** get data part */
+//                                     Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = ?", [selectkonsul], async(error, datapart) => {
+//                                         if(error){
+//                                             res.status(500).json({
+//                                                 message: error
+//                                             }) 
+//                                         } else if(datapart.length >= 0){
+//                                             /** get data konsul */
+//                                             Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                                                 if(error){
+//                                                     res.status(500).json({
+//                                                         message: error
+//                                                     }) 
+//                                                 } else if(konsul.length >= 0){
+//                                                     /** Kirim data part */
+//                                                     res.status(200).json({
+//                                                         datapart: datapart,
+//                                                         konsul : konsul,
+//                                                         pilihkonsul: pilihkonsul,
+//                                                         selectkonsul
+//                                                     })
+//                                                 } else {
+//                                                     res.status(500).json({
+//                                                         message: 'Get data konsul error'
+//                                                     })
+//                                                 }
+//                                             })
+//                                         } else {
+//                                             res.status(500).json({
+//                                                 message: 'Get data part error'
+//                                             })
+//                                         }
+//                                     })
+//                                 }
+//                             })
+//                         } else {
+//                             res.status(500).json({
+//                                 message: 'Get data peserta error'
+//                             })
+//                         }
+//                     })
+//                 } else {
+//                     res.status(500).json({
+//                         message: 'Get data konsul error'
+//                     })
+//                 }
+//             })
+//         }
+//     }catch (error) {
+//         console.log(error);
+//     }
+// })
+
+Router.post('/listsoalkarir', async (req, res) => {
+    const { selectpart } = req.body;
+
+    if(selectpart){
+        try{
+            /** cek part */
+            const cekpart = await new Promise((resolve, reject) => {
+                Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id = ?", [selectpart], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cekpart.length > 0){
+                /** soal */
+                const soal = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT * FROM icare_q3assessment WHERE status = 'aktif' AND idpart = ?", [selectpart], (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(soal.length > 0){
+                    /** datapart */
+                    const datapart = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id_consult_type = 1", (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+                    if(datapart.length > 0) {
+                        /** Kirim data soal */
+                        res.status(200).json({
+                            datapart: datapart,
+                            soal: soal,
+                            selectpart
+                        })
+                    } else if(datapart.length === 0){
+                        /** Send error */
+                        throw new Error('Belum Ada Part/Kualifikasi yang Terdaftar');
+                    } else {
+                        /** Send error */
+                        throw new Error('Get Data Part/Kualifikasi Error');
+                    }
+                } else if(soal.length === 0){
+                    /** Send error */
+                    throw new Error('Belum Ada Soal Terdaftar');
+                } else {
+                    /** Send error */
+                    throw new Error('Get Data Soal Error');
+                }
+            } else if(cekpart.length === 0){
+                /** Send error */
+                throw new Error('Part/Kualifikasi Tidak Terdaftar');
+            } else {
+                /** Send error */
+                throw new Error('Cek Data Part/Kualifikasi error');
+            }
+        } catch(e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
+        }                         
+    } else {
+        /** Field kosong */
+        res.status(500).json({
+            message: "Field tidak boleh kosong"
+        });
+    }
+})
+
+Router.get('/hasilassessmentkarir', async (req, res) => {
+    try{
+        /** cekhasilpeserserta */
+        const results = await new Promise((resolve, reject) => {
+            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') GROUP BY u.id", (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+        if(results.length > 0){
+            /** send data */
+            res.status(200).json({
+                results,
+            })
+        } else if(results.length === 0){
+            /** send error */
+            throw new Error('Belum Ada Peserta yang Memberikan Jawaban');
+        } else {
+            /** send error */
+            throw new Error('Cek Hasil Jawaban Peserta Error');
+        }
+    }catch(e){
+        /** send error */
+        res.status(400).json({ message: e.message });
+    }
+});
+
+Router.post('/hasilassessmentkarirpeserta', async (req, res) => {
+const { selectpeserta } = req.body;
+
+if(selectpeserta){
+    try{
+        /** cekpeserta */
+        const cekpeserta = await new Promise((resolve, reject) => {
+            Connection.query("SELECT id from icare_account WHERE id = ?", [selectpeserta], (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+        if(cekpeserta.length > 0){
+            /** get data jawaban peserta */
+            const results = await new Promise((resolve, reject) => {
+                Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = 1 AND u.id = ?", [selectpeserta], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(results.length >= 0){
+                /** get data peserta yg sudah menjawab dan blm ada kesimpulan */
+                const peserta = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') GROUP BY u.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(peserta.length > 0) {
+                    /** get bioadata peserta */
+                    const biodata = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = 1 AND u.id = ? GROUP BY u.id", [selectpeserta], (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+                    if(biodata.length >= 0){
+                        /** send data */
+                        res.status(200).json({
+                            results, peserta, selectpeserta, biodata
+                        });
+                    } else {
+                        /** send error */
+                        throw new Error('Get Biodata Peserta Error');
+                    }
+                } else if(peserta.length === 0){
+                    /** send error */
+                    throw new Error('Belum Ada PEserta yang Memberikan Jawaban');
+                } else {
+                    /** send error */
+                    throw new Error('Get Data Peserta yang Sudah Memberikan Jawaban Error');
+                }
+            } else {
+                /** send error */
+                throw new Error('Get Data Jawaban Peserta Error');
+            }
+        } else if(cekpeserta.length === 0){
+            /** send error */
+            throw new Error('Peserta Tidak Terdaftar');
+        } else {
+            /** send error */
+            throw new Error('Cek Peserta Error');
+        }
+    }catch(e){
+        /** send error */
+        res.status(400).json({ message: e.message });
+    }                                   
+} else {
+    res.status(500).json({
+        message: "Field tidak boleh kosong"
+    });
+}
+});
+
+Router.get('/kesimpulanassessmentkarir', async (req, res) => {
+try{
+    /** cek peserta yang sudah mendapatkan kesimpulan */
+    const cekkesimpulan = await new Promise((resolve, reject) => {
+        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') GROUP BY u.id", (error, results) => {
+            if(error){
+                reject(error)
+            } else {
+                resolve(results)
+            }
+        })
+    })
+    if(cekkesimpulan.length > 0){
+        /** send data */
+        res.status(200).json({
+            cekkesimpulan,
+        })
+    } else if(cekkesimpulan.length === 0){
+        /** send error */
+        throw new Error('Belum Ada Peserta yang Diberikan Kesimpulan');
+    } else {
+        /** send error */
+        throw new Error('Get Data Peserta yang Sudah Mendapatkan Kesimpulan Error');
+    }
+} catch(e){
+    /** send error */
+    res.status(400).json({ message: e.message });
+}
+});
+
+Router.post('/kesimpulanassessmentkarirpeserta', async (req, res) => {
+const { selectpeserta } = req.body;
+
+if(selectpeserta){
+
+    try{
+        /** cekpeserta */
+        const cekpeserta = await new Promise((resolve, reject) => {
+            Connection.query("SELECT id from icare_account WHERE id = ?", [selectpeserta], (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+        if(cekpeserta.length > 0){
+            /** get data jawaban peserta berdasarkan acara terpilih */
+            const results = await new Promise((resolve, reject) => {
+                Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = 1 AND u.id = ?", [selectpeserta], async (error, results)=>{
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(results.length >= 0){
+                /** get data peserta yg sudah menjawab dan ada kesimpulan */
+                const peserta = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') GROUP BY u.id", async (error, results)=>{
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(peserta.length > 0){
+                    /** get data kesimpulan peserta */
+                    const datakesimpulan = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT k.id AS idkesimpulan, k.id_consult_type AS idkonsul, a.nama AS tipekonsul, k.verified_by AS idpsikolog, p.nama AS namapsikolog, k.id_account AS idpeserta, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account p ON p.id = k.verified_by WHERE k.id_consult_type = 1 AND k.id_account = ? AND NOT k.status = 'hapus'", [selectpeserta], async (error, results)=>{
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
+                    })
+                    if(datakesimpulan.length >= 0){
+                        /** get biodata peserta */
+                        const biodata = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = 1 AND u.id = ? GROUP BY u.id", [selectpeserta], async (error, results)=>{
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve(results)
+                                }
+                            })
+                        })
+                        if(datakesimpulan.length >= 0) {
+                            /** Send Data */
+                            res.status(200).json({
+                                results, peserta, selectpeserta, datakesimpulan, biodata
+                            });
+                        } else {
+                            /** send error */
+                            throw new Error('Get Biodata Peserta Error');
+                        }
+                    } else {
+                        /** send error */
+                        throw new Error('Get Data Kesimpulan Error');
+                    }
+                } else if(peserta.length === 0){
+                    /** send error */
+                    throw new Error('Belum Ada Peserta yang DIberikan Kesimpulan');
+                } else {
+                    /** send error */
+                    throw new Error('Get Data Peserta yang Sudah Diberikan Kesimpulan Error');
+                }
+            } else {
+                /** send error */
+                throw new Error('Get Data Jawaban Peserta Error');
+            }
+        } else if(cekpeserta.length === 0){
+            /** send error */
+            throw new Error('Peserta Tidak Terdaftar');
+        } else {
+            /** send error */
+            throw new Error('Cek Peserta Error');
+        }
+    } catch(e) {
+        /** send error */
+        res.status(400).json({ message: e.message });
+    }
+} else {
+    res.status(500).json({
+        message: "Field tidak boleh kosong"
+    });
+}
+});
 
 /** start of sapa konsep */
 /** list pertanyaan SAPA */
-Router.post('/listpertanyaan2', async (req, res) =>{
-    const { selectkonsul, idu } = req.body;
-    if(selectkonsul, idu){
+Router.post('/listpertanyaankepribadian', async (req, res) =>{
+    const { idu } = req.body;
+    if(idu){
         try{
             /** cek apakah user sudah ada jawaban di part 1 */
             const cek_part1 = await new Promise((resolve, reject) => {
-                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 1 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban1) => {
+                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 1 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = 3 GROUP BY t_part.id ', [idu] , (error, cek_jawaban1) => {
                     if(error) { 
                         /** jika error */
                         reject(error);
@@ -393,33 +799,16 @@ Router.post('/listpertanyaan2', async (req, res) =>{
                 })
 
                 if(pertanyaan_part1.length >= 0){
-                    /** jika tidak error, get data acara */
-                    const datakonsul = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                            if(error) { 
-                                /** jika error */
-                                reject(error);
-                            } else {
-                                /** jika results */
-                                resolve(results);
-                            }
-                        })
-                    })
-                    if(datakonsul.length >= 0){
-                        /** kirim data */
-                        res.status(201).json({ pertanyaan_part1, selectkonsul, datakonsul, partpertanyaan : "1" });
-                    } else {
-                        /** jika error lainnya */
-                        throw new Error('Error, please contact developer');
-                    }
+                    /** kirim data */
+                    res.status(201).json({ pertanyaan_part1, partpertanyaan : "1" });
                 } else {
                     /** jika error lainnya */
-                    throw new Error('Error, please contact developer');
+                    throw new Error('Get Pertanyaan Part 1 Error');
                 }
             } else if(cek_part1.length > 0){
-                /** jika user sudah menjawab part 1 pada acara terpilih, cek jawaban di part 2 */
+                /** jika user sudah menjawab part 1, cek jawaban di part 2 */
                 const cek_part2 = await new Promise((resolve, reject) => {
-                    Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 2 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id', [idu, selectkonsul] , (error, cek_jawaban2) => {
+                    Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 2 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = 3 GROUP BY t_part.id', [idu] , (error, cek_jawaban2) => {
                         if(error) { 
                             /** jika error */
                             reject(error);
@@ -445,33 +834,16 @@ Router.post('/listpertanyaan2', async (req, res) =>{
                     })
     
                     if(pertanyaan_part2.length >= 0){
-                        /** jika tidak error, get data acara */
-                        const datakonsul = await new Promise((resolve, reject) => {
-                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                                if(error) { 
-                                    /** jika error */
-                                    reject(error);
-                                } else {
-                                    /** jika results */
-                                    resolve(results);
-                                }
-                            })
-                        })
-                        if(datakonsul.length >= 0){
-                            /** kirim data */
-                            res.status(201).json({ pertanyaan_part2, selectkonsul, datakonsul, partpertanyaan : "2" });
-                        } else {
-                            /** jika error lainnya */
-                            throw new Error('Error, please contact developer');
-                        }
+                        /** kirim data */
+                        res.status(201).json({ pertanyaan_part2, partpertanyaan : "2" });
                     } else {
                         /** jika error lainnya */
-                        throw new Error('Error, please contact developer');
+                        throw new Error('Get Pertanyaan Part 2 Error');
                     }
                 } else if(cek_part2.length > 0){
                     /** jika user sudah menjawab part 2 pada acara terpilih, cek jawaban di part 3 */
                     const cek_part3 = await new Promise((resolve, reject) => {
-                        Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 3 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban3) => {
+                        Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 3 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = 3 GROUP BY t_part.id ', [idu] , (error, cek_jawaban3) => {
                             if(error) { 
                                 /** jika error */
                                 reject(error);
@@ -497,33 +869,16 @@ Router.post('/listpertanyaan2', async (req, res) =>{
                         })
         
                         if(pertanyaan_part3.length >= 0){
-                            /** jika tidak error, get data acara */
-                            const datakonsul = await new Promise((resolve, reject) => {
-                                Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                                    if(error) { 
-                                        /** jika error */
-                                        reject(error);
-                                    } else {
-                                        /** jika results */
-                                        resolve(results);
-                                    }
-                                })
-                            })
-                            if(datakonsul.length >= 0){
-                                /** kirim data */
-                                res.status(201).json({ pertanyaan_part3, selectkonsul, datakonsul, partpertanyaan : "3" });
-                            } else {
-                                /** jika error lainnya */
-                                throw new Error('Error, please contact developer');
-                            }
+                            /** kirim data */
+                            res.status(201).json({ pertanyaan_part3, partpertanyaan : "3" });
                         } else {
                             /** jika error lainnya */
-                            throw new Error('Error, please contact developer');
+                            throw new Error('Get Pertanyaan Part 3 Error');
                         }
                     } else if(cek_part3.length > 0){
                         /** jika user sudah menjawab part 3 pada acara terpilih, cek jawaban di part 4 */
                         const cek_part4 = await new Promise((resolve, reject) => {
-                            Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 4 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban4) => {
+                            Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 4 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = 3 GROUP BY t_part.id ', [idu] , (error, cek_jawaban4) => {
                                 if(error) { 
                                     /** jika error */
                                     reject(error);
@@ -549,33 +904,16 @@ Router.post('/listpertanyaan2', async (req, res) =>{
                             })
             
                             if(pertanyaan_part4.length >= 0){
-                                /** jika tidak error, get data acara */
-                                const datakonsul = await new Promise((resolve, reject) => {
-                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                                        if(error) { 
-                                            /** jika error */
-                                            reject(error);
-                                        } else {
-                                            /** jika results */
-                                            resolve(results);
-                                        }
-                                    })
-                                })
-                                if(datakonsul.length >= 0){
-                                    /** kirim data */
-                                    res.status(201).json({ pertanyaan_part4, selectkonsul, datakonsul, partpertanyaan : "4" });
-                                } else {
-                                    /** jika error lainnya */
-                                    throw new Error('Error, please contact developer');
-                                }
+                                /** kirim data */
+                                res.status(201).json({ pertanyaan_part4, partpertanyaan : "4" });
                             } else {
                                 /** jika error lainnya */
-                                throw new Error('Error, please contact developer');
+                                throw new Error('Get Pertanyaan Part 4 Error');
                             }
                         } else if(cek_part4.length > 0) {
                             /** jika user sudah menjawab part 4 pada acara terpilih, cek jawaban di part 5 */
                             const cek_part5 = await new Promise((resolve, reject) => {
-                                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 5 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = ? GROUP BY t_part.id ', [idu, selectkonsul] , (error, cek_jawaban5) => {
+                                Connection.query('select icare_account.nama, t_part.id, t_part.nama from t_answer, t_part, t_soal, icare_account where icare_account.id = ? AND t_part.id = 5 AND t_answer.idsoal = t_soal.id AND t_soal.idpart = t_part.id AND icare_account.id = t_answer.iduser AND t_answer.idacara = 3 GROUP BY t_part.id ', [idu] , (error, cek_jawaban5) => {
                                     if(error) { 
                                         /** jika error */
                                         reject(error);
@@ -601,70 +939,37 @@ Router.post('/listpertanyaan2', async (req, res) =>{
                                 })
                 
                                 if(pertanyaan_part5.length >= 0){
-                                    /** jika tidak error, get data acara */
-                                    const datakonsul = await new Promise((resolve, reject) => {
-                                        Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                                            if(error) { 
-                                                /** jika error */
-                                                reject(error);
-                                            } else {
-                                                /** jika results */
-                                                resolve(results);
-                                            }
-                                        })
-                                    })
-                                    if(datakonsul.length >= 0){
-                                        /** kirim data */
-                                        res.status(201).json({ pertanyaan_part5, selectkonsul, datakonsul, partpertanyaan : "5" });
-                                    } else {
-                                        /** jika error lainnya */
-                                        throw new Error('Error, please contact developer');
-                                    }
+                                    /** kirim data */
+                                    res.status(201).json({ pertanyaan_part5, partpertanyaan : "5" });
                                 } else {
                                     /** jika error lainnya */
-                                    throw new Error('Error, please contact developer');
+                                    throw new Error('Get Pertanyaan Part 5 Error');
                                 }
                             } else if(cek_part5.length > 0) {
-                                /** jika user sudah menjawab part 5 pada acara terpilih, kirim notif test selesai */
-                                const datakonsul = await new Promise((resolve, reject) => {
-                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, results) => {
-                                        if(error) { 
-                                            /** jika error */
-                                            reject(error);
-                                        } else {
-                                            /** jika results */
-                                            resolve(results);
-                                        }
-                                    })
-                                })
-                                if(datakonsul.length >= 0){
+                                    /** jika user sudah menjawab part 5 pada acara terpilih, kirim notif test selesai */
                                     /** kirim data */
-                                    res.status(201).json({ message: 'Assessment selesai, silahkan logout. Terima kasih', selectkonsul, datakonsul });
-                                } else {
-                                    /** jika error lainnya */
-                                    throw new Error('Error, please contact developer');
-                                }
+                                    res.status(201).json({ message: 'Assessment Awal Konsultasi Kepribadian Selesai, Terima kasih Atas Partisipasinya'});
                             } else {
                                 /** jika error lainnya */
-                                throw new Error('Error, please contact developer');
+                                throw new Error('Cek Part 5 Error');
                             }
 
                         } else {
                             /** jika error lainnya */
-                            throw new Error('Error, please contact developer');
+                            throw new Error('Cek Part 4 Error');
                         }
                     } else {
                         /** jika error lainnya */
-                        throw new Error('Error, please contact developer');
+                        throw new Error('Cek Part 3 Error');
                     }
                 } else {
                     /** jika error lainnya */
-                    throw new Error('Error, please contact developer');
+                    throw new Error('Cek Part 2 Error');
                 }
 
             } else {
                 /** jika error lainnya */
-                throw new Error('Error, please contact developer');
+                throw new Error('Cek Part 1 Error');
             }
 
         } catch(e) {
@@ -863,1080 +1168,483 @@ Router.post('/skorassessment2', async (req, res) =>{
 })
 
 /** Route for hasil assessment kepribadian */
-Router.post('/hasilassessmentkepribadian', (req, res) =>{
+Router.post('/hasilassessmentkepribadian', async (req, res) =>{
     try{
-        const {selectkonsul} = req.body;
-
-        if(selectkonsul){
-            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND id = ?", [selectkonsul], async (error, acaraterpilih) => {
+        /** get data mahasiswa */
+        const resultcekpeserta = await new Promise((resolve, reject) => {
+            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", (error, results) => {
                 if(error){
-                    /** send error */
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(acaraterpilih.length > 0) {
-                    /** get data mahasiswa */
-                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
-                        if(error) {
-                            /** send error */
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else if(resultcekpeserta.length > 0){
-                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) =>{
-                                if(error) {
-                                    /** send error */
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else if(datakonsul.length >= 0) {
-                                    /** send data */
-                                    res.status(200).json({
-                                        resultcekpeserta,
-                                        datakonsul,
-                                        selectkonsul
-                                    })
-                                } else {
-                                    /** send error */
-                                    res.status(403).json({
-                                        message: 'Error, please contact developer'
-                                    })
-                                }
-                            })
-                        } else if(resultcekpeserta.length == 0) {
-                            /** send error */
-                            res.status(403).json({
-                                message: 'Belum ada peserta yang memberikan jawaban'
-                            })
-                        } else {
-                            /** send error */
-                            res.status(403).json({
-                                message: 'Error, please contact developer'
-                            })
-                        }
-                    })
-                } else if(acaraterpilih.length == 0) {
-                    /** send error */
-                    res.status(403).json({
-                        message: 'Acara tidak terdaftar'
-                    })
+                    reject(error)
                 } else {
-                    /** send error */
-                    res.status(403).json({
-                        message: 'Error, please contact developer'
-                    })
+                    resolve(results)
                 }
             })
-        } else {
-            /** Kirim error */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            })
-        }
-    } catch(error) {
-        /** Kirim error */
-        res.status(500).json({
-            message: error
         })
+        if(resultcekpeserta.length > 0){
+            /** send data */
+            res.status(200).json({
+                resultcekpeserta
+            })
+        } else if(resultcekpeserta.length === 0){
+            /** send error */
+            throw new Error('Belum ada peserta yang memberikan jawaban');
+        } else {
+            /** send error */
+            throw new Error('Get data peserta error');
+        }
+    } catch(e) {
+        /** send error */
+        res.status(400).json({ message: e.message });
     }
 })
 
 /** Route for hasil assessment */
-Router.post('/hasilassessmentkepribadianpeserta', (req, res) =>{
-    try{
-        const {selectkonsul, selectpeserta} = req.body;
+Router.post('/hasilassessmentkepribadianpeserta', async (req, res) =>{
+    const {selectpeserta} = req.body;
 
-        if(selectkonsul && selectpeserta) {
-            /** cek acara -> cek mahasiswa -> get result hasil assessment mahasiswa per part  */
-            Connection.query('SELECT id FROM icare_consult_type WHERE id = ?',[selectkonsul], async (error, cekkonsul) => {
-                if(error) {
-                    /** Kirim error */
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(cekkonsul.length == 0) {
-                    /** Acara tidak terdaftar */
-                    res.status(403).json({
-                        message: "Acara tidak terdaftar"
-                    })
-                } else if(cekkonsul.length > 0) {
-                    /** cek mahasiswa */
-                    Connection.query('SELECT id FROM icare_account WHERE id = ?', [selectpeserta], async (error, cekpeserta) => {
-                        if(error) {
-                            /** Kirim error */
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else if(cekpeserta.length == 0) {
-                            /** Acara tidak terdaftar */
-                            res.status(403).json({
-                                message: "Mahasiswa tidak terdaftar"
-                            })
-                        } else if(cekpeserta.length > 0) {
-                            /** get data hasil assessment mahasiswa part1 */
-                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part1) => {
-                                if(error) {
-                                    /** Kirim error */
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else if(part1.length >= 0) {
-                                    /** get data hasil assessment mahasiswa part2 */
-                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part2) => {
-                                        if(error) {
-                                            /** Kirim error */
-                                            res.status(500).json({
-                                                message: error
-                                            })
-                                        } else if(part2.length >= 0) {
-                                            /** get data hasil assessment mahasiswa part3 */
-                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part3) => {
-                                                if(error) {
-                                                    /** Kirim error */
-                                                    res.status(500).json({
-                                                        message: error
-                                                    })
-                                                } else if(part3.length >= 0) {
-                                                    /** get data hasil assessment mahasiswa part4 */
-                                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part4) => {
-                                                        if(error){
-                                                            /** Kirim error */
-                                                            res.status(500).json({
-                                                                message: error
-                                                            })
-                                                        } else if(part4.length >= 0) {
-                                                            /** get data hasil assessment mahasiswa part5 */
-                                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part5) => {
-                                                                if(error){
-                                                                    /** Kirim error */
-                                                                    res.status(500).json({
-                                                                        message: error
-                                                                    })
-                                                                } else if(part5.length >= 0){
-                                                                    /** get data acara */
-                                                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) => {
-                                                                        if(error) {
-                                                                            /** Kirim error */
-                                                                            res.status(500).json({
-                                                                                message: error
-                                                                            })
-                                                                        } else if(datakonsul.length >= 0) {
-                                                                            /** get data mahasiswa yang sudah menjawab */
-                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
-                                                                                if(error) {
-                                                                                    /** Kirim error */
-                                                                                    res.status(500).json({
-                                                                                        message: error
-                                                                                    })
-                                                                                } else if(resultcekpeserta.length >= 0) {
-                                                                                    Connection.query("SELECT m.id AS idpeserta, m.nama AS nama, m.jenis_kelamin AS jenis_kelamin ,m.phone AS nomor_kontak, m.tanggal_lahir AS tanggal_lahir, m.tempat_lahir AS tempat_lahir, m.pendidikan AS pendidikan, m.universitas AS universitas, m.jurusan AS jurusan FROM icare_account m WHERE m.id = ? AND m.account_type = 'peserta_event' ORDER BY m.nama ASC", [selectpeserta], async (error, biodatapeserta) => {
-                                                                                        if(error) {
-                                                                                            /** Kirim error */
-                                                                                            res.status(500).json({
-                                                                                                message: error
-                                                                                            })
-                                                                                        } else if(biodatapeserta.length >= 0) {
-                                                                                            /** kirim data */
-                                                                                            res.status(200).json({
-                                                                                                part1, part2, part3, part4, part5,
-                                                                                                selectkonsul, selectpeserta, datakonsul, resultcekpeserta, biodatapeserta,
-                                                                                            })
-                                                                                        } else {
-                                                                                            /** Kirim error */
-                                                                                            res.status(403).json({
-                                                                                                message: "Error, please contact developer"
-                                                                                            })
-                                                                                        }
-                                                                                    })
-                                                                                } else {
-                                                                                    /** Kirim error */
-                                                                                    res.status(403).json({
-                                                                                        message: "Error, please contact developer"
-                                                                                    })
-                                                                                }
-                                                                            })
-                                                                        } else {
-                                                                            /** Kirim error */
-                                                                            res.status(403).json({
-                                                                                message: "Error, please contact developer"
-                                                                            })   
-                                                                        }
-                                                                    })
-                                                                } else {
-                                                                    /** Kirim error */
-                                                                    res.status(403).json({
-                                                                        message: "Error, please contact developer"
-                                                                    })
-                                                                }
-                                                            })
-                                                        } else {
-                                                            /** Kirim error */
-                                                            res.status(403).json({
-                                                                message: "Error, please contact developer"
-                                                            })
-                                                        }
-                                                    })
-                                                } else {
-                                                    /** Kirim error */
-                                                    res.status(403).json({
-                                                        message: "Error, please contact developer"
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            /** Kirim error */
-                                            res.status(403).json({
-                                                message: "Error, please contact developer"
-                                            })
-                                        }
-                                    })
-                                } else {
-                                    /** Kirim error */
-                                    res.status(403).json({
-                                        message: "Error, please contact developer"
-                                    })
-                                }
-                            })
+    if(selectpeserta) {
+        try{
+            /** cek peserta */
+            const cekpeserta = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_account WHERE id = ?", [selectpeserta], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cekpeserta.length > 0){
+                /** get data assessment part 1 */
+                const part1 = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                        if(error){
+                            reject(error)
                         } else {
-                            /** Kirim error */
-                            res.status(403).json({
-                                message: "Error, please contact developer"
-                            })
+                            resolve(results)
                         }
                     })
-                } else {
-                    /** Kirim error */
-                    res.status(403).json({
-                        message: "Error, please contact developer"
+                })
+                if(part1.length >= 0){
+                    /** get data assessment part 2 */
+                    const part2 = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
                     })
+                    if(part2.length >= 0){
+                        /** get data assessment part 3 */
+                        const part3 = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve(results)
+                                }
+                            })
+                        })
+                        if(part3.length >= 0){
+                            /** get data assessment part 4 */
+                            const part4 = await new Promise((resolve, reject) => {
+                                Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                    if(error){
+                                        reject(error)
+                                    } else {
+                                        resolve(results)
+                                    }
+                                })
+                            })
+                            if(part4.length >= 0){
+                                /** get data assessment part 5 */
+                                const part5 = await new Promise((resolve, reject) => {
+                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                        if(error){
+                                            reject(error)
+                                        } else {
+                                            resolve(results)
+                                        }
+                                    })
+                                })
+                                if(part5.length >= 0){
+                                    /** get data peserta yang sudah menjawab */
+                                    const resultcekpeserta = await new Promise((resolve, reject) => {
+                                        Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id NOT IN (SELECT id_account FROM icare_conc WHERE status = 'aktif' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", (error, results) => {
+                                            if(error){
+                                                reject(error)
+                                            } else {
+                                                resolve(results)
+                                            }
+                                        })
+                                    })
+                                    if(resultcekpeserta.length >= 0){
+                                        /** get data biodata peserta */
+                                        const biodatapeserta = await new Promise((resolve, reject) => {
+                                            Connection.query("SELECT m.id AS idpeserta, m.nama AS nama, m.jenis_kelamin AS jenis_kelamin ,m.phone AS nomor_kontak, m.tanggal_lahir AS tanggal_lahir, m.tempat_lahir AS tempat_lahir, m.pendidikan AS pendidikan, m.universitas AS universitas, m.jurusan AS jurusan FROM icare_account m WHERE m.id = ? AND m.account_type = 'peserta_event' ORDER BY m.nama ASC", [selectpeserta],(error, results) => {
+                                                if(error){
+                                                    reject(error)
+                                                } else {
+                                                    resolve(results)
+                                                }
+                                            })
+                                        })
+                                        if(biodatapeserta.length >= 0){
+                                            /** kirim data */
+                                            res.status(200).json({
+                                                part1, part2, part3, part4, part5,
+                                                selectpeserta, resultcekpeserta, biodatapeserta,
+                                            })
+                                        } else {
+                                            /** send error */
+                                            throw new Error('Get Biodata Peserta Error'); 
+                                        }
+                                    } else{
+                                        /** send error */
+                                        throw new Error('Get Data Peserta Sudah Menjawab Error'); 
+                                    }
+                                } else {
+                                    /** send error */
+                                    throw new Error('Get Data Part5 Error'); 
+                                }
+                            } else {
+                                /** send error */
+                                throw new Error('Get Data Part4 Error'); 
+                            }
+                        } else {
+                            /** send error */
+                            throw new Error('Get Data Part3 Error'); 
+                        }
+                    } else {
+                        /** send error */
+                        throw new Error('Get Data Part2 Error');   
+                    }
+                } else {
+                    /** send error */
+                    throw new Error('Get Data Part1 Error');    
                 }
-            })
-        } else {
-            /** Kirim error */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            })
+            } else if(cekpeserta.length === 0){
+                /** send error */
+                throw new Error('Peserta Tidak Terdaftar');
+            } else {
+                /** send error */
+                throw new Error('Get Data Peserta Error');
+            }
+        } catch(e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
         }
-    } catch(error) {
+    } else {
         /** Kirim error */
         res.status(500).json({
-            message: error
+            message: "Field tidak boleh kosong"
         })
     }
 })
 
 /** Route for kesimpulan assessment kepribadian */
-Router.post('/kesimpulanassessmentkepribadian', (req, res) =>{
+Router.post('/kesimpulanassessmentkepribadian', async (req, res) =>{
     try{
-        const {selectkonsul} = req.body;
-
-        if(selectkonsul){
-            Connection.query("SELECT id FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, konsulterpilih) => {
+        /** get data peserta yang sudah diberi kesimpulan */
+        const resultcekpeserta = await new Promise((resolve, reject) => {
+            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", (error, results) => {
                 if(error){
-                    /** send error */
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(konsulterpilih.length > 0) {
-                    /** get data peserta */
-                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
-                        if(error) {
-                            /** send error */
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else if(resultcekpeserta.length > 0){
-                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) =>{
-                                if(error) {
-                                    /** send error */
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else if(datakonsul.length >= 0) {
-                                    /** send data */
-                                    res.status(200).json({
-                                        resultcekpeserta,
-                                        datakonsul,
-                                        selectkonsul
-                                    })
-                                } else {
-                                    /** send error */
-                                    res.status(403).json({
-                                        message: 'Error, please contact developer'
-                                    })
-                                }
-                            })
-                        } else if(resultcekpeserta.length == 0) {
-                            /** send error */
-                            res.status(403).json({
-                                message: 'Belum ada peserta yang diberikan kesimpulan'
-                            })
-                        } else {
-                            /** send error */
-                            res.status(403).json({
-                                message: 'Error, please contact developer'
-                            })
-                        }
-                    })
-                } else if(konsulterpilih.length == 0) {
-                    /** send error */
-                    res.status(403).json({
-                        message: 'Tipe konsultasi tidak terdaftar'
-                    })
+                    reject(error)
                 } else {
-                    /** send error */
-                    res.status(403).json({
-                        message: 'Error, please contact developer'
-                    })
+                    resolve(results)
                 }
             })
-        } else {
-            /** Kirim error */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            })
-        }
-    } catch(error) {
-        /** Kirim error */
-        res.status(500).json({
-            message: error
         })
+        if(resultcekpeserta.length > 0){
+            /** send data */
+            res.status(200).json({
+                resultcekpeserta,
+            })
+        } else if( resultcekpeserta.length === 0){
+            /** Belum ada peserta yang diberi kesimpulan */
+            throw new Error('Belum ada peserta yang diberikan kesimpulan');
+        } else {
+            /** Send error */
+            throw new Error('Get data kesimpulan error');
+        }
+    } catch(e) {
+        /** send error */
+        res.status(400).json({ message: e.message });
     }
 })
 
 /** Route for kesimpulan assessment kepribadian peserta */
-Router.post('/kesimpulanassessmentkepribadianpeserta', (req, res) =>{
-    try{
-        const {selectkonsul, selectpeserta} = req.body;
+Router.post('/kesimpulanassessmentkepribadianpeserta', async (req, res) =>{
+    const {selectpeserta} = req.body;
 
-        if(selectkonsul && selectpeserta) {
-            /** cek acara */
-            Connection.query('SELECT id FROM icare_consult_type WHERE id = ?',[selectkonsul], async (error, cekkonsul) => {
-                if(error) {
-                    /** Kirim error */
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(cekkonsul.length == 0) {
-                    /** Acara tidak terdaftar */
-                    res.status(403).json({
-                        message: "Acara tidak terdaftar"
-                    })
-                } else if(cekkonsul.length > 0) {
-                    /** cek mahasiswa */
-                    Connection.query('SELECT id FROM icare_account WHERE id = ?', [selectpeserta], async (error, cekpeserta) => {
-                        if(error) {
-                            /** Kirim error */
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else if(cekpeserta.length == 0) {
-                            /** Acara tidak terdaftar */
-                            res.status(403).json({
-                                message: "Peserta tidak terdaftar"
-                            })
-                        } else if(cekpeserta.length > 0) {
-                            /** get data hasil assessment mahasiswa part1 */
-                            /** SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek */
-                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part1) => {
-                                if(error) {
-                                    /** Kirim error */
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else if(part1.length >= 0) {
-                                    /** get data hasil assessment mahasiswa part2 */
-                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part2) => {
-                                        if(error) {
-                                            /** Kirim error */
-                                            res.status(500).json({
-                                                message: error
-                                            })
-                                        } else if(part2.length >= 0) {
-                                            /** get data hasil assessment mahasiswa part3 */
-                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part3) => {
-                                                if(error) {
-                                                    /** Kirim error */
-                                                    res.status(500).json({
-                                                        message: error
-                                                    })
-                                                } else if(part3.length >= 0) {
-                                                    /** get data hasil assessment mahasiswa part4 */
-                                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part4) => {
-                                                        if(error){
-                                                            /** Kirim error */
-                                                            res.status(500).json({
-                                                                message: error
-                                                            })
-                                                        } else if(part4.length >= 0) {
-                                                            /** get data hasil assessment mahasiswa part5 */
-                                                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = ? GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta, selectkonsul], async (error, part5) => {
-                                                                if(error){
-                                                                    /** Kirim error */
-                                                                    res.status(500).json({
-                                                                        message: error
-                                                                    })
-                                                                } else if(part5.length >= 0){
-                                                                    /** get data acara */
-                                                                    Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND CURDATE() BETWEEN start AND end ORDER BY id ASC", async (error, datakonsul) => {
-                                                                        if(error) {
-                                                                            /** Kirim error */
-                                                                            res.status(500).json({
-                                                                                message: error
-                                                                            })
-                                                                        } else if(datakonsul.length >= 0) {
-                                                                            /** get data mahasiswa yang sudah menjawab */
-                                                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", [selectkonsul], async (error, resultcekpeserta) => {
-                                                                                if(error) {
-                                                                                    /** Kirim error */
-                                                                                    res.status(500).json({
-                                                                                        message: error
-                                                                                    })
-                                                                                } else if(resultcekpeserta.length >= 0) {
-                                                                                    Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u WHERE u.id = ? AND u.account_type = 'peserta_event' ORDER BY u.nama ASC", [selectpeserta], async (error, datapeserta) => {
-                                                                                        if(error) {
-                                                                                            /** Kirim error */
-                                                                                            res.status(500).json({
-                                                                                                message: error
-                                                                                            })
-                                                                                        } else if(datapeserta.length >= 0) {
-                                                                                            /** Ambil data kesimpulan */
-                                                                                            Connection.query("SELECT u.id AS idpsikolog, u.nama AS namapsikolog, k.id AS idkesimpulan, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account u ON u.id = k.verified_by WHERE k.id_consult_type = ? AND k.id_account = ? AND NOT k.status = 'hapus'", [selectkonsul, selectpeserta], async (error, datakesimpulan) => {
-                                                                                                if(error) {
-                                                                                                    /** Kirim error */
-                                                                                                    res.status(500).json({
-                                                                                                        message: error
-                                                                                                    })
-                                                                                                } else {
-                                                                                                    /** kirim data */
-                                                                                                    res.status(200).json({
-                                                                                                        part1, part2, part3, part4, part5,
-                                                                                                        selectkonsul, selectpeserta, datakonsul, resultcekpeserta, datapeserta, datakesimpulan
-                                                                                                    })
-                                                                                                }
-                                                                                            })
-                                                                                        } else {
-                                                                                            /** Kirim error */
-                                                                                            res.status(403).json({
-                                                                                                message: "Error, please contact developer"
-                                                                                            })
-                                                                                        }
-                                                                                    })
-                                                                                } else {
-                                                                                    /** Kirim error */
-                                                                                    res.status(403).json({
-                                                                                        message: "Error, please contact developer"
-                                                                                    })
-                                                                                }
-                                                                            })
-                                                                        } else {
-                                                                            /** Kirim error */
-                                                                            res.status(403).json({
-                                                                                message: "Error, please contact developer"
-                                                                            })   
-                                                                        }
-                                                                    })
-                                                                } else {
-                                                                    /** Kirim error */
-                                                                    res.status(403).json({
-                                                                        message: "Error, please contact developer"
-                                                                    })
-                                                                }
-                                                            })
-                                                        } else {
-                                                            /** Kirim error */
-                                                            res.status(403).json({
-                                                                message: "Error, please contact developer"
-                                                            })
-                                                        }
-                                                    })
-                                                } else {
-                                                    /** Kirim error */
-                                                    res.status(403).json({
-                                                        message: "Error, please contact developer"
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            /** Kirim error */
-                                            res.status(403).json({
-                                                message: "Error, please contact developer"
-                                            })
-                                        }
-                                    })
-                                } else {
-                                    /** Kirim error */
-                                    res.status(403).json({
-                                        message: "Error, please contact developer"
-                                    })
-                                }
-                            })
+    if(selectpeserta) {
+        try{
+            const cek_peserta = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_account WHERE id = ?", [selectpeserta], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_peserta.length > 0){
+                /** part1 */
+                const part1 = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '1' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                        if(error){
+                            reject(error)
                         } else {
-                            /** Kirim error */
-                            res.status(403).json({
-                                message: "Error, please contact developer"
-                            })
+                            resolve(results)
                         }
                     })
-                } else {
-                    /** Kirim error */
-                    res.status(403).json({
-                        message: "Error, please contact developer"
+                })
+                if(part1.length >= 0){
+                    /** part2 */
+                    const part2 = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '2' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve(results)
+                            }
+                        })
                     })
+                    if(part2.length >= 0){
+                        /** part 3 */
+                        const part3 = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '3' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve(results)
+                                }
+                            })
+                        })
+                        if(part3.length >= 0){
+                            /** part 4 */
+                            const part4 = await new Promise((resolve, reject) => {
+                                Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '4' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                    if(error){
+                                        reject(error)
+                                    } else {
+                                        resolve(results)
+                                    }
+                                })
+                            })
+                            if(part4.length >= 0){
+                                /** part 5 */
+                                const part5 = await new Promise((resolve, reject) => {
+                                    Connection.query("SELECT view_total_skor_mhs_acara.konsul, view_total_skor_mhs_acara.namapeserta, view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek, view_total_skor_mhs_acara.skor FROM view_total_skor_mhs_acara WHERE view_total_skor_mhs_acara.id_peserta = ? AND view_total_skor_mhs_acara.idpart = '5' AND view_total_skor_mhs_acara.idkonsul = 3 GROUP BY view_total_skor_mhs_acara.part, view_total_skor_mhs_acara.aspek", [selectpeserta], (error, results) => {
+                                        if(error){
+                                            reject(error)
+                                        } else {
+                                            resolve(results)
+                                        }
+                                    })
+                                })
+                                if(part5.length >= 0){
+                                    /** get result cek peserta */
+                                    const resultcekpeserta = await new Promise((resolve, reject) => {
+                                        Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u INNER JOIN t_answer a ON a.iduser = u.id INNER JOIN icare_consult_type c ON c.id = a.idacara WHERE u.id IN (SELECT id_account FROM icare_conc WHERE NOT status = 'hapus' AND id_consult_type = 3) AND u.account_type = 'peserta_event' AND a.idacara = 3 GROUP BY u.id ORDER BY u.nama", (error, results) => {
+                                            if(error){
+                                                reject(error)
+                                            } else {
+                                                resolve(results)
+                                            }
+                                        })
+                                    })
+                                    if(resultcekpeserta.length > 0){
+                                        /** datapeserta */
+                                        const datapeserta = await new Promise((resolve, reject) => {
+                                            Connection.query("SELECT u.id AS id, u.nama AS nama, u.jenis_kelamin AS jenis_kelamin, u.phone AS nomor_kontak, u.tanggal_lahir AS tanggal_lahir, u.tempat_lahir AS tempat_lahir, u.pendidikan AS pendidikan, u.universitas AS universitas, u.fakultas AS fakultas, u.jurusan AS jurusan FROM icare_account u WHERE u.id = ? AND u.account_type = 'peserta_event' ORDER BY u.nama ASC", [selectpeserta], (error, results) => {
+                                                if(error){
+                                                    reject(error)
+                                                } else {
+                                                    resolve(results)
+                                                }
+                                            })
+                                        })
+                                        if(datapeserta.length >= 0){
+                                            /** datakesimpulan */
+                                            const datakesimpulan = await new Promise((resolve, reject) => {
+                                                Connection.query("SELECT u.id AS idpsikolog, u.nama AS namapsikolog, k.id AS idkesimpulan, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account u ON u.id = k.verified_by WHERE k.id_consult_type = 3 AND k.id_account = ? AND NOT k.status = 'hapus'", [selectpeserta], (error, results) => {
+                                                    if(error){
+                                                        reject(error)
+                                                    } else {
+                                                        resolve(results)
+                                                    }
+                                                })
+                                            })
+                                            if(datakesimpulan.length >= 0){
+                                                /** kirim data */
+                                                res.status(200).json({
+                                                    part1, part2, part3, part4, part5,
+                                                    selectpeserta, resultcekpeserta, datapeserta, datakesimpulan
+                                                })
+                                            } else {
+                                                /** Send error */
+                                                throw new Error('Get data kesimpulan error'); 
+                                            }
+                                        } else {
+                                            /** Send error */
+                                            throw new Error('Get data peserta error'); 
+                                        }
+                                    } else if(resultcekpeserta === 0){
+                                        /** Send error */
+                                        throw new Error('Belum ada peserta yang diberi kesimpulan'); 
+                                    } else {
+                                        /** Send error */
+                                        throw new Error('Get data peserta yang sudah diberi kesimpulan error');     
+                                    }
+                                } else {
+                                    /** Send error */
+                                    throw new Error('Get data part 5 error'); 
+                                }
+                            } else {
+                                /** Send error */
+                                throw new Error('Get data part 4 error');     
+                            }
+                        } else {
+                            /** Send error */
+                            throw new Error('Get data part 3 error'); 
+                        }
+                    } else {
+                        /** Send error */
+                        throw new Error('Get data part 2 error'); 
+                    }
+                } else {
+                    /** Send error */
+                    throw new Error('Get data part 1 error');    
                 }
-            })
-        } else {
-            /** Kirim error */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            })
+            } else if(cek_peserta.length === 0){
+                /** Send error */
+                throw new Error('Peserta tidak terdaftar');
+            } else {
+                /** Send error */
+                throw new Error('Cek peserta error');
+            }
+        } catch(e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
         }
-    } catch(error) {
+    } else {
         /** Kirim error */
         res.status(500).json({
-            message: error
+            message: "Field tidak boleh kosong"
         })
     }
 })
 /** end of sapa konsep */
 
-Router.post('/listsoal2', (req, res) => {
-    try{
-        const { selectkonsul, selectpart } = req.body;
+// Router.post('/jawaban', (req, res) => {
+//     try{
+//         const { selectkonsul, selectuser } = req.body;
 
-        if(selectkonsul, selectpart){
-            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' AND id = ?", selectkonsul, async(error, pilihkonsul) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data jawaban error'
-                    })
-                } else if(pilihkonsul.length == 0){
-                    res.status(403).json({
-                        message: 'Konsul tidak terdaftar'
-                    })
-                } else if(pilihkonsul.length > 0){
-                    Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id = ?", selectpart, async(error, cekpart) => {
-                        if(error){
-                            res.status(500).json({
-                                message: 'Get data kualifikasi konsultasi error'
-                            })
-                        } else if(cekpart.length == 0){
-                            res.status(403).json({
-                                message: 'Kualifikasi konsultasi tidak terdaftar'
-                            })
-                        } else if(cekpart.length > 0){
-                            Connection.query("SELECT * FROM icare_q3assessment WHERE status = 'aktif' AND idpart = ?", selectpart, async(error, soal) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: 'Get data soal error'
-                                    })
-                                } else if(soal.length > 0){
-                                    /** get all data part */
-                                    Connection.query("SELECT * FROM icare_passessment WHERE status = 'aktif' AND id_consult_type = ?", [selectkonsul], async(error, datapart) => {
-                                        if(error){
-                                            res.status(500).json({
-                                                message: error
-                                            }) 
-                                        } else if(datapart.length >= 0){
-                                            /** get data konsul */
-                                            Connection.query("SELECT * FROM icare_consult_type WHERE status_consult = 'aktif' ORDER BY nama ASC", async (error, konsul) => {
-                                                if(error){
-                                                    res.status(500).json({
-                                                        message: error
-                                                    }) 
-                                                } else if(konsul.length >= 0){
-                                                    /** Kirim data soal */
-                                                    res.status(200).json({
-                                                        datapart: datapart,
-                                                        konsul : konsul,
-                                                        pilihkonsul: pilihkonsul,
-                                                        soal: soal,
-                                                        selectkonsul,
-                                                        selectpart
-                                                    })
-                                                } else {
-                                                    res.status(500).json({
-                                                        message: 'Get data konsul error'
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            res.status(500).json({
-                                                message: 'Get data part error'
-                                            })
-                                        }
-                                    })
-                                } else if(soal.length == 0){
-                                    res.status(403).json({
-                                        message: 'Belum ada soal terdaftar'
-                                    })
-                                } else {
-                                    res.status(500).json({
-                                        message: 'Get data soal error'
-                                    })
-                                }
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: 'Get data kualifikasi konsultasi error'
-                            })
-                        }
-                    })
-                } else {
-                    res.status(500).json({
-                        message: 'Get data konsul error'
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch(error) {
-        console.log(error);
-    }
-})
+//         if(selectkonsul, selectuser){
+//             Connection.query("SELECT t.id AS idtipe, q.pertanyaan AS pertanyaan, a.jawaban AS jawaban, ac.nama AS namauser FROM icare_aassessment a INNER JOIN icare_qassessment q ON q.id = a.id_pertanyaan INNER JOIN icare_consult_type t ON q.id_consult_type = t.id INNER JOIN icare_account ac ON ac.id = a.id_account WHERE t.id = ? AND ac.id = ?", [selectkonsul, selectuser], async (error, results) => {
+//                 if(error){
+//                     res.status(500).json({
+//                         message: 'Get data jawaban error'
+//                     })
+//                 } else if(results.length >= 0 ){
+//                     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                         if(error){
+//                             res.status(500).json({
+//                                 message: error
+//                             })
+//                         } else {
+//                             Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
+//                                 if(error){
+//                                     res.status(500).json({
+//                                         message: error
+//                                     })
+//                                 } else {
+//                                     Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
+//                                         if(error){
+//                                             throw error;
+//                                         } else {
+//                                             /** Kirim data konsul */
+//                                             res.status(200).json({
+//                                                 results: results,
+//                                                 konsul : konsul,
+//                                                 pilihkonsul: pilihkonsul,
+//                                                 pertanyaan: pertanyaan,
+//                                                 selectkonsul
+//                                             })
+//                                         }
+//                                     })
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** Field kosong */
+//             res.status(500).json({
+//                 message: "Field tidak boleh kosong"
+//             });
+//         }
+//     } catch(error){
+//         console.log(error);
+//     }
+// });
 
-Router.post('/jawaban', (req, res) => {
-    try{
-        const { selectkonsul, selectuser } = req.body;
+// Router.post('/listjawaban', (req, res) => {
+//     try{
+//         const { selectkonsul } = req.body;
 
-        if(selectkonsul, selectuser){
-            Connection.query("SELECT t.id AS idtipe, q.pertanyaan AS pertanyaan, a.jawaban AS jawaban, ac.nama AS namauser FROM icare_aassessment a INNER JOIN icare_qassessment q ON q.id = a.id_pertanyaan INNER JOIN icare_consult_type t ON q.id_consult_type = t.id INNER JOIN icare_account ac ON ac.id = a.id_account WHERE t.id = ? AND ac.id = ?", [selectkonsul, selectuser], async (error, results) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data jawaban error'
-                    })
-                } else if(results.length >= 0 ){
-                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                        if(error){
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else {
-                            Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else {
-                                    Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
-                                        if(error){
-                                            throw error;
-                                        } else {
-                                            /** Kirim data konsul */
-                                            res.status(200).json({
-                                                results: results,
-                                                konsul : konsul,
-                                                pilihkonsul: pilihkonsul,
-                                                pertanyaan: pertanyaan,
-                                                selectkonsul
-                                            })
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch(error){
-        console.log(error);
-    }
-});
-
-Router.post('/listjawaban', (req, res) => {
-    try{
-        const { selectkonsul } = req.body;
-
-        if(selectkonsul){
-            Connection.query("SELECT t.id AS idtipe, q.pertanyaan AS pertanyaan, a.jawaban AS jawaban, ac.nama AS namauser FROM icare_aassessment a INNER JOIN icare_qassessment q ON q.id = a.id_pertanyaan INNER JOIN icare_consult_type t ON q.id_consult_type = t.id INNER JOIN icare_account ac ON ac.id = a.id_account WHERE t.id = ?", [selectkonsul], async (error, results) => {
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data jawaban error'
-                    })
-                } else if(results.length >= 0 ){
-                    Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
-                        if(error){
-                            res.status(500).json({
-                                message: error
-                            })
-                        } else {
-                            Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
-                                if(error){
-                                    res.status(500).json({
-                                        message: error
-                                    })
-                                } else {
-                                    Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
-                                        if(error){
-                                            throw error;
-                                        } else {
-                                            /** Kirim data konsul */
-                                            res.status(200).json({
-                                                results: results,
-                                                konsul : konsul,
-                                                pilihkonsul: pilihkonsul,
-                                                pertanyaan: pertanyaan,
-                                                selectkonsul
-                                            })
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch(error){
-        console.log(error);
-    }
-});
-
-Router.post('/listhasil', (req, res) => {
-    try{
-        const { selectkonsul } = req.body;
-
-        if(selectkonsul){
-            Connection.query("SELECT id FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, cekkonsul) =>{
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data cek konsul error'
-                    })
-                } else if(cekkonsul.length == 0) {
-                    res.status(403).json({
-                        message: 'Konsul tidak terdaftar'
-                    })
-                } else if(cekkonsul.length > 0) {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
-                        if(error){
-                            res.status(500).json({
-                                message: 'Get data hasil error'
-                            })
-                        } else if(results.length > 0 ){
-                            Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
-                                if(error){
-                                    res.status(500).json({
-                                        message: 'Get data konsul error'
-                                    })
-                                } else if(konsul.length >= 0) {
-                                    res.status(200).json({
-                                        results,
-                                        konsul, selectkonsul
-                                    })
-                                } else {
-                                    res.status(500).json({
-                                        message: 'Get data konsul error'
-                                    })
-                                }
-                            })
-                        } else if(results.length == 0){
-                            res.status(403).json({
-                                message: 'Belum ada peserta yang memberikan jawaban',
-                                selectkonsul
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: 'Get data hasil error'
-                            })
-                        };
-                    })
-                } else {
-                    res.status(403).json({
-                        message: 'Get data cek konsul error'
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-
-    } catch(error){
-        console.log(error);
-    }
-});
-
-Router.post('/listhasilpeserta', (req, res) => {
-    try{
-        const { selectkonsul, selectpeserta } = req.body;
-
-        if(selectkonsul && selectpeserta){
-            /** cek konsul */
-            Connection.query("SELECT id from icare_consult_type WHERE id = ?", [selectkonsul], async (error, cekkonsul) => {
-                if(error){
-                    res.status(500).json({
-                        message: "Get cek acara error"
-                    });
-                } else if(cekkonsul.length == 0){
-                    res.status(500).json({
-                        message: "Konsultasi tidak terdaftar"
-                    });
-                } else if(cekkonsul.length > 0) {
-                    /** cek peserta */
-                    Connection.query("SELECT id from icare_account WHERE id = ?", [selectpeserta], async (error, cekpeserta) => {
-                        if(error){
-                            res.status(500).json({
-                                message: "Get cek peserta error"
-                            });
-                        } else if(cekpeserta.length == 0) {
-                            res.status(500).json({
-                                message: "Peserta tidak terdaftar"
-                            });
-                        } else if(cekpeserta.length > 0) {
-                            /** get data jawaban peserta berdasarkan acara terpilih */
-                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
-                                /** get data acara */
-                                Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
-                                    if(error){
-                                        res.status(500).json({
-                                            message: "Get data konsul error"
-                                        });
-                                    } else if(konsul.length >= 0){
-                                        /** get data peserta yg sudah menjawab dan blm ada kesimpulan */
-                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
-                                            if(error){
-                                                res.status(500).json({
-                                                    message: "Get data peserta error"
-                                                });
-                                            }else if(peserta.length > 0){
-                                                /** get biodata peserta */
-                                                Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ? GROUP BY u.id", [selectkonsul, selectpeserta], async (error, biodata) => {
-                                                    if(error){
-                                                        res.status(500).json({
-                                                            message: "Get biodata peserta error"
-                                                        });
-                                                    } else if(biodata.length > 0) {
-                                                        /** biodata tersedia */
-                                                        res.status(200).json({
-                                                            results, konsul, peserta, selectkonsul, selectpeserta, biodata
-                                                        });
-                                                    }
-                                                })
-                                            }else if(peserta.length == 0){
-                                                res.status(403).json({
-                                                    message: "Belum ada peserta yang memberikan jawaban"
-                                                });
-                                            }else{
-                                                res.status(500).json({
-                                                    message: "Get data peserta error"
-                                                });
-                                            }                                 
-                                        })
-                                    } else {
-                                        res.status(500).json({
-                                            message: "Get data konsul error"
-                                        });
-                                    }
-                                })
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: "Get cek peserta error"
-                            });
-                        }
-                    })
-                } else {
-                    res.status(500).json({
-                        message: "Get cek acara error"
-                    });
-                }
-            })
-        } else {
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch(error){
-        console.log(error);
-    }
-});
-
-Router.post('/listkesimpulan', (req, res) => {
-    try{
-        const { selectkonsul } = req.body;
-
-        if(selectkonsul){
-            Connection.query("SELECT id FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, cekkonsul) =>{
-                if(error){
-                    res.status(500).json({
-                        message: 'Get data cek konsul error'
-                    })
-                } else if(cekkonsul.length == 0) {
-                    res.status(403).json({
-                        message: 'Konsul tidak terdaftar'
-                    })
-                } else if(cekkonsul.length > 0) {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, results) => {
-                        if(error){
-                            res.status(500).json({
-                                message: 'Get data hasil error'
-                            })
-                        } else if(results.length > 0 ){
-                            Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
-                                if(error){
-                                    res.status(500).json({
-                                        message: 'Get data konsul error'
-                                    })
-                                } else if(konsul.length >= 0) {
-                                    res.status(200).json({
-                                        results,
-                                        konsul, selectkonsul
-                                    })
-                                } else {
-                                    res.status(500).json({
-                                        message: 'Get data konsul error'
-                                    })
-                                }
-                            })
-                        } else if(results.length == 0){
-                            res.status(403).json({
-                                message: 'Belum ada peserta yang diberikan kesimpulan',
-                                selectkonsul
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: 'Get data hasil error'
-                            })
-                        };
-                    })
-                } else {
-                    res.status(403).json({
-                        message: 'Get data cek konsul error'
-                    })
-                }
-            })
-        } else {
-            /** Field kosong */
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-
-    } catch(error){
-        console.log(error);
-    }
-});
-
-Router.post('/listkesimpulanpeserta', (req, res) => {
-    try{
-        const { selectkonsul, selectpeserta } = req.body;
-
-        if(selectkonsul && selectpeserta){
-            /** cek konsul */
-            Connection.query("SELECT id from icare_consult_type WHERE id = ?", [selectkonsul], async (error, cekkonsul) => {
-                if(error){
-                    res.status(500).json({
-                        message: "Get cek acara error"
-                    });
-                } else if(cekkonsul.length == 0){
-                    res.status(500).json({
-                        message: "Konsultasi tidak terdaftar"
-                    });
-                } else if(cekkonsul.length > 0) {
-                    /** cek peserta */
-                    Connection.query("SELECT id from icare_account WHERE id = ?", [selectpeserta], async (error, cekpeserta) => {
-                        if(error){
-                            res.status(500).json({
-                                message: "Get cek peserta error"
-                            });
-                        } else if(cekpeserta.length == 0) {
-                            res.status(500).json({
-                                message: "Peserta tidak terdaftar"
-                            });
-                        } else if(cekpeserta.length > 0) {
-                            /** get data jawaban peserta berdasarkan acara terpilih */
-                            Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, p.pertanyaan AS pertanyaan, j.jawaban AS jawaban, j.jawaban_essay AS jawaban_essay, p.sub_pertanyaan AS sub_pertanyaan, j.sub_jawaban AS sub_jawaban FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ?", [selectkonsul, selectpeserta], async (error, results)=>{
-                                /** get data acara */
-                                Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul)=>{
-                                    if(error){
-                                        res.status(500).json({
-                                            message: "Get data konsul error"
-                                        });
-                                    } else if(konsul.length >= 0){
-                                        /** get data peserta yg sudah menjawab dan ada kesimpulan */
-                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = ? AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = ? AND status = 'aktif') GROUP BY u.id", [selectkonsul, selectkonsul], async (error, peserta) => {
-                                            if(error){
-                                                res.status(500).json({
-                                                    message: "Get data peserta error"
-                                                });
-                                            }else if(peserta.length > 0){
-                                                /** get data kesimpulan peserta */
-                                                Connection.query("SELECT k.id AS idkesimpulan, k.id_consult_type AS idkonsul, a.nama AS tipekonsul, k.verified_by AS idpsikolog, p.nama AS namapsikolog, k.id_account AS idpeserta, k.conc AS kesimpulan FROM icare_conc k INNER JOIN icare_consult_type a ON a.id = k.id_consult_type INNER JOIN icare_account p ON p.id = k.verified_by WHERE k.id_consult_type = ? AND k.id_account = ? AND NOT k.status = 'hapus'", [selectkonsul, selectpeserta], async (error, datakesimpulan) => {
-                                                    if(error){
-                                                        res.status(500).json({
-                                                            message: "Get data konsul error"
-                                                        });
-                                                    } else {
-                                                        /** get biodata peserta */
-                                                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta, u.tempat_lahir AS tempat_lahir, u.tanggal_lahir AS tanggal_lahir, u.jenis_kelamin AS jenis_kelamin, u.pendidikan AS pendidikan_terakhir, u.universitas AS asal_universitas, u.jurusan AS jurusan, u.phone AS phone FROM icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON p.id = j.id_pertanyaan WHERE p.id_consult_type = ? AND u.id = ? GROUP BY u.id", [selectkonsul, selectpeserta], async (error, biodata) => {
-                                                            if(error){
-                                                                res.status(500).json({
-                                                                    message: "Get biodata peserta error"
-                                                                });
-                                                            } else if(biodata.length > 0) {
-                                                                /** biodata tersedia */
-                                                                res.status(200).json({
-                                                                    results, konsul, peserta, selectkonsul, selectpeserta, datakesimpulan, biodata
-                                                                });
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }else if(peserta.length == 0){
-                                                res.status(403).json({
-                                                    message: "Belum ada peserta yang memberikan jawaban"
-                                                });
-                                            }else{
-                                                res.status(500).json({
-                                                    message: "Get data peserta error"
-                                                });
-                                            }                                 
-                                        })
-                                    } else {
-                                        res.status(500).json({
-                                            message: "Get data konsul error"
-                                        });
-                                    }
-                                })
-                            })
-                        } else {
-                            res.status(500).json({
-                                message: "Get cek peserta error"
-                            });
-                        }
-                    })
-                } else {
-                    res.status(500).json({
-                        message: "Get cek acara error"
-                    });
-                }
-            })
-        } else {
-            res.status(500).json({
-                message: "Field tidak boleh kosong"
-            });
-        }
-    } catch(error){
-        console.log(error);
-    }
-});
-
+//         if(selectkonsul){
+//             Connection.query("SELECT t.id AS idtipe, q.pertanyaan AS pertanyaan, a.jawaban AS jawaban, ac.nama AS namauser FROM icare_aassessment a INNER JOIN icare_qassessment q ON q.id = a.id_pertanyaan INNER JOIN icare_consult_type t ON q.id_consult_type = t.id INNER JOIN icare_account ac ON ac.id = a.id_account WHERE t.id = ?", [selectkonsul], async (error, results) => {
+//                 if(error){
+//                     res.status(500).json({
+//                         message: 'Get data jawaban error'
+//                     })
+//                 } else if(results.length >= 0 ){
+//                     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, konsul) => {
+//                         if(error){
+//                             res.status(500).json({
+//                                 message: error
+//                             })
+//                         } else {
+//                             Connection.query("SELECT id, nama FROM icare_consult_type WHERE id = ?", [selectkonsul], async (error, pilihkonsul) => {
+//                                 if(error){
+//                                     res.status(500).json({
+//                                         message: error
+//                                     })
+//                                 } else {
+//                                     Connection.query("SELECT q.id AS idp, q.pertanyaan AS pertanyaan FROM icare_qassessment q WHERE q.id_consult_type = ? AND q.status = 'aktif' ", [selectkonsul], async (error, pertanyaan) => {
+//                                         if(error){
+//                                             throw error;
+//                                         } else {
+//                                             /** Kirim data konsul */
+//                                             res.status(200).json({
+//                                                 results: results,
+//                                                 konsul : konsul,
+//                                                 pilihkonsul: pilihkonsul,
+//                                                 pertanyaan: pertanyaan,
+//                                                 selectkonsul
+//                                             })
+//                                         }
+//                                     })
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** Field kosong */
+//             res.status(500).json({
+//                 message: "Field tidak boleh kosong"
+//             });
+//         }
+//     } catch(error){
+//         console.log(error);
+//     }
+// });
 
 module.exports = Router;
