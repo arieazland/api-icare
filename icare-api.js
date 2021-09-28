@@ -2,6 +2,7 @@ const Express = require("express");
 const Mysql = require("mysql");
 const Bcrypt = require("bcryptjs");
 const Path = require("path");
+const http = require("http");
 const Dotenv = require("dotenv");
 Dotenv.config({ path: './.env' });
 
@@ -36,6 +37,8 @@ app.use('/kesimpulankepribadian', require('./routes/kesimpulankepribadian'));
 app.use('/assessment', require('./routes/assessment'));
 
 let port = process.env.PORT;
-app.listen(port, () => {
+
+const server = http.createServer(app);
+server.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });

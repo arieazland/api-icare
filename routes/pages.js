@@ -1,4 +1,5 @@
 const Express = require("express");
+const app = Express();
 const Router = Express.Router();
 const Dotenv = require("dotenv");
 // Set Moment Format engine
@@ -8,7 +9,7 @@ Moment.locale('id');
 
 Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
-const { Cookie } = require("express-session");
+//const { Cookie } = require("express-session");
 
 /** Route for Register */
 Router.get('/', (req, res) => {
@@ -1362,7 +1363,7 @@ Router.post('/kesimpulanassessmentkepribadian', async (req, res) =>{
             res.status(200).json({
                 resultcekpeserta,
             })
-        } else if( resultcekpeserta.length === 0){
+        } else if( resultcekpeserta.length == 0){
             /** Belum ada peserta yang diberi kesimpulan */
             throw new Error('Belum ada peserta yang diberikan kesimpulan');
         } else {
