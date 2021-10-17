@@ -35,6 +35,7 @@ app.use('/jawab', require('./routes/jawab'));
 app.use('/kesimpulankarir', require('./routes/kesimpulankarir'));
 app.use('/kesimpulankepribadian', require('./routes/kesimpulankepribadian'));
 app.use('/assessment', require('./routes/assessment'));
+app.use('/room', require('./routes/room'));
 
 let port = process.env.PORT;
 

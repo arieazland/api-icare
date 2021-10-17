@@ -31,48 +31,131 @@ Router.get('/userlist', (req, res) =>{
     })
 })
 
-Router.post("/getpeserta", (req, res) => {
-    try{
+Router.post("/getpesertavidcall", async (req, res) => {
+    const { idpeserta, idpsikolog  } = req.body;
+    if(idpeserta && idpsikolog ){
+        try{
+            /** cek data peserta */
+            const cek_peserta = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id, email FROM icare_account WHERE id = ? AND account_type IN ('peserta','peserta_event')", [idpeserta],(error, results) => {
+                    if(error) { 
+                        /** jika error */
+                        reject(error);
+                    } else {
+                        /** jika results */
+                        resolve(results);
+                    }
+                });
+            });
+            if(cek_peserta.length > 0){
+                /** cek data psikolog */
+                const cek_psikolog = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT * FROM icare_account WHERE id = ? AND account_type IN ('konsultan','psikologis')", [idpsikolog],(error, results) => {
+                        if(error) { 
+                            /** jika error */
+                            reject(error);
+                        } else {
+                            /** jika results */
+                            resolve(results);
+                        }
+                    });
+                });
+                if(cek_psikolog.length > 0){
+                    /** get url video call room */
+                    const urlroom = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT url_room FROM icare_roomvidcall WHERE idpsikolog = ?", [idpsikolog],(error, results) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(results);
+                            }
+                        });
+                    });
 
-        const { idpeserta } = req.body
+                    if(urlroom.length > 0){
+                        /** Kirim data */
+                        res.status(200).json({
+                            urlroom, cek_peserta
+                        })
+                    } else if(urlroom === 0){
+                        /** send error */
+                        throw new Error('Psikolog Belum Mendapatkan URL Room Video Call, Silahkan kontak admin');
+                    } else{
+                        /** send error */
+                        throw new Error('Get data url room gagal');
+                    }
 
-        if(idpeserta){
-            Connection.query("SELECT id, email, nama, phone FROM icare_account WHERE id = ? AND account_type IN ('peserta','peserta_event')", [idpeserta], async (error, cekpeserta) => {
-                if(error) {
-                    /** Kirim error */
-                    res.status(500).json({
-                        message: error
-                    })
-                } else if(cekpeserta.length == 0) {
-                    /** data peserta tidak ada */
-                    res.status(403).json({
-                        message: "Peserta tidak terdaftar"
-                    })
-                } else if(cekpeserta.length > 0) {
-                    /** get data peserta */
-                    res.status(200).json({
-                        data: cekpeserta
-                    })
+                } else if(cek_psikolog.length === 0){
+                    /** send error */
+                    throw new Error('Psikolog tidak terdaftar');
                 } else {
-                    /** Kirim error */
-                    res.status(500).json({
-                        message: "Error, please contact developer"
-                    })
+                    /** send error */
+                    throw new Error('Get data psikolog gagal');
                 }
-            })
-        } else {
-            /** field kosong */
-            res.status(403).json({
-                message: "Field tidak boleh kosong"
-            })
+
+            } else if(cek_peserta.length === 0){
+                /** send error */
+                throw new Error('Peserta tidak terdaftar');
+            } else {
+                /** send error */
+                throw new Error('Get data peserta gagal');
+            }
+
+        } catch (e) {
+            res.status(400).json({ message: e.message });   
         }
-    } catch (error) {
-        /** Kirim error */
-        res.status(500).json({
-            message: error
+    } else {
+        /** field kosong */
+        res.status(403).json({
+            message: "Field tidak boleh kosong"
         })
     }
 })
+
+// Router.post("/getpeserta", (req, res) => {
+//     try{
+
+//         const { idpeserta } = req.body
+
+//         if(idpeserta){
+//             Connection.query("SELECT id, email, nama, phone FROM icare_account WHERE id = ? AND account_type IN ('peserta','peserta_event')", [idpeserta], async (error, cekpeserta) => {
+//                 if(error) {
+//                     /** Kirim error */
+//                     res.status(500).json({
+//                         message: error
+//                     })
+//                 } else if(cekpeserta.length == 0) {
+//                     /** data peserta tidak ada */
+//                     res.status(403).json({
+//                         message: "Peserta tidak terdaftar"
+//                     })
+//                 } else if(cekpeserta.length > 0) {
+//                     /** get data peserta */
+//                     res.status(200).json({
+//                         data: cekpeserta
+//                     })
+//                 } else {
+//                     /** Kirim error */
+//                     res.status(500).json({
+//                         message: "Error, please contact developer"
+//                     })
+//                 }
+//             })
+//         } else {
+//             /** field kosong */
+//             res.status(403).json({
+//                 message: "Field tidak boleh kosong"
+//             })
+//         }
+//     } catch (error) {
+//         /** Kirim error */
+//         res.status(500).json({
+//             message: error
+//         })
+//     }
+// })
 
 // Router.get('/konsullist', (req, res) => {
 //     Connection.query("SELECT * FROM icare_consult_type WHERE NOT status_consult = 'hapus' ORDER BY nama ASC", async (error, results) => {
@@ -1539,6 +1622,45 @@ Router.post('/kesimpulanassessmentkepribadianpeserta', async (req, res) =>{
     }
 })
 /** end of sapa konsep */
+
+/** Route for Video Call */
+Router.get('/videocall', async (req, res) =>{
+    try{
+        /** get data video call */
+        const listvidcall = await new Promise((resolve, reject) => {
+            Connection.query("SELECT r.id AS id, r.nama_room AS namaroom, r.url_room AS urlroom, a.nama AS namapengguna, r.date_created AS tanggaldibuat, r.time_created AS jamdibuat FROM icare_roomvidcall r, icare_account a WHERE status = 'aktif' AND r.idpsikolog = a.id  ", (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+
+        /** get data psikolog */
+        const listpsikolog = await new Promise((resolve, reject) => {
+            Connection.query("SELECT u.id, u.nama FROM icare_account u WHERE account_type IN ('konsultan', 'psikologis') AND NOT id IN (SELECT idpsikolog FROM icare_roomvidcall)", (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+        if(listvidcall.length >= 0 && listpsikolog.length >= 0){
+            /** send data */
+            res.status(200).json({
+                listvidcall, listpsikolog
+            })
+        } else {
+            /** Send error */
+            throw new Error('Get data list room video call error');
+        }
+    } catch(e) {
+        /** send error */
+        res.status(400).json({ message: e.message });
+    }
+})
 
 // Router.post('/jawaban', (req, res) => {
 //     try{
