@@ -11,11 +11,11 @@ require("moment/locale/id");  // without this line it didn't work
 Moment.locale('id');
 
 exports.registerJawabsatu = async (req, res) => {
-    const { iduser, idpart, idsoal, radio1, radio2, radio3, radio4, essayboxg, essayboxi } = req.body;
+    const { iduser, idpart, idsoal, radio1, radio2, radio3, radio4, essayboxg, essayboxi, selectsesi } = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
 
-    if(iduser && idpart && idsoal && radio1 && radio2 && radio3 && radio4){
+    if(iduser && idpart && idsoal && radio1 && radio2 && radio3 && radio4 && selectsesi){
         try{
             /** cek user */
             const cek_user = await new Promise((resolve, reject) => {
@@ -27,7 +27,18 @@ exports.registerJawabsatu = async (req, res) => {
                     }
                 })
             })
-            if(cek_user.length > 0){
+
+            const cek_sesi = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_sesi_vidcall WHERE id = ?", [selectsesi], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+
+            if(cek_user.length > 0 && cek_sesi.length > 0){
                 /** user terdaftar */
                 /** cek part */
                 const cek_part = await new Promise((resolve, reject) => {
@@ -93,8 +104,18 @@ exports.registerJawabsatu = async (req, res) => {
                                 }
                             })
                         })
+
+                        const input_sesi = await new Promise((resolve, reject) => {
+                            Connection.query("INSERT INTO icare_sesi_peserta SET ?", {id: null, id_sesi: selectsesi, id_peserta: iduser, date_created: tanggal, date_updated: null, time_created: waktu, time_updated: null}, (error) => {
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve("true")
+                                }
+                            })
+                        })
                         
-                        if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_jawaban3 === "true" && input_jawaban4 === "true"){
+                        if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_jawaban3 === "true" && input_jawaban4 === "true" && input_sesi === "true"){
                             /** berhasil simpan jawaban */
                             res.status(201).json({
                                 message: "Jawaban berhasil disimpan, terima kasih atas partisipasinya",
@@ -113,10 +134,10 @@ exports.registerJawabsatu = async (req, res) => {
                     /** part tidak terdaftar */
                     throw new Error('Part Tidak Terdaftar');
                 }
-
+            
             } else {
                 /** user tidak terdaftar */
-                throw new Error('User Tidak Terdaftar');
+                throw new Error('User atau Sesi Tidak Terdaftar');
             }
         } catch(e) {
             /** send error */
@@ -132,11 +153,11 @@ exports.registerJawabsatu = async (req, res) => {
 }
 
 exports.registerJawabdua = async (req, res) => {
-    const { iduser, idpart, idsoal, radio5, radio6, radio7, radio8, radiosub5 , essayboxi } = req.body;
+    const { iduser, idpart, idsoal, radio5, radio6, radio7, radio8, radiosub5 , essayboxi, selectsesi } = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
 
-    if(iduser && idpart && idsoal && radio5 && radio6 && radio7 && radio8){
+    if(iduser && idpart && idsoal && radio5 && radio6 && radio7 && radio8 && selectsesi){
         try{
             /** cek user */
             const cek_user = await new Promise((resolve, reject) => {
@@ -148,7 +169,18 @@ exports.registerJawabdua = async (req, res) => {
                     }
                 })
             })
-            if(cek_user.length > 0){
+
+            /** cek sesi */
+            const cek_sesi = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_sesi_vidcall WHERE id = ?", [selectsesi], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_user.length > 0 && cek_sesi.length > 0){
                 /** user terdaftar */
                 /** cek part */
                 const cek_part = await new Promise((resolve, reject) => {
@@ -214,8 +246,18 @@ exports.registerJawabdua = async (req, res) => {
                                 }
                             })
                         })
+
+                        const input_sesi = await new Promise((resolve, reject) => {
+                            Connection.query("INSERT INTO icare_sesi_peserta SET ?", {id: null, id_sesi: selectsesi, id_peserta: iduser, date_created: tanggal, date_updated: null, time_created: waktu, time_updated: null}, (error) => {
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve("true")
+                                }
+                            })
+                        })
                         
-                        if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_jawaban3 === "true" && input_jawaban4 === "true"){
+                        if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_jawaban3 === "true" && input_jawaban4 === "true" && input_sesi === "true"){
                             /** berhasil simpan jawaban */
                             res.status(201).json({
                                 message: "Jawaban berhasil disimpan, terima kasih atas partisipasinya",
@@ -237,7 +279,7 @@ exports.registerJawabdua = async (req, res) => {
 
             } else {
                 /** user tidak terdaftar */
-                throw new Error('User Tidak Terdaftar');
+                throw new Error('User atau Sesi Tidak Terdaftar');
             }
         } catch(e) {
             /** send error */
@@ -252,11 +294,11 @@ exports.registerJawabdua = async (req, res) => {
 }
 
 exports.registerJawabtiga = async (req, res) => {
-    const { iduser, idpart, idsoal, radio9, radio10, essayboxi } = req.body;
+    const { iduser, idpart, idsoal, radio9, radio10, essayboxi, selectsesi } = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
 
-    if(iduser && idpart && idsoal && radio9 && radio10){
+    if(iduser && idpart && idsoal && radio9 && radio10 && selectsesi){
         try{
             /** cek user */
             const cek_user = await new Promise((resolve, reject) => {
@@ -268,7 +310,18 @@ exports.registerJawabtiga = async (req, res) => {
                     }
                 })
             })
-            if(cek_user.length > 0){
+
+            /** cek sesi */
+            const cek_sesi = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_sesi_vidcall WHERE id = ?", [selectsesi], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_user.length > 0 && cek_sesi.length > 0){
                 /** user terdaftar */
                 /** cek part */
                 const cek_part = await new Promise((resolve, reject) => {
@@ -314,8 +367,18 @@ exports.registerJawabtiga = async (req, res) => {
                                 }
                             })
                         })
+
+                        const input_sesi = await new Promise((resolve, reject) => {
+                            Connection.query("INSERT INTO icare_sesi_peserta SET ?", {id: null, id_sesi: selectsesi, id_peserta: iduser, date_created: tanggal, date_updated: null, time_created: waktu, time_updated: null}, (error) => {
+                                if(error){
+                                    reject(error)
+                                } else {
+                                    resolve("true")
+                                }
+                            })
+                        })
                         
-                        if(input_jawaban1 === "true" && input_jawaban2 === "true"){
+                        if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_sesi === "true"){
                             /** berhasil simpan jawaban */
                             res.status(201).json({
                                 message: "Jawaban Berhasil Disimpan, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya",
@@ -337,7 +400,7 @@ exports.registerJawabtiga = async (req, res) => {
 
             } else {
                 /** user tidak terdaftar */
-                throw new Error('User Tidak Terdaftar');
+                throw new Error('User atau Sesi Tidak Terdaftar');
             }
 
         } catch(e) {

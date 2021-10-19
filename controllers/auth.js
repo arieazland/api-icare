@@ -1,7 +1,8 @@
 const Mysql = require("mysql");
 const Path = require("path");
 const Dotenv = require("dotenv");
-const Bcrypt = require('bcryptjs');
+//const Bcrypt = require('bcryptjs');
+const md5 = require('md5')
 
 Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
@@ -18,13 +19,15 @@ exports.login = async (req, res) => {
         var waktu = Moment().format("HH:mm:ss");
 
         if(email && password){
+            var unhased = md5(password);
+
             Connection.query('SELECT * FROM icare_account WHERE email = ?', [email], async (error, results) =>{
                 if(results.length == 0){
                     /** email salah */
                     res.status(401).json({
                         message: 'Email atau password salah'
                     });
-                } else if(results.length > 0 && !(await Bcrypt.compare(password, results[0].password))){
+                } else if(results.length > 0 && unhased!=results[0].password){
                     /** password salah */
                     res.status(401).json({
                         message: 'Email atau password salah'
@@ -34,7 +37,7 @@ exports.login = async (req, res) => {
                     res.status(401).json({
                         message: 'User anda sudah di nonaktifkan'
                     });
-                } else if(results.length > 0 && await Bcrypt.compare(password, results[0].password) && results[0].account_type != 'nonaktif') {
+                } else if(results.length > 0 && unhased === results[0].password && results[0].account_type != 'nonaktif') {
                     /** login sukses */
                     res.status(200).json({
                         message: 'Login Berhasil',
@@ -86,7 +89,8 @@ exports.registerAdmin = (req, res) => {
 
             } else if (results.length == 0){
                 /** Username tersedia */
-                let hashedPassword = await Bcrypt.hash(password, 8);
+                // let hashedPassword = await Bcrypt.hash(password, 8);
+                let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, account_type: "admin", date_created: tanggal, time_created: waktu}, 
@@ -135,7 +139,8 @@ exports.registerPeserta = async (req, res) => {
                     /** password dan konfirmasi password sama */
 
                     /** hashing password */
-                    let hashedPassword = await Bcrypt.hash(password, 8);
+                    // let hashedPassword = await Bcrypt.hash(password, 8);
+                    let hashedPassword = md5(password);
 
                     /** insert data ke database */
                     const insert_data_peserta = await new Promise((resolve, reject) => {
@@ -203,7 +208,8 @@ exports.registerPesertaevent = (req, res) => {
 
             } else if (results.length == 0){
                 /** Username tersedia */
-                let hashedPassword = await Bcrypt.hash(password, 8);
+                // let hashedPassword = await Bcrypt.hash(password, 8);
+                let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
@@ -254,7 +260,8 @@ exports.registerPesertareguler = (req, res) => {
 
             } else if (results.length == 0){
                 /** Username tersedia */
-                let hashedPassword = await Bcrypt.hash(password, 8);
+                // let hashedPassword = await Bcrypt.hash(password, 8);
+                let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
@@ -305,7 +312,8 @@ exports.registerKonsultan = (req, res) => {
 
             } else if (results.length == 0){
                 /** Username tersedia */
-                let hashedPassword = await Bcrypt.hash(password, 8);
+                // let hashedPassword = await Bcrypt.hash(password, 8);
+                let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
@@ -356,7 +364,8 @@ exports.registerPsikolog = (req, res) => {
 
             } else if (results.length == 0){
                 /** Username tersedia */
-                let hashedPassword = await Bcrypt.hash(password, 8);
+                // let hashedPassword = await Bcrypt.hash(password, 8);
+                let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
