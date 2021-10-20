@@ -17,6 +17,9 @@ exports.registrasiRoom = async (req, res) => {
     
     if(namaroom && psikolog && urlroom){
         try{
+            const customurlroom = urlroom.substr(8);
+            const urlroomicare = 'https://care.imeet.id/videocallicare/'+customurlroom;
+
             /** lakukan cek psikolog */
             const cek_psikolog = await new Promise((resolve, reject) => {
                 Connection.query("SELECT id FROM icare_account WHERE id = ?", [psikolog], (error, results) => {
@@ -31,7 +34,7 @@ exports.registrasiRoom = async (req, res) => {
             if(cek_psikolog.length > 0){
                 /** simpan ke database */
                 const save_url = await new Promise((resolve, reject) => {
-                    Connection.query("INSERT INTO icare_roomvidcall SET ?", {id: null, idpsikolog: psikolog, nama_room: namaroom, url_room: urlroom, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
+                    Connection.query("INSERT INTO icare_roomvidcall SET ?", {id: null, idpsikolog: psikolog, nama_room: namaroom, url_room: urlroomicare, real_url_room: urlroom, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
                         if(error){
                             reject(error)
                         } else {

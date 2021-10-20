@@ -74,12 +74,24 @@ Router.post("/getpesertavidcall", async (req, res) => {
                         });
                     });
 
-                    if(urlroom.length > 0){
+                    const real_urlroom = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT real_url_room FROM icare_roomvidcall WHERE idpsikolog = ?", [idpsikolog],(error, results) => {
+                            if(error) { 
+                                /** jika error */
+                                reject(error);
+                            } else {
+                                /** jika results */
+                                resolve(results);
+                            }
+                        });
+                    });
+
+                    if(urlroom.length > 0 && real_urlroom.length > 0){
                         /** Kirim data */
                         res.status(200).json({
-                            urlroom, cek_peserta
+                            urlroom, cek_peserta, real_urlroom
                         })
-                    } else if(urlroom == 0){
+                    } else if(urlroom == 0 && real_urlroom == 0){
                         /** send error */
                         throw new Error('Psikolog Belum Mendapatkan URL Room Video Call, Silahkan kontak admin');
                     } else{
@@ -685,7 +697,7 @@ Router.post('/hasilassessmentkarirsesi', async (req, res) => {
             if(cek_sesi.length > 0){
                 /** cekhasilpeserserta */
                 const results = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id", [selectsesi], (error, results) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id ORDER BY u.id ASC", [selectsesi], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -770,7 +782,7 @@ if(selectpeserta && selectsesi){
             if(results.length >= 0){
                 /** get data peserta yg sudah menjawab dan blm ada kesimpulan */
                 const peserta = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id", [selectsesi], (error, results) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND NOT u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id ORDER BY u.id ASC", [selectsesi], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -885,7 +897,7 @@ Router.post('/kesimpulanassessmentkarirsesi', async (req, res) => {
             if(cek_sesi.length > 0){
                 /** cek peserta yang sudah mendapatkan kesimpulan */
                 const cekkesimpulan = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id", [selectsesi], (error, results) => {
+                    Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id ORDER BY u.id ASC", [selectsesi], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -972,7 +984,7 @@ Router.post('/kesimpulanassessmentkarirpeserta', async (req, res) => {
                 if(results.length >= 0){
                     /** get data peserta yg sudah menjawab dan ada kesimpulan */
                     const peserta = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id", [selectsesi], async (error, results)=>{
+                        Connection.query("SELECT u.id AS idpeserta, u.nama AS namapeserta FROM icare_sesi_peserta sp, icare_account u INNER JOIN icare_a2assessment j ON j.id_account = u.id INNER JOIN icare_q3assessment p ON j.id_pertanyaan = p.id WHERE p.id_consult_type = 1 AND u.id IN (SELECT id_account FROM icare_conc WHERE id_consult_type = 1 AND status = 'aktif') AND u.id = sp.id_peserta AND sp.id_sesi = ? GROUP BY u.id ORDER BY u.id ASC", [selectsesi], async (error, results)=>{
                             if(error){
                                 reject(error)
                             } else {
@@ -1996,7 +2008,7 @@ Router.get('/videocall', async (req, res) =>{
 
         /** get data psikolog */
         const listpsikolog = await new Promise((resolve, reject) => {
-            Connection.query("SELECT u.id, u.nama FROM icare_account u WHERE account_type IN ('konsultan', 'psikologis') AND NOT id IN (SELECT idpsikolog FROM icare_roomvidcall)", (error, results) => {
+            Connection.query("SELECT u.id, u.nama FROM icare_account u WHERE account_type IN ('konsultan', 'psikologis') AND NOT id IN (SELECT idpsikolog FROM icare_roomvidcall WHERE status = 'aktif')", (error, results) => {
                 if(error){
                     reject(error)
                 } else {
