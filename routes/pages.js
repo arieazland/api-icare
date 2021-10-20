@@ -307,9 +307,9 @@ Router.post('/listpartkarir', async (req, res) => {
     const { selectuser } = req.body;
     if(selectuser){
         try{
-            /** cekpeserta */
-            const cekpeserta = await new Promise((resolve, reject) => {
-                Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], (error, results) => {
+            /** cek kuota peserta sesi */
+            const cek_kuota = await new Promise((resolve, reject) => {
+                Connection.query("SELECT COUNT(sp.id_peserta) AS totalpeserta FROM icare_sesi_peserta sp, icare_sesi_vidcall sv WHERE sp.id_sesi = sv.id AND sv.status = 'aktif' AND sv.id_consult_type = '1'", (error, results) => {
                     if(error) { 
                         /** jika error */
                         reject(error);
@@ -319,10 +319,11 @@ Router.post('/listpartkarir', async (req, res) => {
                     }
                 });
             });
-            if(cekpeserta.length > 0){
-                /** cek apakah user sudah ada jawaban atau tidak */
-                const cekjawaban = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = 1", [selectuser], (error, results) => {
+
+            if(cek_kuota[0].totalpeserta < 500){
+                /** cekpeserta */
+                const cekpeserta = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT * FROM icare_account WHERE id = ? AND (account_type = 'peserta_event' OR account_type = 'peserta_event') AND NOT account_type = 'nonaktif'", [selectuser], (error, results) => {
                         if(error) { 
                             /** jika error */
                             reject(error);
@@ -332,11 +333,10 @@ Router.post('/listpartkarir', async (req, res) => {
                         }
                     });
                 });
-                if(cekjawaban.length === 0){
-                    /** peserta blm memberikan jawaban */
-                    /** get data part */
-                    const datapart = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = 1",(error, results) => {
+                if(cekpeserta.length > 0){
+                    /** cek apakah user sudah ada jawaban atau tidak */
+                    const cekjawaban = await new Promise((resolve, reject) => {
+                        Connection.query("SELECT * FROM icare_a2assessment WHERE id_account = ? AND id_consult_type = 1", [selectuser], (error, results) => {
                             if(error) { 
                                 /** jika error */
                                 reject(error);
@@ -346,34 +346,57 @@ Router.post('/listpartkarir', async (req, res) => {
                             }
                         });
                     });
-                    if(datapart.length > 0){
-                        /** Kirim data part */
-                        res.status(200).json({
-                            datapart: datapart
-                        })
-                    } else if(datapart.length === 0){
+                    if(cekjawaban.length === 0){
+                        /** peserta blm memberikan jawaban */
+                        /** get data part */
+                        const datapart = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT * FROM icare_passessment WHERE id_consult_type = 1",(error, results) => {
+                                if(error) { 
+                                    /** jika error */
+                                    reject(error);
+                                } else {
+                                    /** jika results */
+                                    resolve(results);
+                                }
+                            });
+                        });
+                        if(datapart.length > 0){
+                            /** Kirim data part */
+                            res.status(200).json({
+                                datapart: datapart
+                            })
+                        } else if(datapart.length === 0){
+                            /** send error */
+                            throw new Error('Data Part/Kualifikasi Kosong');
+                        } else {
+                            /** send error */
+                            throw new Error('Get Data Part/Kualifikasi Error');
+                        }
+                    } else if(cekjawaban.length > 0){
+                        /** peserta sudah memberikan jawaban */
                         /** send error */
-                        throw new Error('Data Part/Kualifikasi Kosong');
+                        // throw new Error('Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya');
+                        res.status(201).json({ message: 'Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya'});
                     } else {
                         /** send error */
-                        throw new Error('Get Data Part/Kualifikasi Error');
+                        throw new Error('Cek Jawaban Error');
                     }
-                } else if(cekjawaban.length > 0){
-                    /** peserta sudah memberikan jawaban */
+                } else if(cekpeserta.length === 0){
                     /** send error */
-                    // throw new Error('Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya');
-                    res.status(201).json({ message: 'Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya'});
+                    throw new Error('Peserta Tidak Terdaftar');
                 } else {
                     /** send error */
-                    throw new Error('Cek Jawaban Error');
+                    throw new Error('Cek Peserta Error');
                 }
-            } else if(cekpeserta.length === 0){
+
+            } else if(cek_kuota[0].totalpeserta >= 500){
                 /** send error */
-                throw new Error('Peserta Tidak Terdaftar');
+                throw new Error('Mohon maaf, saat ini kuota sudah penuh. Anda tidak dapat mengikuti assessment dan konsultasi psikolog. Terima kasih.');
             } else {
                 /** send error */
-                throw new Error('Cek Peserta Error');
+                throw new Error('Get Cek Kuota Total Peserta Error');
             }
+
         } catch(e){
             res.status(400).json({ message: e.message });   
         }

@@ -19,12 +19,12 @@ exports.registrasiJawaban = async (req, res) => {
     
     if(iduser && idsoal && radio){
         try{
+            /** pengecekkan kuota sesi */
             /** lakukan terlebih dahulu pengecekkan iduser dan idsoal */
             /** kemudian lakukan pengecekkan jawaban jika sudah ada jawaban atas ID user, ID soal dan ID acara tsb, */
             /** di lanjutkan ke part selanjutnya */
             /** jika belum ada dilakukan penyimpanan jawaban dan kirim notif jawaban berhasil di simpan */
 
-            
             /** lakukan cek iduser */
             const cek_user = await new Promise((resolve, reject) => {
                 Connection.query("SELECT id FROM icare_account WHERE id = ?", [iduser], (error, results) => {
