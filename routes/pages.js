@@ -2186,4 +2186,47 @@ Router.post('/ratingpsikolog', async (req, res) =>{
 //     }
 // });
 
+/** Route for lupa password */
+Router.post('/lupapassword', (req, res) =>{
+    try{
+        const {email} = req.body;
+
+        if(email) {
+            Connection.query("SELECT email AS email, id AS id from icare_account WHERE email = ?", [email], async(error, results) => {
+                if(error){
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: error
+                    })
+                } else if(results.length == 0){
+                    /** email tidak terdaftar */
+                    res.status(403).json({
+                        message: "Jika email terdaftar, silahkan cek email anda dan ikuti instruksinya"
+                    })
+                } else if(results.length > 0){
+                    /** email terdaftar */
+                    res.status(200).json({
+                        results
+                    })
+                } else {
+                    /** Kirim error */
+                    res.status(500).json({
+                        message: error
+                    })
+                }
+            })
+        } else {
+            /** field kosong */
+            res.status(403).json({
+                message: 'Email tidak boleh kosong'
+            })
+        }
+    } catch(error) {
+        /** Kirim error */
+        res.status(500).json({
+            message: error
+        })
+    }
+})
+
 module.exports = Router;

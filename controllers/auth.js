@@ -8,6 +8,7 @@ Dotenv.config({ path: './.env' });
 const Connection = require ("../DBconnection");
 
 const Moment = require("moment");
+const { resolve } = require("path");
 require("moment/locale/id");  // without this line it didn't work
 Moment.locale('id');
 
@@ -93,7 +94,7 @@ exports.registerAdmin = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "admin", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, non_hashed: password, account_type: "admin", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -212,7 +213,7 @@ exports.registerPesertaevent = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, non_hashed: password, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -264,7 +265,7 @@ exports.registerPesertareguler = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, non_hashed: password, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -316,7 +317,7 @@ exports.registerKonsultan = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, non_hashed: password, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -368,7 +369,7 @@ exports.registerPsikolog = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, non_hashed: password, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
                     (error) => {
                     if(error){
                         console.log(error)
@@ -468,10 +469,11 @@ exports.delete = (req, res) => {
     }
 };
 
-/** Admin Register Process */
+/** Ganti password Process */
 exports.gantiPassword = (req, res) => {
     try{
         const { id, passwordlama, password, password2 } = req.body
+        let hashedPassword = md5(password);
 
         if(id && passwordlama && password && password2){
             if(password == password2){
@@ -486,7 +488,7 @@ exports.gantiPassword = (req, res) => {
                         res.status(403).json({
                             message: "User tidak terdaftar",
                         });
-                    } else if(cekid.length > 0 && !(await Bcrypt.compare(passwordlama, cekid[0].password))) {
+                    } else if(cekid.length > 0 && hashedPassword!=cekid[0].password) {
                         /** password lama tidak sesuai */
                         res.status(403).json({
                             message: "Password lama tidak sesuai",
@@ -496,12 +498,12 @@ exports.gantiPassword = (req, res) => {
                         res.status(403).json({
                             message: "User nonaktif",
                         });
-                    } else if(cekid.length > 0 && await Bcrypt.compare(passwordlama, cekid[0].password) && cekid[0].account_type != 'nonaktif'){
+                    } else if(cekid.length > 0 && hashedPassword===cekid[0].password && cekid[0].account_type != 'nonaktif'){
                         /** hash password */
-                        let hashedPassword = await Bcrypt.hash(password, 8);
+                        // let hashedPassword = await Bcrypt.hash(password);
 
                         /** user aktif dan password lama sesuai, lakukan update password */
-                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword}, id], async (error, results) => {
+                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], async (error, results) => {
                             if(error){
                                 /** error */
                                 res.status(500).json({
@@ -542,6 +544,72 @@ exports.gantiPassword = (req, res) => {
         /** Error */
         res.status(500).json({
             message: error,
+        });
+    }
+}
+
+/** Reset password Process */
+exports.resetPassword = async (req, res) => {
+    const { id, password, password2 } = req.body;
+
+    if(id && password && password2){
+        try{
+            /** cek id */
+            const cek_user = await new Promise((resolve, reject) => {
+                Connection.query("SELECT id FROM icare_account WHERE id = ?", [id], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_user.length > 0){
+
+                /** cek password == password2 */
+                if(password === password2){
+                    /** update password */
+                    let hashedPassword = md5(password);
+
+                    const update_password = await new Promise((resolve, reject) => {
+                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], (error) => {
+                            if(error){
+                                reject(error)
+                            } else {
+                                resolve("true")
+                            }
+                        })
+                    })
+                    if(update_password === "true"){
+                        res.status(201).json({
+                            message: "Reset password berhasil, silahkan login"
+                        });
+                    } else {
+                        /** User tidak terdaftar */
+                        throw new Error('Reset password gagal');
+                    }
+                } else {
+                    /** User tidak terdaftar */
+                    throw new Error('Password dan konfirmasi password tidak sama');
+                }
+
+            } else if(cek_user.length === 0){
+                /** User tidak terdaftar */
+                throw new Error('User tidak terdaftar');
+            } else {
+                /** Get data user error */
+                throw new Error('Get data user, Error');
+            }
+
+
+        } catch(e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
+        }
+    } else {
+        /** Field tidak boleh kosong */
+        res.status(500).json({
+            message: "Field tidak boleh kosong",
         });
     }
 }
