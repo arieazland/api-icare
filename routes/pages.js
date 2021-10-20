@@ -553,7 +553,7 @@ Router.post('/listsoalkarir', async (req, res) => {
 
                 /** sesi */
                 const sesi = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT sv.id, sv.sesi FROM icare_sesi_vidcall sv WHERE sv.id_consult_type = '1' AND sv.status = 'aktif' AND NOT id IN (SELECT id_sesi FROM icare_sesi_peserta GROUP BY id_sesi HAVING COUNT(*) >= 3)", (error, results) => {
+                    Connection.query("SELECT sv.id, sv.sesi FROM icare_sesi_vidcall sv WHERE sv.id_consult_type = '1' AND sv.status = 'aktif' AND NOT id IN (SELECT id_sesi FROM icare_sesi_peserta GROUP BY id_sesi HAVING COUNT(*) >= 125)", (error, results) => {
                         if(error){
                             reject(error)
                         } else {
