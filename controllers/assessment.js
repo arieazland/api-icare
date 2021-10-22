@@ -27,7 +27,7 @@ exports.registrasiJawaban = async (req, res) => {
 
             /** lakukan cek iduser */
             const cek_user = await new Promise((resolve, reject) => {
-                Connection.query("SELECT id FROM icare_account WHERE id = ?", [iduser], (error, results) => {
+                Connection.query("SELECT id FROM cdc_account WHERE id = ?", [iduser], (error, results) => {
                     if(error){
                         reject(error)
                     } else {

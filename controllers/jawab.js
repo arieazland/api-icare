@@ -45,7 +45,7 @@ exports.registerJawabsatu = async (req, res) => {
                 if(cek_kuota_sesi[0].totalpesertasesi < 125){
                     /** cek user */
                     const cek_user = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT id FROM icare_account WHERE id = ?", [iduser], (error, results) => {
+                        Connection.query("SELECT id FROM cdc_account WHERE id = ?", [iduser], (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -229,7 +229,7 @@ exports.registerJawabdua = async (req, res) => {
                 if(cek_kuota_sesi[0].totalpesertasesi < 125){
                     /** cek user */
                     const cek_user = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT id FROM icare_account WHERE id = ?", [iduser], (error, results) => {
+                        Connection.query("SELECT id FROM cdc_account WHERE id = ?", [iduser], (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -412,7 +412,7 @@ exports.registerJawabtiga = async (req, res) => {
                 if(cek_kuota_sesi[0].totalpesertasesi < 125){
                     /** cek user */
                     const cek_user = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT id FROM icare_account WHERE id = ?", [iduser], (error, results) => {
+                        Connection.query("SELECT id FROM cdc_account WHERE id = ?", [iduser], (error, results) => {
                             if(error){
                                 reject(error)
                             } else {

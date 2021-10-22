@@ -21,7 +21,7 @@ exports.registerKesimpulan = async (req, res) => {
         try{
             /** cekpeserta */
             const cekpeserta = await new Promise((resolve, reject) => {
-                Connection.query("SELECT id FROM icare_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
+                Connection.query("SELECT id FROM cdc_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
                     if(error){
                         reject(error)
                     } else {
@@ -32,7 +32,7 @@ exports.registerKesimpulan = async (req, res) => {
             if(cekpeserta.length > 0){
                 /** cekpsikolog */
                 const cekpsikolog = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT id FROM icare_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
+                    Connection.query("SELECT id FROM cdc_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -124,7 +124,7 @@ exports.editKesimpulan = async (req, res) => {
             if(cekkesimpulan.length > 0){
                 /** cekkesimpulan */
                 const cekpeserta = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT id FROM icare_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
+                    Connection.query("SELECT id FROM cdc_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -135,7 +135,7 @@ exports.editKesimpulan = async (req, res) => {
                 if(cekpeserta.length > 0){
                     /** cekpsikolog */
                     const cekpsikolog = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT id FROM icare_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
+                        Connection.query("SELECT id FROM cdc_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -217,7 +217,7 @@ exports.deleteKesimpulan = async (req, res) => {
             if(cekkesimpulan.length > 0) {
                 /** cekpeserta */
                 const cekpeserta = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT id FROM icare_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
+                    Connection.query("SELECT id FROM cdc_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [selectpeserta], (error, results) => {
                         if(error){
                             reject(error)
                         } else {
@@ -228,7 +228,7 @@ exports.deleteKesimpulan = async (req, res) => {
                 if(cekpeserta.length > 0){
                     /** cekpsikolog */
                     const cekpsikolog = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT id FROM icare_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
+                        Connection.query("SELECT id FROM cdc_account WHERE id = ? AND ((account_type = 'psikologis' OR account_type = 'konsultan')OR account_type = 'admin')", [idpsikolog], (error, results) => {
                             if(error){
                                 reject(error)
                             } else {

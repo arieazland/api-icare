@@ -22,7 +22,7 @@ exports.registrasiRoom = async (req, res) => {
 
             /** lakukan cek psikolog */
             const cek_psikolog = await new Promise((resolve, reject) => {
-                Connection.query("SELECT id FROM icare_account WHERE id = ?", [psikolog], (error, results) => {
+                Connection.query("SELECT id FROM cdc_account WHERE id = ?", [psikolog], (error, results) => {
                     if(error){
                         reject(error)
                     } else {

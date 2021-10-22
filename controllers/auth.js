@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
         if(email && password){
             var unhased = md5(password);
 
-            Connection.query('SELECT * FROM icare_account WHERE email = ?', [email], async (error, results) =>{
+            Connection.query('SELECT * FROM cdc_account WHERE email = ?', [email], async (error, results) =>{
                 if(results.length == 0){
                     /** email salah */
                     res.status(401).json({
@@ -70,7 +70,7 @@ exports.registerAdmin = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
-        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -93,7 +93,7 @@ exports.registerAdmin = (req, res) => {
                 // let hashedPassword = await Bcrypt.hash(password, 8);
                 let hashedPassword = md5(password);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, non_hashed: password, account_type: "admin", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
@@ -125,7 +125,7 @@ exports.registerPeserta = async (req, res) => {
         try{
             /** cek email */
             const cek_email = await new Promise((resolve, reject) => {
-                Connection.query("SELECT email FROM icare_account WHERE email = ?", [email], (error, results) => {
+                Connection.query("SELECT email FROM cdc_account WHERE email = ?", [email], (error, results) => {
                     if(error){
                         reject(error)
                     } else {
@@ -145,7 +145,7 @@ exports.registerPeserta = async (req, res) => {
 
                     /** insert data ke database */
                     const insert_data_peserta = await new Promise((resolve, reject) => {
-                        Connection.query("INSERT INTO icare_account SET ?", {id: null, email: email, nama: nama, username: username,password: hashedPassword, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
+                        Connection.query("INSERT INTO cdc_account SET ?", {id: null, email: email, nama: nama, username: username,password: hashedPassword, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -189,7 +189,7 @@ exports.registerPesertaevent = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
-        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -212,7 +212,7 @@ exports.registerPesertaevent = (req, res) => {
                 // let hashedPassword = await Bcrypt.hash(password, 8);
                 let hashedPassword = md5(password);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, non_hashed: password, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
@@ -241,7 +241,7 @@ exports.registerPesertareguler = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
-        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -264,7 +264,7 @@ exports.registerPesertareguler = (req, res) => {
                 // let hashedPassword = await Bcrypt.hash(password, 8);
                 let hashedPassword = md5(password);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, non_hashed: password, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
@@ -293,7 +293,7 @@ exports.registerKonsultan = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
-        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -316,7 +316,7 @@ exports.registerKonsultan = (req, res) => {
                 // let hashedPassword = await Bcrypt.hash(password, 8);
                 let hashedPassword = md5(password);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, non_hashed: password, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
@@ -345,7 +345,7 @@ exports.registerPsikolog = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(email && nama && password && password2){
-        Connection.query('SELECT email FROM icare_account WHERE email = ?', [email], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ?', [email], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -368,14 +368,14 @@ exports.registerPsikolog = (req, res) => {
                 // let hashedPassword = await Bcrypt.hash(password, 8);
                 let hashedPassword = md5(password);
 
-                Connection.query('INSERT INTO icare_account SET ?', {id: null, email: email, nama: nama, 
+                Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
                     password: hashedPassword, non_hashed: password, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
                     (error) => {
                     if(error){
                         console.log(error)
                     } else {
                         /** Registrasi berhasil  */
-                        Connection.query("SELECT * FROM icare_account", async (error, results) =>{
+                        Connection.query("SELECT * FROM cdc_account", async (error, results) =>{
                             if(error){ 
                                 throw error; 
                             } else if(results.length >= 0){
@@ -404,7 +404,7 @@ exports.edit = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(id && email && nama){
-        Connection.query('SELECT email FROM icare_account WHERE email = ? AND id <> ?', [email, id], async (error, results) => {
+        Connection.query('SELECT email FROM cdc_account WHERE email = ? AND id <> ?', [email, id], async (error, results) => {
             if(error) { 
                 // throw error;
                 res.status(500).json({
@@ -419,7 +419,7 @@ exports.edit = (req, res) => {
             } else if (results.length == 0){
                 /** Username tersedia */
 
-                Connection.query('UPDATE icare_account SET ? WHERE id = ?', [{email: email, nama: nama, 
+                Connection.query('UPDATE cdc_account SET ? WHERE id = ?', [{email: email, nama: nama, 
                     date_updated: tanggal, time_updated: waktu}, id], (error, results) => {
                     if(error){
                         console.log(error)
@@ -447,7 +447,7 @@ exports.delete = (req, res) => {
     var waktu = Moment().format("HH:mm:ss");
     
     if(id){
-        Connection.query('UPDATE icare_account SET ? WHERE id = ? ', [{account_type: 'nonaktif', date_updated: tanggal, 
+        Connection.query('UPDATE cdc_account SET ? WHERE id = ? ', [{account_type: 'nonaktif', date_updated: tanggal, 
         time_updated: waktu}, id], async (error, results) => {
             if(error) { 
                 // throw error;
@@ -477,7 +477,7 @@ exports.gantiPassword = (req, res) => {
 
         if(id && passwordlama && password && password2){
             if(password == password2){
-                Connection.query("SELECT * FROM icare_account WHERE id = ?", [id], async (error, cekid) => {
+                Connection.query("SELECT * FROM cdc_account WHERE id = ?", [id], async (error, cekid) => {
                     if(error){
                         /** error */
                         res.status(500).json({
@@ -503,7 +503,7 @@ exports.gantiPassword = (req, res) => {
                         // let hashedPassword = await Bcrypt.hash(password);
 
                         /** user aktif dan password lama sesuai, lakukan update password */
-                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], async (error, results) => {
+                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], async (error, results) => {
                             if(error){
                                 /** error */
                                 res.status(500).json({
@@ -556,7 +556,7 @@ exports.resetPassword = async (req, res) => {
         try{
             /** cek id */
             const cek_user = await new Promise((resolve, reject) => {
-                Connection.query("SELECT id FROM icare_account WHERE id = ?", [id], (error, results) => {
+                Connection.query("SELECT id FROM cdc_account WHERE id = ?", [id], (error, results) => {
                     if(error){
                         reject(error)
                     } else {
@@ -572,7 +572,7 @@ exports.resetPassword = async (req, res) => {
                     let hashedPassword = md5(password);
 
                     const update_password = await new Promise((resolve, reject) => {
-                        Connection.query("UPDATE icare_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], (error) => {
+                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], (error) => {
                             if(error){
                                 reject(error)
                             } else {
