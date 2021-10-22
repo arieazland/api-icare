@@ -1,5 +1,5 @@
 const Express = require("express");
-const Mysql = require("mysql");
+const Mysql = require("mariadb");
 const Bcrypt = require("bcryptjs");
 const Path = require("path");
 const http = require("http");
