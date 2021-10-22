@@ -105,11 +105,11 @@ exports.registerKesimpulan = async (req, res) => {
 }
 
 exports.editKesimpulan = async (req, res) => {
-    const { idkesimpulan, selectpeserta, idpsikolog, kesimpulan } = req.body
+    const { idkesimpulan, selectpeserta, idpsikolog, kesimpulan, selectsesi } = req.body
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss")
 
-    if(idkesimpulan && selectpeserta && idpsikolog && kesimpulan){
+    if(idkesimpulan && selectpeserta && idpsikolog && kesimpulan && selectsesi){
         try{
             /** cekkesimpulan */
             const cekkesimpulan = await new Promise((resolve, reject) => {
@@ -158,7 +158,7 @@ exports.editKesimpulan = async (req, res) => {
                             /** edit kesimpulan berhasil */
                             res.status(200).json({
                                 message: "Kesimpulan Berhasil Diubah",
-                                selectpeserta
+                                selectpeserta, selectsesi
                             });    
                         } else {
                             /** send error */
@@ -198,11 +198,11 @@ exports.editKesimpulan = async (req, res) => {
 }
 
 exports.deleteKesimpulan = async (req, res) => {
-    const { idkesimpulan, selectpeserta, idpsikolog } = req.body
+    const { idkesimpulan, selectpeserta, idpsikolog, selectsesi } = req.body
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss")
 
-    if(idkesimpulan && selectpeserta && idpsikolog){
+    if(idkesimpulan && selectpeserta && idpsikolog && selectsesi){
         try{
             /** cekkesimpulan */
             const cekkesimpulan = await new Promise((resolve, reject) => {
@@ -251,7 +251,8 @@ exports.deleteKesimpulan = async (req, res) => {
                             /** hapus kesimpulan berhasil */
                             res.status(200).json({
                                 message: "Kesimpulan Berhasil Dihapus",
-                            }); 
+                                selectsesi
+                            });
                         } else {
                             /** send error */
                             throw new Error('Kesimpulan Gagal Dihapus');
