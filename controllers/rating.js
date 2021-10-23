@@ -14,12 +14,12 @@ exports.registrasiRating = async (req, res) => {
     const {rate, komentar, psikolog, peserta} = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
-    
+
     if(rate && psikolog && peserta){
         try{
             /** lakukan cek psikolog */
             const cek_psikolog = await new Promise((resolve, reject) => {
-                Connection.query("SELECT id FROM cdc_account WHERE id = ?", [psikolog], (error, results) => {
+                Connection.query("SELECT id FROM cdc_account WHERE id = ? AND (account_type = 'psikologis' OR account_type = 'konsultan') ", [psikolog], (error, results) => {
                     if(error){
                         reject(error)
                     } else {
@@ -31,7 +31,7 @@ exports.registrasiRating = async (req, res) => {
             if(cek_psikolog.length > 0){
                 /** cek peserta */
                 const cek_peserta = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT id FROM cdc_account WHERE id = ?", [peserta], (error, results) => {
+                    Connection.query("SELECT id FROM cdc_account WHERE id = ? AND (account_type = 'peserta' OR account_type = 'peserta_event')", [peserta], (error, results) => {
                         if(error){
                             reject(error)
                         } else {

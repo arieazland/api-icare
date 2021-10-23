@@ -94,7 +94,7 @@ exports.registerAdmin = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, non_hashed: password, account_type: "admin", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, password_nonhashed: password, non_hashed: password, account_type: "admin", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -145,7 +145,7 @@ exports.registerPeserta = async (req, res) => {
 
                     /** insert data ke database */
                     const insert_data_peserta = await new Promise((resolve, reject) => {
-                        Connection.query("INSERT INTO cdc_account SET ?", {id: null, email: email, nama: nama, username: username,password: hashedPassword, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
+                        Connection.query("INSERT INTO cdc_account SET ?", {id: null, email: email, nama: nama, username: username,password: hashedPassword, password_nonhashed: password, non_hashed: password, jenis_kelamin: jenis_kelamin, phone: nomor_kontak, tempat_lahir: tempat_lahir, tanggal_lahir: tanggal_lahir, pendidikan: pendidikan, universitas: universitas, jurusan: jurusan, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, (error, results) => {
                             if(error){
                                 reject(error)
                             } else {
@@ -213,7 +213,7 @@ exports.registerPesertaevent = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, non_hashed: password, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, password_nonhashed: password, non_hashed: password, account_type: "peserta_event", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -265,7 +265,7 @@ exports.registerPesertareguler = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, non_hashed: password, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, password_nonhashed: password, non_hashed: password, account_type: "peserta", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -317,7 +317,7 @@ exports.registerKonsultan = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, non_hashed: password, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, password_nonhashed: password, non_hashed: password, account_type: "konsultan", date_created: tanggal, time_created: waktu}, 
                     (error, results) => {
                     if(error){
                         console.log(error)
@@ -369,7 +369,7 @@ exports.registerPsikolog = (req, res) => {
                 let hashedPassword = md5(password);
 
                 Connection.query('INSERT INTO cdc_account SET ?', {id: null, email: email, nama: nama, 
-                    password: hashedPassword, non_hashed: password, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
+                    password: hashedPassword, password_nonhashed: password, non_hashed: password, account_type: "psikologis", date_created: tanggal, time_created: waktu}, 
                     (error) => {
                     if(error){
                         console.log(error)
