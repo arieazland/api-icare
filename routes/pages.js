@@ -335,7 +335,7 @@ Router.post('/listpartkarir', async (req, res) => {
             if(cek_kuota[0].totalpeserta < 500){
                 /** cekpeserta */
                 const cekpeserta = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT * FROM cdc_account WHERE id = ? AND account_type IN ('peserta_event', 'peserta_event') AND account_type = 'aktif'", [selectuser], (error, results) => {
+                    Connection.query("SELECT * FROM cdc_account WHERE id = ? AND account_type IN ('peserta','peserta_event') ", [selectuser], (error, results) => {
                         if(error) { 
                             /** jika error */
                             reject(error);
