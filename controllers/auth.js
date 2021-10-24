@@ -14,53 +14,69 @@ Moment.locale('id');
 
 /** Login Process */
 exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        var tanggal = Moment().format("YYYY-MM-DD");
-        var waktu = Moment().format("HH:mm:ss");
+    const { email, password, namabrowser, namaos, namaplatform } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
+    var ipadd = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).substr(7)
+    // ipadd = ip.substr(7)
+    // console.log(ipadd);
 
-        if(email && password){
+    if(email && password){
+
+        try{
             var unhased = md5(password);
-
-            Connection.query('SELECT * FROM cdc_account WHERE email = ?', [email], async (error, results) =>{
-                if(results.length == 0){
-                    /** email salah */
-                    res.status(401).json({
-                        message: 'Email atau password salah'
-                    });
-                } else if(results.length > 0 && unhased!=results[0].password){
-                    /** password salah */
-                    res.status(401).json({
-                        message: 'Email atau password salah'
-                    });
-                } else if (results.length > 0 && results[0].account_type == 'nonaktif'){
-                    /** user nonaktif */
-                    res.status(401).json({
-                        message: 'User anda sudah di nonaktifkan'
-                    });
-                } else if(results.length > 0 && unhased === results[0].password && results[0].account_type != 'nonaktif') {
-                    /** login sukses */
+            const cek_user = await new Promise((resolve, reject) => {
+                Connection.query("SELECT * FROM cdc_account WHERE email = ?", [email], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_user.length == 0){
+                /** email tidak ada */
+                throw new Error('Email atau password salah');
+            } else if(cek_user.length > 0 && unhased!=cek_user[0].password){
+                /** password salah */
+                throw new Error('Email atau password salah');
+            } else if(cek_user.length > 0 && cek_user[0].account_type == 'nonaktif'){
+                /** user nonaktif */
+                throw new Error('User Account anda nonaktif');
+            } else if(cek_user.length > 0 && unhased === cek_user[0].password && cek_user[0].account_type!='nonaktif'){
+                const save_activity = await new Promise((resolve, reject) => {
+                    Connection.query("INSERT INTO icare_log SET ?", [{id: null, id_account: cek_user[0].id, email_account: cek_user[0].email, aktifitas: 'login', ip_address: ipadd, nama_browser: namabrowser, nama_os: namaos, nama_platform: namaplatform, date_created: tanggal, time_created: waktu}], (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve("true")
+                        }
+                    })
+                })
+                if(save_activity === "true"){
                     res.status(200).json({
                         message: 'Login Berhasil',
-                        data: results
+                        data: cek_user
                     });
                 } else {
-                    res.status(500).json({
-                        message: 'Error please contact developer!'
-                    });
+                    /** send error */
+                    throw new Error('Login Gagal');    
                 }
-            });
-        } else {
-            /** username dan password kosong */
-            res.status(500).json({
-                message: 'Field tidak boleh kosong'
-            });
+                
+            } else {
+                /** send error */
+                throw new Error('Login Gagal');
+            }
+        } catch (e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
         }
-    } catch (error) {
+    } else {
+        /** username dan password kosong */
         res.status(500).json({
-            message: error
+            message: 'Field tidak boleh kosong'
         });
-    }        
+    }     
 };
 
 /** Admin Register Process */

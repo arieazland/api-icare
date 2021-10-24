@@ -145,6 +145,7 @@ exports.registerJawabsatu = async (req, res) => {
                                     /** berhasil simpan jawaban */
                                     res.status(201).json({
                                         message: "Jawaban berhasil disimpan, terima kasih atas partisipasinya",
+                                        selectsesi
                                     });
                                 } else {
                                     /** gagal simpan jawaban 1 */
@@ -329,6 +330,7 @@ exports.registerJawabdua = async (req, res) => {
                                     /** berhasil simpan jawaban */
                                     res.status(201).json({
                                         message: "Jawaban berhasil disimpan, terima kasih atas partisipasinya",
+                                        selectsesi
                                     });
                                 } else {
                                     /** gagal simpan jawaban 1 */
@@ -491,7 +493,8 @@ exports.registerJawabtiga = async (req, res) => {
                                 if(input_jawaban1 === "true" && input_jawaban2 === "true" && input_sesi === "true"){
                                     /** berhasil simpan jawaban */
                                     res.status(201).json({
-                                        message: "Jawaban Berhasil Disimpan, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya",
+                                        message: "Jawaban Berhasil Disimpan, Terima Kasih Atas Partisipasinya",
+                                        selectsesi
                                     });
                                 } else {
                                     /** gagal simpan jawaban 1 */

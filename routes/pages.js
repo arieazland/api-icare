@@ -386,9 +386,32 @@ Router.post('/listpartkarir', async (req, res) => {
                         }
                     } else if(cekjawaban.length > 0){
                         /** peserta sudah memberikan jawaban */
-                        /** send error */
-                        // throw new Error('Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya');
-                        res.status(201).json({ message: 'Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya'});
+                        /** get sesi pilihan peeserta */
+                        const sesi = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT * FROM icare_sesi_peserta WHERE id_peserta = ?", [selectuser], (error, results) => {
+                                if(error) { 
+                                    /** jika error */
+                                    reject(error);
+                                } else {
+                                    /** jika results */
+                                    resolve(results);
+                                }
+                            });
+                        });
+                        if(sesi.length > 0){
+                            /** send notifikasi */
+                            // throw new Error('Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya');
+                            res.status(201).json({ 
+                                // message: 'Anda Sudah Menyelesaikan Assessment Awal Konsultasi Karir, Silahkan Cek Terus Email Anda, Link Video Call akan Dikirimkan ke Email Anda, Terima Kasih Atas Partisipasinya', 
+                                selectsesi: sesi
+                            });
+                        } else {
+                            /** send error */
+                            throw new Error('Get data sesi peserta, error');
+                        }
+
+
+                        
                     } else {
                         /** send error */
                         throw new Error('Cek Jawaban Error');
