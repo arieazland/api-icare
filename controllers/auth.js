@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
                     });
                 } else {
                     /** send error */
-                    throw new Error('Login Gagal');    
+                    throw new Error('Login Gagal');
                 }
                 
             } else {

@@ -2287,4 +2287,58 @@ Router.post('/lupapassword', (req, res) =>{
     }
 })
 
+/** Route for logout */
+Router.post('/logout', async (req, res) =>{
+    const { idu, namabrowser, namaos, namaplatform } = req.body;
+    var tanggal = Moment().format("YYYY-MM-DD");
+    var waktu = Moment().format("HH:mm:ss");
+    var ipadd = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).substr(7)
+
+    if(idu) {
+        try{
+            const cek_user = await new Promise((resolve, reject) => {
+                Connection.query("SELECT * FROM cdc_account WHERE id = ?", [idu], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(cek_user.length > 0){
+                const save_activity = await new Promise((resolve, reject) => {
+                    Connection.query("INSERT INTO icare_log SET ?", [{id: null, id_account: cek_user[0].id, email_account: cek_user[0].email, aktifitas: 'logout', ip_address: ipadd, nama_browser: namabrowser, nama_os: namaos, nama_platform: namaplatform, date_created: tanggal, time_created: waktu}], (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve("true")
+                        }
+                    })
+                })
+                if(save_activity === "true"){
+                    res.status(200).json({
+                        message: 'Logout Berhasil'
+                    });
+                } else {
+                    /** send error */
+                    throw new Error('Logout Gagal');
+                }
+            } else {
+                /** send error */
+                throw new Error('Logout Gagal');
+            }
+        } catch(e) {
+            /** send error */
+            res.status(400).json({ message: e.message });
+        }
+    } else {
+        /** field kosong */
+        res.status(403).json({
+            message: 'Email tidak boleh kosong'
+        })
+    }
+})
+
+
+
 module.exports = Router;
