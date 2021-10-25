@@ -2340,28 +2340,48 @@ Router.post('/logout', async (req, res) =>{
 })
 
 /** Route For Log Activity */
-Router.get('/logactivity', async (req, res) =>{
-    try{
-        const data_log = await new Promise((resolve, reject) => {
-            Connection.query("SELECT * FROM icare_log", (error, results) => {
-                if(error){
-                    reject(error)
-                } else {
-                    resolve(results)
-                }
+Router.post('/logactivity', async (req, res) =>{
+    const { datestart, dateend } = req.body;
+    if(datestart && dateend){
+        try{
+            /** get data log */
+            const data_log = await new Promise((resolve, reject) => {
+                Connection.query("SELECT * FROM icare_log WHERE date_created BETWEEN ? AND ?", [datestart, dateend], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
             })
-        })
-        if(data_log.length >= 0){
-            res.status(200).json({
-                data_log
-            });
-        } else {
+
+            /** hit count */
+            const data_count = await new Promise((resolve, reject) => {
+                Connection.query("SELECT COUNT(id) AS count FROM icare_log WHERE aktifitas = 'login' AND date_created BETWEEN ? AND ? ", [datestart, dateend], (error, results) => {
+                    if(error){
+                        reject(error)
+                    } else {
+                        resolve(results)
+                    }
+                })
+            })
+            if(data_log.length >= 0){
+                res.status(200).json({
+                    data_log, data_count, datestart, dateend
+                });
+            } else {
+                /** send error */
+                throw new Error('Get Data Log Activity Gagal');
+            }
+        } catch(e) {
             /** send error */
-            throw new Error('Get Data Log Activity Gagal');
+            res.status(400).json({ message: e.message });
         }
-    } catch(e) {
-        /** send error */
-        res.status(400).json({ message: e.message });
+    } else {
+        /** field kosong */
+        res.status(403).json({
+            message: 'Field tidak boleh kosong'
+        })
     }
 })
 
