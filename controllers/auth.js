@@ -17,7 +17,7 @@ exports.login = async (req, res) => {
     const { email, password, ipadd, namabrowser, namaos, namaplatform } = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
-    // var ipadd = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).substr(7)
+    var ipadd = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).substr(7)
     // ipadd = ip.substr(7)
     // console.log(ipadd);
 
