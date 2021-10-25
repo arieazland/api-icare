@@ -2351,7 +2351,7 @@ Router.get('/logactivity', async (req, res) =>{
                 }
             })
         })
-        if(data_log.length > 0){
+        if(data_log.length >= 0){
             res.status(200).json({
                 data_log
             });
