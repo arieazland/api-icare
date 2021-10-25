@@ -18,7 +18,7 @@ exports.registrasiRoom = async (req, res) => {
     if(namaroom && psikolog && urlroom){
         try{
             const customurlroom = urlroom.substr(8);
-            const urlroomicare = 'https://care.imeet.id/videocallicare/'+customurlroom;
+            const urlroomicare = 'https://icare.imeet.id/videocallicare/'+customurlroom;
 
             /** lakukan cek psikolog */
             const cek_psikolog = await new Promise((resolve, reject) => {

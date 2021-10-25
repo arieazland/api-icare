@@ -50,7 +50,7 @@ Router.post("/getpesertavidcall", async (req, res) => {
             if(cek_peserta.length > 0){
                 /** cek data psikolog */
                 const cek_psikolog = await new Promise((resolve, reject) => {
-                    Connection.query("SELECT * FROM cdc_account WHERE id = ? AND account_type IN ('konsultan','psikologis') AND status = 'aktif' ", [idpsikolog],(error, results) => {
+                    Connection.query("SELECT * FROM cdc_account WHERE id = ? AND account_type IN ('konsultan','psikologis') ", [idpsikolog],(error, results) => {
                         if(error) { 
                             /** jika error */
                             reject(error);
@@ -2336,6 +2336,32 @@ Router.post('/logout', async (req, res) =>{
         res.status(403).json({
             message: 'Email tidak boleh kosong'
         })
+    }
+})
+
+/** Route For Log Activity */
+Router.get('/logactivity', async (req, res) =>{
+    try{
+        const data_log = await new Promise((resolve, reject) => {
+            Connection.query("SELECT * FROM icare_log", (error, results) => {
+                if(error){
+                    reject(error)
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+        if(data_log.length > 0){
+            res.status(200).json({
+                data_log
+            });
+        } else {
+            /** send error */
+            throw new Error('Get Data Log Activity Gagal');
+        }
+    } catch(e) {
+        /** send error */
+        res.status(400).json({ message: e.message });
     }
 })
 
