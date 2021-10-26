@@ -490,6 +490,7 @@ exports.gantiPassword = (req, res) => {
     try{
         const { id, passwordlama, password, password2 } = req.body
         let hashedPassword = md5(password);
+        let hashedPasswordlama = md5(passwordlama);
 
         if(id && passwordlama && password && password2){
             if(password == password2){
@@ -504,7 +505,7 @@ exports.gantiPassword = (req, res) => {
                         res.status(403).json({
                             message: "User tidak terdaftar",
                         });
-                    } else if(cekid.length > 0 && hashedPassword!=cekid[0].password) {
+                    } else if(cekid.length > 0 && hashedPasswordlama!=cekid[0].password) {
                         /** password lama tidak sesuai */
                         res.status(403).json({
                             message: "Password lama tidak sesuai",
@@ -514,12 +515,12 @@ exports.gantiPassword = (req, res) => {
                         res.status(403).json({
                             message: "User nonaktif",
                         });
-                    } else if(cekid.length > 0 && hashedPassword===cekid[0].password && cekid[0].account_type != 'nonaktif'){
+                    } else if(cekid.length > 0 && hashedPasswordlama===cekid[0].password && cekid[0].account_type != 'nonaktif'){
                         /** hash password */
                         // let hashedPassword = await Bcrypt.hash(password);
 
                         /** user aktif dan password lama sesuai, lakukan update password */
-                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], async (error, results) => {
+                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, password_nonhashed: password, non_hashed: password}, id], async (error, results) => {
                             if(error){
                                 /** error */
                                 res.status(500).json({
