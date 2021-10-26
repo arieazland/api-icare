@@ -589,7 +589,7 @@ exports.resetPassword = async (req, res) => {
                     let hashedPassword = md5(password);
 
                     const update_password = await new Promise((resolve, reject) => {
-                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, non_hashed: password}, id], (error) => {
+                        Connection.query("UPDATE cdc_account SET ? WHERE id = ?", [{password: hashedPassword, password_nonhashed: password, non_hashed: password}, id], (error) => {
                             if(error){
                                 reject(error)
                             } else {
