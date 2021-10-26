@@ -31,6 +31,42 @@ Router.get('/userlist', (req, res) =>{
     })
 })
 
+/** Route for cek ketersediaan room psikolog */
+Router.post("/cekroom", async (req, res) => {
+    const {psikolog} = req.body;
+    if(psikolog){
+        try{
+            const cek_room = await new Promise((resolve, reject) => {
+                Connection.query(" SELECT * FROM icare_roomvidcall WHERE idpsikolog = ? AND status = 'aktif' ", [psikolog],(error, results) => {
+                    if(error) { 
+                        /** jika error */
+                        reject(error);
+                    } else {
+                        /** jika results */
+                        resolve(results);
+                    }
+                });
+            });
+            if(cek_room.length === 0){
+                /** Kirim data */
+                res.status(200).json({
+                    psikolog
+                })
+            } else {
+                /** send error */
+                throw new Error('Psikolog sudah memiliki room, psikolog hanya di perkenankan menggunakan 1 room saja. Jika mengalami kesulitan silahkan hubungi admin');
+            }
+        } catch(e) {
+            res.status(400).json({ message: e.message }); 
+        }
+    } else {
+        /** field kosong */
+        res.status(403).json({
+            message: "Field tidak boleh kosong"
+        })
+    }
+})
+
 Router.post("/getpesertavidcall", async (req, res) => {
     const { idpeserta, idpsikolog  } = req.body;
     if(idpeserta && idpsikolog ){
@@ -63,7 +99,7 @@ Router.post("/getpesertavidcall", async (req, res) => {
                 if(cek_psikolog.length > 0){
                     /** get url video call room */
                     const urlroom = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT url_room FROM icare_roomvidcall WHERE idpsikolog = ?", [idpsikolog],(error, results) => {
+                        Connection.query("SELECT url_room FROM icare_roomvidcall WHERE idpsikolog = ? AND status = 'aktif' ", [idpsikolog],(error, results) => {
                             if(error) { 
                                 /** jika error */
                                 reject(error);
@@ -75,7 +111,7 @@ Router.post("/getpesertavidcall", async (req, res) => {
                     });
 
                     const real_urlroom = await new Promise((resolve, reject) => {
-                        Connection.query("SELECT real_url_room FROM icare_roomvidcall WHERE idpsikolog = ?", [idpsikolog],(error, results) => {
+                        Connection.query("SELECT real_url_room FROM icare_roomvidcall WHERE idpsikolog = ? AND status = 'aktif' ", [idpsikolog],(error, results) => {
                             if(error) { 
                                 /** jika error */
                                 reject(error);

@@ -52,24 +52,46 @@ exports.registerKesimpulan = async (req, res) => {
                         })
                     })
                     if(cekkesimpulan.length === 0){
-                        /** input data kesimpulan */
-                        const insertkesimpulan = await new Promise((resolve, reject) => {
-                            Connection.query("INSERT INTO icare_conc SET ?", {id: null, id_consult_type: '1', id_account: selectpeserta, conc: kesimpulan, verified_by: idpsikolog, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
+                        /** get nama url room daily.co psikolog terkait */
+                        const nama_room = await new Promise((resolve, reject) => {
+                            Connection.query("SELECT * FROM icare_roomvidcall WHERE idpsikolog = ? AND status = 'aktif'", [idpsikolog], async (error, results) => {
                                 if(error){
                                     reject(error)
                                 } else {
-                                    resolve("true")
+                                    resolve(results)
                                 }
                             })
                         })
-                        if(insertkesimpulan === "true"){
-                            /** insert kesimpulan berhasil */
-                            res.status(200).json({
-                                message: "Kesimpulan Berhasil Disimpan",
-                            });
+                        if(nama_room.length === 1){
+                            /** input data kesimpulan */
+                            const insertkesimpulan = await new Promise((resolve, reject) => {
+                                Connection.query("INSERT INTO icare_conc SET ?", {id: null, id_consult_type: '1', id_account: selectpeserta, conc: kesimpulan, verified_by: idpsikolog, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
+                                    if(error){
+                                        reject(error)
+                                    } else {
+                                        resolve("true")
+                                    }
+                                })
+                            })
+                            if(insertkesimpulan === "true"){
+                                /** insert kesimpulan berhasil */
+                                res.status(200).json({
+                                    message: "Kesimpulan Berhasil Disimpan",
+                                    nama_room
+                                });
+                            } else {
+                                /** send error */
+                                throw new Error('Kesimpulan Gagaln Disimpan');
+                            }
+                        } else if(nama_room.length === 0){
+                            /** send error */
+                            throw new Error('Psikolog tidak memiliki room video call, harap hubungi admin');
+                        } else if(nama_room.length > 1) {
+                            /** send error */
+                            throw new Error('Psikolog memiliki room video call lebih dari 1, harap hubungi admin');
                         } else {
                             /** send error */
-                            throw new Error('Kesimpulan Gagaln Disimpan');
+                            throw new Error('Get data room video call gagal, harap hubungi admin');
                         }
                     } else if(cekkesimpulan.length > 0){
                         /** send error */
