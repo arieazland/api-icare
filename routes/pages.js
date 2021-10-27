@@ -708,6 +708,212 @@ Router.post('/listsoalkarir', async (req, res) => {
     }
 })
 
+/** route for list peserta */
+Router.post('/kategorilist', async (req, res) => {
+    const { kategorilist } = req.body;
+
+    if(kategorilist){
+        try{
+            if(kategorilist == 1){
+                /** get data peserta semua list */
+                const all_sesi = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(all_sesi.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: all_sesi,
+                        kategorilist: kategorilist,
+                        judul: "Semua Sesi dan Semua Kategori"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 2){
+                /** get data peserta sesi 1 */
+                const sesisatu = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_sesi_peserta.id_sesi = 1 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(sesisatu.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: sesisatu,
+                        kategorilist: kategorilist,
+                        judul: "Sesi 1"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 3){
+                /** get data peserta sesi 2 */
+                const sesidua = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_sesi_peserta.id_sesi = 2 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(sesidua.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: sesidua,
+                        kategorilist: kategorilist,
+                        judul: "Sesi 2"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 4){
+                /** get data peserta sesi 3 */
+                const sesitiga = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_sesi_peserta.id_sesi = 3 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(sesitiga.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: sesitiga,
+                        kategorilist: kategorilist,
+                        judul: "Sesi 3"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 5){
+                /** get data peserta sesi 4 */
+                const sesiempat = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_sesi_peserta.id_sesi = 4 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(sesiempat.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: sesiempat,
+                        kategorilist: kategorilist,
+                        judul: "Sesi 4"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 6){
+                /** get data peserta pernah bekerja */
+                const pernahgawe = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_a2assessment.idpart = 1 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(pernahgawe.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: pernahgawe,
+                        kategorilist: kategorilist,
+                        judul: "Kategori Pernah Bekerja"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 7){
+                /** get data peserta gagal seleksi */
+                const gagalseleksi = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_a2assessment.idpart = 2 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(gagalseleksi.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: gagalseleksi,
+                        kategorilist: kategorilist,
+                        judul: "Kategori Gagal dalam Seleksi"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            }
+            else if(kategorilist == 8){
+                /** get data peserta freshgraduate */
+                const freshgraduate = await new Promise((resolve, reject) => {
+                    Connection.query("SELECT cdc_account.id AS id_peserta, cdc_account.nama AS nama_peserta, cdc_account.email AS email_peserta, icare_sesi_vidcall.sesi AS sesi, icare_passessment.nama AS kategori FROM icare_sesi_peserta LEFT JOIN cdc_account ON cdc_account.id = icare_sesi_peserta.id_peserta LEFT JOIN icare_a2assessment ON icare_a2assessment.id_account = icare_sesi_peserta.id_peserta LEFT JOIN icare_sesi_vidcall ON icare_sesi_vidcall.id = icare_sesi_peserta.id_sesi LEFT JOIN icare_passessment ON icare_passessment.id = icare_a2assessment.idpart WHERE icare_a2assessment.idpart = 3 GROUP BY icare_sesi_peserta.id", (error, results) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(results)
+                        }
+                    })
+                })
+                if(freshgraduate.length >= 0){
+                    /** Kirim data soal */
+                    res.status(200).json({
+                        data: freshgraduate,
+                        kategorilist: kategorilist,
+                        judul: "Kategori Tanpa Pengalaman Bekerja"
+                    })
+                } else {
+                    /** Send error */
+                    throw new Error('Proses pengambilan data list peserta gagal');
+                }
+            } else {
+                /** Send error */
+                throw new Error('Kategori tidak terdaftar');
+            }
+        } catch(e){
+            /** send error */
+            res.status(400).json({ message: e.message });
+        }
+    } else {
+        /** Field kosong */
+        res.status(500).json({
+            message: "Harap pilih kategori list terlebih dahulu"
+        });
+    }
+})
+
+/** route for hasil assessment karir */
 Router.get('/hasilassessmentkarir', async (req, res) => {
     try{
         /** get data sesi */
