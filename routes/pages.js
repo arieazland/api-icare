@@ -49,12 +49,19 @@ Router.post("/cekroom", async (req, res) => {
             });
             if(cek_room.length === 0){
                 /** Kirim data */
+                const jumlahUrl = 0;
                 res.status(200).json({
-                    psikolog
+                    psikolog, jumlahUrl
+                })
+            } else if(cek_room.length === 1) {
+                /** kirim data URL lebih dari 1 */
+                const jumlahUrl = 1;
+                res.status(200).json({
+                    psikolog, jumlahUrl, cek_room
                 })
             } else {
                 /** send error */
-                throw new Error('Psikolog sudah memiliki room, psikolog hanya di perkenankan menggunakan 1 room saja. Jika mengalami kesulitan silahkan hubungi admin');
+                throw new Error("Pengecekkan room psikolog gagal")
             }
         } catch(e) {
             res.status(400).json({ message: e.message }); 
