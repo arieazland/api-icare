@@ -22,9 +22,8 @@ exports.login = async (req, res) => {
     // console.log(ipadd);
 
     if(email && password){
-
+        var unhased = md5(password);
         try{
-            var unhased = md5(password);
             const cek_user = await new Promise((resolve, reject) => {
                 Connection.query("SELECT * FROM cdc_account WHERE email = ?", [email], (error, results) => {
                     if(error){

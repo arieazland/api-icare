@@ -11,11 +11,11 @@ require("moment/locale/id");  // without this line it didn't work
 Moment.locale('id');
 
 exports.registrasiRoom = async (req, res) => {
-    const {namaroom, psikolog, urlroom} = req.body;
+    const {namaroom, psikolog, peserta, urlroom} = req.body;
     var tanggal = Moment().format("YYYY-MM-DD");
     var waktu = Moment().format("HH:mm:ss");
     
-    if(namaroom && psikolog && urlroom){
+    if(namaroom && psikolog && peserta && urlroom){
         try{
             const customurlroom = urlroom.substr(8);
             const urlroomicare = 'https://icare.imeet.id/videocallicare/'+customurlroom;
@@ -34,7 +34,7 @@ exports.registrasiRoom = async (req, res) => {
             if(cek_psikolog.length > 0){
                 /** simpan ke database */
                 const save_url = await new Promise((resolve, reject) => {
-                    Connection.query("INSERT INTO icare_roomvidcall SET ?", {id: null, idpsikolog: psikolog, nama_room: namaroom, url_room: urlroomicare, real_url_room: urlroom, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
+                    Connection.query("INSERT INTO icare_roomvidcall SET ?", {id: null, idpsikolog: psikolog, idpeserta: peserta, nama_room: namaroom, url_room: urlroomicare, real_url_room: urlroom, status: 'aktif', date_created: tanggal, time_created: waktu }, async (error, results) => {
                         if(error){
                             reject(error)
                         } else {
